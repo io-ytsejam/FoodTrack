@@ -2,7 +2,7 @@ setup:
 
 build:
   docker:
-    frontend: frontend/Dockerfile
+    frontend: ./frontend/Dockerfile
   config:
     REQUIREMENTS_FILENAME: heroku.yml
 
