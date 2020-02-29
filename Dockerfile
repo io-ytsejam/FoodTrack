@@ -1,9 +1,9 @@
-# Stage 1
-# FROM node:8 as react-build
-# WORKDIR /frontend
-# COPY . ./frontend
-# RUN yarn
-# RUN yarn build
+Stage 1
+FROM node:8 as react-build
+WORKDIR /frontend
+COPY . ./frontend
+RUN yarn
+RUN yarn build
 
 # Stage 2 - the production environment
 FROM nginx:1.17.8
