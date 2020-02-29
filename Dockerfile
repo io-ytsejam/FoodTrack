@@ -9,7 +9,7 @@
 FROM nginx:1.17.8
 COPY ./frontend/default.conf.template /etc/nginx/conf.d/default.conf.template
 COPY ./frontend/nginx.conf /etc/nginx/nginx.conf
-# COPY --from=react-build /frontend/build /usr/share/nginx/html
-COPY static /usr/share/nginx/html
+COPY --from=react-build /frontend/build /usr/share/nginx/html
+# COPY static /usr/share/nginx/html
 
 CMD /bin/bash -c "envsubst '\$PORT' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf" && nginx -g 'daemon off;'
