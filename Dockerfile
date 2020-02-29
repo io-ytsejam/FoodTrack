@@ -7,8 +7,8 @@
 
 # Stage 2 - the production environment
 FROM nginx:alpine
-COPY default.conf.template /etc/nginx/conf.d/default.conf.template
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY ./frontend/default.conf.template /etc/nginx/conf.d/default.conf.template
+COPY ./frontend/nginx.conf /etc/nginx/nginx.conf
 # COPY --from=react-build /frontend/build /usr/share/nginx/html
 COPY static /usr/share/nginx/html
 
