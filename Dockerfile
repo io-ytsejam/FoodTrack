@@ -6,7 +6,7 @@
 # RUN yarn build
 
 # Stage 2 - the production environment
-FROM nginx:alpine
+FROM nginx:1.17.8
 COPY ./frontend/default.conf.template /etc/nginx/conf.d/default.conf.template
 COPY ./frontend/nginx.conf /etc/nginx/nginx.conf
 # COPY --from=react-build /frontend/build /usr/share/nginx/html
