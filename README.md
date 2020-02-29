@@ -1,30 +1,52 @@
 # FoodTrack
-## To run this:
+
+This is very basic template of REST API returning five records of forecast under /api/weatherforecast, 
+and React frontend printing those records. 
+
+## How run this?
+
+For now you can run backend and frontend separately for development purposes, or using `docker-compose`  with
+production build of frontend served by Nginx.
+
+### In development environment:
 
 1. Clone this repo
 `git clone <repo-link>`
 
-2. Install frontend dependencies
+* Install frontend dependencies
 ```
 cd frontend/
 yarn install
 yarn start
 ```
-Frontend should start on 'http://localhost:3000'
+Frontend should start on http://localhost
 
-3. Build backend
+* Build backend
 ```
 cd backend/
 dotnet publish -c Release -o out
 dotnet run
 ```
 
-4. In another terminal run backend
+Backend should start on http://localhost:5000
+
+### In production environment:
+
+* Make sure if you have Docker installed on your machine. If not, download it from https://www.docker.com
+and configure for your OS
+
+* Build frontend image: 
 ```
-dotnet bin/Debug/netcoreapp3.1/backend.dll
+cd frontend/
+docker build -t frontend .
 ```
 
-Backend should start on 'http://localhost:5000'
+* Build backend image: 
+```
+cd backend/
+docker build -t backend .
+```
 
-### Creating docker-compose in progress
+* Make all things **run** by typing `docker-compose up` from main project directory `foodtrack`
 
+### Creating `docker-compose` for development in progress
