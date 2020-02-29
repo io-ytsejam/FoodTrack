@@ -1,4 +1,4 @@
-Stage 1
+# Stage 1
 FROM node:8 as react-build
 WORKDIR /frontend
 COPY . ./frontend
