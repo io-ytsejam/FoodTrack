@@ -1,7 +1,7 @@
 # Stage 1
 FROM node:8 as react-build
 WORKDIR /frontend
-COPY . ./frontend
+COPY ./frontend .
 RUN yarn
 RUN yarn build
 
