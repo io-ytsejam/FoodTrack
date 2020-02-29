@@ -3,7 +3,7 @@
 This is very basic template of REST API returning five records of forecast under /api/weatherforecast, 
 and React frontend printing those records. 
 
-## How run this?
+## How to run this?
 
 For now you can run backend and frontend separately for development purposes, or using `docker-compose`  with
 production build of frontend served by Nginx.
