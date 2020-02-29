@@ -1,3 +1,7 @@
+upstream backend {
+  server foodtrack-app;
+}
+
 server {
     listen $PORT default_server;
     #charset koi8-r;
@@ -10,7 +14,7 @@ server {
     }
     
     location /api/ {
-        proxy_pass http://foodtrack-app:5000;
+        proxy_pass http://backend:5000;
     }
 
     #error_page  404              /404.html;
