@@ -13,6 +13,7 @@ services:
 
   backend:
     build: ./backend/Dockerfile
+    image: backend
     restart: always
     ports:
       - "8080:5000"
