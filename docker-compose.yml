@@ -1,7 +1,7 @@
 version: "2"
 services:
   frontend:
-    build: ./frontend
+    build: ./frontend/Dockerfile
     restart: always
     ports:
       - "80:80"
@@ -12,7 +12,7 @@ services:
       - backend
 
   backend:
-    build: ./backend
+    build: ./backend/Dockerfile
     restart: always
     ports:
       - "8080:5000"
