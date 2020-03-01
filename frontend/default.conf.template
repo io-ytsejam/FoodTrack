@@ -1,5 +1,5 @@
 upstream backend {
-  server foodtrack-app;
+  server http://foodtrack-app.herokuapp.com;
 }
 
 server {
@@ -14,7 +14,7 @@ server {
     }
     
     location /api/ {
-        proxy_pass http://backend:5000;
+        proxy_pass http://backend;
     }
 
     #error_page  404              /404.html;
