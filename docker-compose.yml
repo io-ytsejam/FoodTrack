@@ -1,21 +1,18 @@
 version: "2"
 services:
   frontend:
-    build: ./frontend/Dockerfile
+    # build: ./frontend/Dockerfile
+    image: frontend
     restart: always
     ports:
       - "80:80"
     working_dir: /frontend
-    volumes:
-      - ./frontend:/frontend
     depends_on:
       - backend
 
   backend:
-    build: ./backend/Dockerfile
+    # build: ./backend/Dockerfile
     image: backend
     restart: always
     ports:
       - "8080:5000"
-    volumes:
-      - ./backend:/backend
