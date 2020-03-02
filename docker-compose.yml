@@ -1,7 +1,8 @@
 version: "2"
 services:
   frontend:
-    image: foodtrackacr.azurecr.io/frontend
+    build: ./frontend/Dockerfile
+    image: frontend
     restart: always
     ports:
       - "80:80"
@@ -10,7 +11,8 @@ services:
       - backend
 
   backend:
-    image: foodtrackacr.azurecr.io/backend
+    build: ./backend/Dockerfile
+    image: backend
     restart: always
     ports:
       - "8080:5000"
