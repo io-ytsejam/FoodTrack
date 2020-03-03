@@ -6,3 +6,6 @@ frontend/.idea
 backend/.idea
 backend/.env
 backend/.vscode/
+backend/bin
+backend/obj
+backend/out
