@@ -1,22 +1,20 @@
 version: "2"
 services:
   frontend:
-    image: node:13.8.0-alpine3.10
+    image: frontend
     restart: always
     ports:
-      - "80:3000"
+      - "80:80"
     working_dir: /frontend
-    environment:
-      - CHOKIDAR_USEPOOLING=true
-    volumes: 
+    volumes:
       - ./frontend:/frontend
-    command: yarn start
-#   depends_on:
-#     - backend
+    depends_on:
+      - backend
 
-# backend:
-#   build: ./backend/Dockerfile
-#   image: backend
-#   restart: always
-#   ports:
-#     - "8080:5000"
+  backend:
+    image: backend
+    restart: always
+    ports:
+      - "8080:5000"
+    volumes:
+      - ./backend:/backend
