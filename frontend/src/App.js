@@ -1,4 +1,7 @@
-import React, {Component} from 'react';
+import React, {Component, Suspense} from 'react';
+import Navbar from "./UI/Navbar/Navbar";
+import {ThemeProvider} from '@material-ui/core';
+import {theme} from './UI/MaterialTheme';
 
 class App extends Component {
   constructor(props) {
@@ -7,7 +10,6 @@ class App extends Component {
       weatherForecast: []
     };
   }
-
 
   componentDidMount() {
     fetch("/api/weatherforecast")
@@ -19,23 +21,37 @@ class App extends Component {
         .catch(err => this.setState({ weatherForecast: err }))
   }
 
+
   render() {
-    const { weatherForecast } = this.state;
+      const wait = props => {
+        return new Promise((resolve, reject) => {
+          setTimeout(() => {
+            return resolve()
+          }, 1000)
+        })
+      };
+      const { weatherForecast } = this.state;
         return (
             <div>
-              {
-                weatherForecast instanceof Error ?
+              <ThemeProvider theme={theme}>
+                <Navbar/>
+                {
+                  weatherForecast instanceof Error ?
                     <h1>Error while fetching: <span>{ weatherForecast.message }</span></h1> :
                     <ul>
                       {weatherForecast.map(forecast => (
-                          <li>
-                            <h3>{forecast.date}</h3>
-                            <p>Temp C: <span>{forecast.temperatureC}</span></p>
-                            <p>Summary: <span>{forecast.summary}</span></p>
-                          </li>
+                        <li>
+                          <h3>{forecast.date}</h3>
+                          <p>Temp C: <span>{forecast.temperatureC}</span></p>
+                          <p>Summary: <span>{forecast.summary}</span></p>
+                        </li>
                       ))}
                     </ul>
-              }
+                }
+              </ThemeProvider>
+              <Suspense fallback={<h1>Loading...</h1>}>
+
+              </Suspense>
             </div>
         );
     }
