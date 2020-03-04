@@ -16,6 +16,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import History from'@material-ui/icons/History';
+import {Link} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   grow: {
@@ -79,7 +80,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Navbar = () => {
+const Navbar = props => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -161,9 +162,15 @@ const Navbar = () => {
     </Menu>
   );
 
+  const { pages } = props;
   return (
     <div className={classes.grow}>
-      <AppBar position="static">
+      <AppBar
+        position="fixed"
+        style={{
+          top: 0
+        }}
+      >
         <Toolbar>
           <IconButton
             edge="start"
@@ -173,9 +180,11 @@ const Navbar = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography className={classes.title} variant="h6" noWrap>
-            Food Track
-          </Typography>
+          <Link to="/">
+            <Typography title="Go to home page" className={classes.title} variant="h6" noWrap>
+              Food Track
+            </Typography>
+          </Link>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -191,13 +200,15 @@ const Navbar = () => {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <History />
-              </Badge>
-            </IconButton>
-            <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={17} color="secondary">
+            <Link to={'history'}>
+              <IconButton aria-label="show 4 new mails" color="inherit">
+                <Badge badgeContent={21} color="secondary">
+                  <History />
+                </Badge>
+              </IconButton>
+            </Link>
+            <IconButton aria-label="show 37 new notifications" color="inherit">
+              <Badge badgeContent={37} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
