@@ -33,22 +33,19 @@ class App extends Component {
       const { weatherForecast } = this.state;
         return (
             <div>
-              <ThemeProvider theme={theme}>
-                <Navbar/>
-                {
-                  weatherForecast instanceof Error ?
-                    <h1>Error while fetching: <span>{ weatherForecast.message }</span></h1> :
-                    <ul>
-                      {weatherForecast.map(forecast => (
-                        <li>
-                          <h3>{forecast.date}</h3>
-                          <p>Temp C: <span>{forecast.temperatureC}</span></p>
-                          <p>Summary: <span>{forecast.summary}</span></p>
-                        </li>
-                      ))}
-                    </ul>
-                }
-              </ThemeProvider>
+              {
+                weatherForecast instanceof Error ?
+                  <h1>Error while fetching: <span>{ weatherForecast.message }</span></h1> :
+                  <ul>
+                    {weatherForecast.map(forecast => (
+                      <li>
+                        <h3>{forecast.date}</h3>
+                        <p>Temp C: <span>{forecast.temperatureC}</span></p>
+                        <p>Summary: <span>{forecast.summary}</span></p>
+                      </li>
+                    ))}
+                  </ul>
+              }
               <Suspense fallback={<h1>Loading...</h1>}>
 
               </Suspense>
