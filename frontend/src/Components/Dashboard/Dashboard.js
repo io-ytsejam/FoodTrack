@@ -16,7 +16,7 @@ class Dashboard extends Component {
   componentDidMount() {
     const { setIsReady } = this.props;
     setIsReady(false);
-    const apiKey = 'cf77fdc39b774655be5e62c3ceb0c2b6';
+    const apiKey = 'c79c6bea99154e7da483a920455b2d77';
     const url = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10&`;
     fetch(url, { method: 'GET' })
       .then(res => res.json())
