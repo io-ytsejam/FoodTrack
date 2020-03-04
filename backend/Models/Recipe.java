@@ -1,53 +1,67 @@
 package Models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 public class Recipe
 {
-    @Id
-    @GeneratedValue
-    private int Id;
+    @Id @GeneratedValue
+    @Column(name="RECIPE_ID", nullable=false)
+    private int recipeId;
 
-    private String Name;
+    @Column(name="NAME", nullable=false)
+    private String name;
 
-    private String Description;
+    @Column(name="DESCRIPTION", nullable=false)
+    private String description;
 
-    private String Steps;
+    @Column(name="STEPS", nullable=false)
+    private String steps;
 
+    @Column(name="IF_EXTERNAL", nullable=false)
     private boolean ifExternal;
 
-    public int getId() {
-        return Id;
+    public Recipe(int recipeId, String name, String description, String steps, boolean ifExternal) {
+        this.recipeId = recipeId;
+        this.name = name;
+        this.description = description;
+        this.steps = steps;
+        this.ifExternal = ifExternal;
     }
 
-    public void setId(int id) {
-        Id = id;
+    public int getRecipeId() {
+        return recipeId;
+    }
+
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getDescription() {
-        return Description;
+        return description;
     }
 
     public void setDescription(String description) {
-        Description = description;
+        this.description = description;
     }
 
     public String getSteps() {
-        return Steps;
+        return steps;
     }
 
     public void setSteps(String steps) {
-        Steps = steps;
+        this.steps = steps;
     }
 
     public boolean isIfExternal() {

@@ -1,30 +1,38 @@
 package Models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 public class Preferences
 {
-    @Id
-    @GeneratedValue
-    private int Id;
+    @Id @GeneratedValue
+    @Column(name="PREFERENCES_ID", nullable=false)
+    private int preferencesId;
 
-    private String Category;
+    @Column(name="CATEGORY", nullable=false)
+    private String category;
 
-    public int getId() {
-        return Id;
+    public Preferences(int preferencesId, String category) {
+        this.preferencesId = preferencesId;
+        this.category = category;
     }
 
-    public void setId(int id) {
-        Id = id;
+    public int getPreferencesId() {
+        return preferencesId;
+    }
+
+    public void setPreferencesId(int preferencesId) {
+        this.preferencesId = preferencesId;
     }
 
     public String getCategory() {
-        return Category;
+        return category;
     }
 
     public void setCategory(String category) {
-        Category = category;
+        this.category = category;
     }
 }

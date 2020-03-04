@@ -1,29 +1,39 @@
 package Models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 public class Health_Restrictions
 {
-    @Id @GeneratedValue
-    private int Id;
+    @Id
+    @GeneratedValue
+    @Column(name="HEALTHRESTRICTIONS_ID", nullable=false)
+    private int healthrestrictionsId;
 
-    private String Name;
+    @Column(name="NAME", nullable=false)
+    private String name;
 
-    public int getId() {
-        return Id;
+    public Health_Restrictions(int healthrestrictionsId, String name) {
+        this.healthrestrictionsId = healthrestrictionsId;
+        this.name = name;
     }
 
-    public void setId(int id) {
-        Id = id;
+    public int getHealthrestrictionsId() {
+        return healthrestrictionsId;
+    }
+
+    public void setHealthrestrictionsId(int healthrestrictionsId) {
+        this.healthrestrictionsId = healthrestrictionsId;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 }

@@ -1,30 +1,39 @@
 package Models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @Entity
 public class Rating
 {
     @Id
     @GeneratedValue
-    private int Id;
+    @Column(name="RATING_ID", nullable=false)
+    private int ratingId;
 
-    private int Value;
+    @Column(name="VALUE", nullable=false)
+    private int value;
 
-    public int getId() {
-        return Id;
+    public Rating(int ratingId, int value) {
+        this.ratingId = ratingId;
+        this.value = value;
     }
 
-    public void setId(int id) {
-        Id = id;
+    public int getRatingId() {
+        return ratingId;
+    }
+
+    public void setRatingId(int ratingId) {
+        this.ratingId = ratingId;
     }
 
     public int getValue() {
-        return Value;
+        return value;
     }
 
     public void setValue(int value) {
-        Value = value;
+        this.value = value;
     }
 }
