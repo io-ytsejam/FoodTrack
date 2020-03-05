@@ -1,9 +1,8 @@
 package main.java.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class User
@@ -23,6 +22,9 @@ public class User
 
     @Column(name="LASTNAME", nullable=false)
     private String lastname;
+
+    public User() {
+    }
 
     public User(int userId, String nickname, String password, String firstname, String lastname) {
         this.userId=userId;
@@ -71,4 +73,25 @@ public class User
     public void setLastname(String lastname) {
         this.lastname = lastname;
     }
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<Recipe> recipeList = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<User_history> user_histories = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<Rating> ratings = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<User_setting> user_settings = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<User_healthRestriction> user_healthRestrictions = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<User_preference> user_preferences = new ArrayList<>();
 }

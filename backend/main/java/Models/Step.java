@@ -15,6 +15,9 @@ public class Step {
     @Column(name="STEP_DESCRIPTION", nullable=false)
     private String stepDescription;
 
+    public Step() {
+    }
+
     public Step(int stepId, String stepDescription) {
         this.stepDescription=stepDescription;
         this.stepId=stepId;

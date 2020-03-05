@@ -1,9 +1,6 @@
 package main.java.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Recipe_ingredient
@@ -17,6 +14,9 @@ public class Recipe_ingredient
 
     @Column(name="UNIT", nullable=false)
     private String unit;
+
+    public Recipe_ingredient() {
+    }
 
     public Recipe_ingredient(int recipeingredientId, String quantity, String unit) {
         this.quantity=quantity;
@@ -47,4 +47,10 @@ public class Recipe_ingredient
     public void setUnit(String unit) {
         this.unit = unit;
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Recipe recipe;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Ingredient ingredient;
 }
