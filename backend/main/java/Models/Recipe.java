@@ -1,9 +1,8 @@
 package main.java.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Recipe
@@ -20,6 +19,9 @@ public class Recipe
 
     @Column(name="IF_EXTERNAL", nullable=false)
     private boolean ifExternal;
+
+    public Recipe() {
+    }
 
     public Recipe(int recipeId, String name, String description, boolean ifExternal) {
         this.recipeId = recipeId;
@@ -59,4 +61,20 @@ public class Recipe
     public void setIfExternal(boolean ifExternal) {
         this.ifExternal = ifExternal;
     }
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<Rating> ratingList = new ArrayList<>();
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User user;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<Photo> photos = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<Recipe_ingredient> recipe_ingredients = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<User_history> user_histories = new ArrayList<>();
+
 }

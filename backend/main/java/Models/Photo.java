@@ -1,9 +1,6 @@
 package main.java.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Photo
@@ -15,6 +12,9 @@ public class Photo
 
     @Column(name="PHOTO_LINK", nullable=false)
     private String photo_link;
+
+    public Photo() {
+    }
 
     public Photo(int photoId, String photo_link) {
         this.photoId = photoId;
@@ -36,4 +36,7 @@ public class Photo
     public void setPhoto_link(String photo_link) {
         this.photo_link = photo_link;
     }
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Recipe recipe;
 }

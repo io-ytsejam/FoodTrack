@@ -1,9 +1,8 @@
 package main.java.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Ingredient
@@ -15,6 +14,9 @@ public class Ingredient
 
     @Column(name="NAME", nullable=false)
     private String name;
+
+    public Ingredient() {
+    }
 
     public Ingredient(int ingredientId, String name) {
         this.ingredientId = ingredientId;
@@ -36,4 +38,7 @@ public class Ingredient
     public void setName(String name) {
         this.name = name;
     }
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<Recipe_ingredient> recipe_ingredientList = new ArrayList<>();
 }

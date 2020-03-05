@@ -1,9 +1,6 @@
 package main.java.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Rating
@@ -15,6 +12,9 @@ public class Rating
 
     @Column(name="VALUE", nullable=false)
     private int value;
+
+    public Rating() {
+    }
 
     public Rating(int ratingId, int value) {
         this.ratingId = ratingId;
@@ -36,4 +36,10 @@ public class Rating
     public void setValue(int value) {
         this.value = value;
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Recipe recipe;
 }

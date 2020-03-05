@@ -1,6 +1,7 @@
 package main.java.Models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 
 
 @Entity
@@ -12,6 +13,9 @@ public class Comment
 
     @Column(name="CONTENT", nullable=false)
     private String content;
+
+    public Comment() {
+    }
 
     public Comment(int commentId, String content) {
         this.commentId = commentId;
@@ -33,6 +37,9 @@ public class Comment
     public void setContent(String content) {
         this.content = content;
     }
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User user;
 }
 
 

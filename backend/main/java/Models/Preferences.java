@@ -1,9 +1,8 @@
 package main.java.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Preferences
@@ -14,6 +13,9 @@ public class Preferences
 
     @Column(name="CATEGORY", nullable=false)
     private String category;
+
+    public Preferences() {
+    }
 
     public Preferences(int preferencesId, String category) {
         this.preferencesId = preferencesId;
@@ -35,4 +37,7 @@ public class Preferences
     public void setCategory(String category) {
         this.category = category;
     }
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<User_preference> user_preferenceList = new ArrayList<>();
 }
