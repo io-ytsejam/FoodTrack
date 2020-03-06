@@ -77,4 +77,7 @@ public class Recipe
     @OneToMany(cascade = CascadeType.ALL)
     private final List<User_history> user_histories = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<Step_Recipe> step_recipes= new ArrayList<>();
+
 }

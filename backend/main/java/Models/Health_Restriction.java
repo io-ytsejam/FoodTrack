@@ -5,30 +5,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Health_Restrictions
+public class Health_Restriction
 {
     @Id
     @GeneratedValue
-    @Column(name="HEALTHRESTRICTIONS_ID", nullable=false)
-    private int healthrestrictionsId;
+    @Column(name="HEALTHRESTRICTION_ID", nullable=false)
+    private int healthrestrictionId;
 
     @Column(name="NAME", nullable=false)
     private String name;
 
-    public Health_Restrictions() {
+    public Health_Restriction() {
     }
 
-    public Health_Restrictions(int healthrestrictionsId, String name) {
-        this.healthrestrictionsId = healthrestrictionsId;
+    public Health_Restriction(int healthrestrictionId, String name) {
+        this.healthrestrictionId = healthrestrictionId;
         this.name = name;
     }
 
-    public int getHealthrestrictionsId() {
-        return healthrestrictionsId;
+    public int getHealthrestrictionId() {
+        return healthrestrictionId;
     }
 
-    public void setHealthrestrictionsId(int healthrestrictionsId) {
-        this.healthrestrictionsId = healthrestrictionsId;
+    public void setHealthrestrictionId(int healthrestrictionId) {
+        this.healthrestrictionId = healthrestrictionId;
     }
 
     public String getName() {

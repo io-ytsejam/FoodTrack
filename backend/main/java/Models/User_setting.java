@@ -1,9 +1,6 @@
 package main.java.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User_setting
@@ -38,4 +35,10 @@ public class User_setting
     public void setValue(boolean value) {
         this.value = value;
     }
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User user;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Setting setting;
 }

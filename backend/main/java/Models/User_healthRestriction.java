@@ -1,9 +1,6 @@
 package main.java.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User_healthRestriction
@@ -14,6 +11,11 @@ public class User_healthRestriction
 
     @Column(name="VALUE", nullable=false)
     private boolean value;
+
+    public User_healthRestriction(User user, Health_Restriction health_restriction) {
+        this.user = user;
+        this.health_restriction = health_restriction;
+    }
 
     public User_healthRestriction(int userhealthId, boolean value) {
         this.userhealthId=userhealthId;
@@ -35,4 +37,10 @@ public class User_healthRestriction
     public void setValue(boolean value) {
         this.value = value;
     }
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User user;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Health_Restriction health_restriction;
 }

@@ -1,8 +1,6 @@
 package main.java.Models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User_history
@@ -21,4 +19,10 @@ public class User_history
     public void setUserhistoryId(int userhistoryId) {
         this.userhistoryId = userhistoryId;
     }
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User user;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Recipe recipe;
 }

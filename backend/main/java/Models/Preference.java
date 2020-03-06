@@ -5,29 +5,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Preferences
+public class Preference
 {
     @Id @GeneratedValue
-    @Column(name="PREFERENCES_ID", nullable=false)
-    private int preferencesId;
+    @Column(name="PREFERENCE_ID", nullable=false)
+    private int preferenceId;
 
     @Column(name="CATEGORY", nullable=false)
     private String category;
 
-    public Preferences() {
+    public Preference() {
     }
 
-    public Preferences(int preferencesId, String category) {
-        this.preferencesId = preferencesId;
+    public Preference(int preferenceId, String category) {
+        this.preferenceId = preferenceId;
         this.category = category;
     }
 
-    public int getPreferencesId() {
-        return preferencesId;
+    public int getPreferenceId() {
+        return preferenceId;
     }
 
-    public void setPreferencesId(int preferencesId) {
-        this.preferencesId = preferencesId;
+    public void setPreferenceId(int preferenceId) {
+        this.preferenceId = preferenceId;
     }
 
     public String getCategory() {

@@ -1,9 +1,8 @@
 package main.java.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Step {
@@ -38,4 +37,7 @@ public class Step {
     public void setStepDescription(String stepDescription) {
         this.stepDescription = stepDescription;
     }
+
+    @OneToMany(cascade = CascadeType.ALL)
+    private final List<Step_Recipe> step_recipes= new ArrayList<>();
 }
