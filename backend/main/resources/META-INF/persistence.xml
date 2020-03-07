@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+             xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+    <persistence-unit name="JavaHelps" transaction-type="RESOURCE_LOCAL">
+        <!-- Persistence provider -->
+        <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
+        <!-- Entity classes -->
+        <class>main.java.Models.Comment</class>
+        <class>main.java.Models.Health_Restriction</class>
+        <class>main.java.Models.Ingredient</class>
+        <class>main.java.Models.Photo</class>
+        <class>main.java.Models.Preference</class>
+        <class>main.java.Models.Rating</class>
+        <class>main.java.Models.Recipe</class>
+        <class>main.java.Models.Recipe_ingredient</class>
+        <class>main.java.Models.Setting</class>
+        <class>main.java.Models.Step</class>
+        <class>main.java.Models.Step_Recipe</class>
+        <class>main.java.Models.User</class>
+        <class>main.java.Models.User_healthRestriction</class>
+        <class>main.java.Models.User_history</class>
+        <class>main.java.Models.User_preference</class>
+        <class>main.java.Models.User_setting</class>
+        <properties>
+            <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:XE" />
+            <property name="javax.persistence.jdbc.user" value="czarek" />
+            <property name="javax.persistence.jdbc.password" value="wweraw" />
+            <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver" />
+            <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect" />
+        </properties>
+    </persistence-unit>
+</persistence>
