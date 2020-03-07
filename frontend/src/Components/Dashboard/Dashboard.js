@@ -5,6 +5,8 @@ import CardHeader from "@material-ui/core/CardHeader";
 import Typography from "@material-ui/core/Typography";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import Container from "@material-ui/core/Container";
+import HorizontalList, {DimmedExpandableCard} from "../UI/HorizontalList/HorizontalList";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -31,38 +33,20 @@ class Dashboard extends Component {
   render() {
     const { randomRecipes } = this.state;
     return (
-      <>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          gridGap: '5px'
-        }}>
-          {
-            randomRecipes && randomRecipes.map((recipe, key) => (
-              <Card key={key} style={{
-                margin: "5px"
-              }}>
-                <CardHeader title={recipe.title} />
-                <CardContent>
-                  <p>
-                    {
-                      recipe.summary
-                        .substr(0, 100)
-                        .replace(/<.*>/g, '') + '...'
-                    }
-                  </p>
-                  <CardMedia
-                    title={recipe.title}
-                    inputMode={"url"}
-                    component="img"
-                    image={recipe.image}
-                  />
-                </CardContent>
-              </Card>
-            ))
-          }
-        </div>
-      </>
+      <HorizontalList>
+        {
+          randomRecipes.map((recipe, index) => (
+            <DimmedExpandableCard
+              key={index}
+              title={recipe.title}
+              image={recipe.image}
+              supportingText={recipe.summary
+                .substr(0, 100)
+                .replace(/<.*>/g, '') + '...'}
+            />
+          ))
+        }
+      </HorizontalList>
     );
   }
 }
