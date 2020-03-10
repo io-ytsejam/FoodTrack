@@ -5,28 +5,12 @@
     <persistence-unit name="JavaHelps" transaction-type="RESOURCE_LOCAL">
         <!-- Persistence provider -->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <!-- Entity classes -->
-        <class>main.java.Models.Comment</class>
-        <class>main.java.Models.Health_Restriction</class>
-        <class>main.java.Models.Ingredient</class>
-        <class>main.java.Models.Photo</class>
-        <class>main.java.Models.Preference</class>
-        <class>main.java.Models.Rating</class>
-        <class>main.java.Models.Recipe</class>
-        <class>main.java.Models.Recipe_ingredient</class>
-        <class>main.java.Models.Setting</class>
-        <class>main.java.Models.Step</class>
-        <class>main.java.Models.Step_Recipe</class>
-        <class>main.java.Models.User</class>
-        <class>main.java.Models.User_healthRestriction</class>
-        <class>main.java.Models.User_history</class>
-        <class>main.java.Models.User_preference</class>
-        <class>main.java.Models.User_setting</class>
         <properties>
             <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:XE" />
-            <property name="javax.persistence.jdbc.user" value="czarek" />
-            <property name="javax.persistence.jdbc.password" value="${database.password}" />
+            <property name="javax.persistence.jdbc.user" value="test" />
+            <property name="javax.persistence.jdbc.password" value="test" />
             <property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver" />
+            <property name="javax.persistence.jdbc.ddl-generation" value="update" />
             <property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect" />
         </properties>
     </persistence-unit>
