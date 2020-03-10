@@ -6,28 +6,25 @@
     <session-factory>
         <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
         <property name="connection.url">jdbc:oracle:thin:@localhost:1521:XE</property>
-        <property name="connection.username">czarek</property>
-        <property name="connection.password">${database.password}</property>
         <property name="dialect">org.hibernate.dialect.Oracle12cDialect</property>
-        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
 
         <property name="show_sql">true</property>
-
-        <mapping class="main.java.Models.Comment" />
-        <mapping class="main.java.Models.Health_Restriction" />
-        <mapping class="main.java.Models.Ingredient" />
-        <mapping class="main.java.Models.Photo" />
-        <mapping class="main.java.Models.Preference" />
-        <mapping class="main.java.Models.Rating" />
-        <mapping class="main.java.Models.Recipe" />
-        <mapping class="main.java.Models.Recipe_ingredient" />
-        <mapping class="main.java.Models.Setting" />
-        <mapping class="main.java.Models.Step" />
-        <mapping class="main.java.Models.Step_Recipe" />
-        <mapping class="main.java.Models.User" />
-        <mapping class="main.java.Models.User_healthRestriction" />
-        <mapping class="main.java.Models.User_history" />
-        <mapping class="main.java.Models.User_preference" />
-        <mapping class="main.java.Models.User_setting" />
+        <mapping class="main.java.Models.CommentEntity"/>
+        <mapping class="main.java.Models.HealthRestrictionEntity"/>
+        <mapping class="main.java.Models.IngredientEntity"/>
+        <mapping class="main.java.Models.PersonEntity"/>
+        <mapping class="main.java.Models.PersonPreferenceEntity"/>
+        <mapping class="main.java.Models.PersonRecipeEntity"/>
+        <mapping class="main.java.Models.PersonRestrictionEntity"/>
+        <mapping class="main.java.Models.PersonSettingEntity"/>
+        <mapping class="main.java.Models.PhotoEntity"/>
+        <mapping class="main.java.Models.PreferenceEntity"/>
+        <mapping class="main.java.Models.RatingEntity"/>
+        <mapping class="main.java.Models.RecipeEntity"/>
+        <mapping class="main.java.Models.RecipeIngredientEntity"/>
+        <mapping class="main.java.Models.SettingEntity"/>
+        <mapping class="main.java.Models.StepEntity"/>
+        <mapping class="main.java.Models.StepRecipeEntity"/>
     </session-factory>
 </hibernate-configuration>
