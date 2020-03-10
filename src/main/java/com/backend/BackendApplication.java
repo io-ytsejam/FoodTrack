@@ -1,6 +1,7 @@
 package main.java.com.backend;
 
 import main.java.Models.*;
+import org.springframework.boot.SpringApplication;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
