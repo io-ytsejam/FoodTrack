@@ -5,8 +5,11 @@ import javax.persistence.*;
 @Entity
 public class User_history
 {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userhistoryId;
+
+    public User_history() {
+    }
 
     public User_history(int userhistoryId) {
         this.userhistoryId=userhistoryId;

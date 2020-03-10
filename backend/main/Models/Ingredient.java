@@ -8,7 +8,7 @@ import java.util.List;
 public class Ingredient
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="INGREDIENT_ID", nullable=false)
     private int ingredientId;
 

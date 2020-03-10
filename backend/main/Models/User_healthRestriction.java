@@ -5,12 +5,15 @@ import javax.persistence.*;
 @Entity
 public class User_healthRestriction
 {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="USER_HEALTH_ID", nullable=false)
     private int userhealthId;
 
     @Column(name="VALUE", nullable=false)
     private boolean value;
+
+    public User_healthRestriction() {
+    }
 
     public User_healthRestriction(User user, Health_Restriction health_restriction) {
         this.user = user;

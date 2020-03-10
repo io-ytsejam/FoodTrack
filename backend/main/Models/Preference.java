@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 public class Preference
 {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="PREFERENCE_ID", nullable=false)
     private int preferenceId;
 

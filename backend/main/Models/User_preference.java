@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 public class User_preference
 {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="USER_PREFERENCE_ID", nullable=false)
     private int userpreferenceId;
 

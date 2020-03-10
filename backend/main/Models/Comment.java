@@ -1,13 +1,11 @@
 package main.java.Models;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-
 
 @Entity
 public class Comment
 {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="COMMENT_ID", nullable=false)
     private int commentId;
 

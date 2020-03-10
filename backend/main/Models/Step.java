@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 public class Step {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="STEP_ID", nullable=false)
     private int stepId;
 

@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 public class Recipe
 {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="RECIPE_ID", nullable=false)
     private int recipeId;
 

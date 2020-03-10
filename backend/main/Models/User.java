@@ -4,10 +4,10 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity(name="Person")
 public class User
 {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="USER_ID", nullable=false)
     private int userId;
 
@@ -26,8 +26,7 @@ public class User
     public User() {
     }
 
-    public User(int userId, String nickname, String password, String firstname, String lastname) {
-        this.userId=userId;
+    public User(String nickname, String password, String firstname, String lastname) {
         this.nickname=nickname;
         this.password=password;
         this.firstname=firstname;

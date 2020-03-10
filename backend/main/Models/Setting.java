@@ -7,7 +7,7 @@ import java.util.List;
 @Entity
 public class Setting
 {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="SETTING_ID", nullable=false)
     private int settingId;
 

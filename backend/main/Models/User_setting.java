@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 public class User_setting
 {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="USER_SETTING_ID", nullable=false)
     private int usersettingId;
 

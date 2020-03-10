@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class Rating
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="RATING_ID", nullable=false)
     private int ratingId;
 

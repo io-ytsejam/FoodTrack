@@ -8,7 +8,7 @@ import java.util.List;
 public class Health_Restriction
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="HEALTHRESTRICTION_ID", nullable=false)
     private int healthrestrictionId;
 
