@@ -10,21 +10,21 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <property name="show_sql">true</property>
-        <mapping class="main.java.Models.CommentEntity"/>
-        <mapping class="main.java.Models.HealthRestrictionEntity"/>
-        <mapping class="main.java.Models.IngredientEntity"/>
-        <mapping class="main.java.Models.PersonEntity"/>
-        <mapping class="main.java.Models.PersonPreferenceEntity"/>
-        <mapping class="main.java.Models.PersonRecipeEntity"/>
-        <mapping class="main.java.Models.PersonRestrictionEntity"/>
-        <mapping class="main.java.Models.PersonSettingEntity"/>
-        <mapping class="main.java.Models.PhotoEntity"/>
-        <mapping class="main.java.Models.PreferenceEntity"/>
-        <mapping class="main.java.Models.RatingEntity"/>
-        <mapping class="main.java.Models.RecipeEntity"/>
-        <mapping class="main.java.Models.RecipeIngredientEntity"/>
-        <mapping class="main.java.Models.SettingEntity"/>
-        <mapping class="main.java.Models.StepEntity"/>
-        <mapping class="main.java.Models.StepRecipeEntity"/>
+        <mapping class="Models.CommentEntity"/>
+        <mapping class="Models.HealthRestrictionEntity"/>
+        <mapping class="Models.IngredientEntity"/>
+        <mapping class="Models.PersonEntity"/>
+        <mapping class="Models.PersonPreferenceEntity"/>
+        <mapping class="Models.PersonRecipeEntity"/>
+        <mapping class="Models.PersonRestrictionEntity"/>
+        <mapping class="Models.PersonSettingEntity"/>
+        <mapping class="Models.PhotoEntity"/>
+        <mapping class="Models.PreferenceEntity"/>
+        <mapping class="Models.RatingEntity"/>
+        <mapping class="Models.RecipeEntity"/>
+        <mapping class="Models.RecipeIngredientEntity"/>
+        <mapping class="Models.SettingEntity"/>
+        <mapping class="Models.StepEntity"/>
+        <mapping class="Models.StepRecipeEntity"/>
     </session-factory>
 </hibernate-configuration>
