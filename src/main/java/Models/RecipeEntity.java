@@ -1,5 +1,4 @@
-package main.java.Models;
-
+package Models;
 import javax.persistence.*;
 import java.util.Objects;
 

@@ -1,4 +1,4 @@
-package main.java.Models;
+package Models;
 
 import javax.persistence.*;
 
@@ -10,14 +10,6 @@ public class PersonEntity {
     private String password;
     private String firstname;
     private String lastname;
-
-    public PersonEntity(long personid, String nickname, String password, String firstname, String lastname) {
-        this.personid=personid;
-        this.nickname=nickname;
-        this.password=password;
-        this.firstname=firstname;
-        this.lastname=lastname;
-    }
 
     public PersonEntity() {
     }
