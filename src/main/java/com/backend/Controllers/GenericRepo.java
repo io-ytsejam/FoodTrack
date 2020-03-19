@@ -1,0 +1,28 @@
+package com.backend.Controllers;
+
+import javax.persistence.*;
+import javax.transaction.Transactional;
+import java.lang.reflect.ParameterizedType;
+
+@Transactional
+public class GenericRepo<T,K> {
+    @PersistenceContext
+    private EntityManager entityManager;
+    private Class<T> type;
+
+    @SuppressWarnings("unchecked")
+    GenericRepo() {
+        type = (Class<T>) ((ParameterizedType) this.getClass()
+                .getGenericSuperclass())
+                .getActualTypeArguments()[0];
+    }
+
+    public void save(T entity) {
+        entityManager.persist(entity);
+    }
+
+    public T get(K key) {
+        T find = entityManager.find(type, key);
+        return find;
+    }
+}

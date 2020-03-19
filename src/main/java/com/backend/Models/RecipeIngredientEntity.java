@@ -1,54 +1,33 @@
 package com.backend.Models;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "RECIPE_INGREDIENT", schema = "TEST", catalog = "")
-@IdClass(RecipeIngredientEntityPK.class)
+@Table(name="Recipe_Ingredient")
 public class RecipeIngredientEntity {
-    private long recipeRecipeid;
-    private long ingredientIngredientid;
+
+    @Id
+    @GeneratedValue
+    private long recipeingredientId;
 
     public RecipeIngredientEntity() {
     }
 
-    @Id
-    @Column(name = "RECIPE_RECIPEID")
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    public long getRecipeRecipeid() {
-        return recipeRecipeid;
+    public long getRecipeingredientId() {
+        return recipeingredientId;
     }
 
-    public void setRecipeRecipeid(long recipeRecipeid) {
-        this.recipeRecipeid = recipeRecipeid;
+    public void setRecipeingredientId(long recipeingredientId) {
+        this.recipeingredientId = recipeingredientId;
     }
 
-    @Id
-    @Column(name = "INGREDIENT_INGREDIENTID")
-    public long getIngredientIngredientid() {
-        return ingredientIngredientid;
-    }
 
-    public void setIngredientIngredientid(long ingredientIngredientid) {
-        this.ingredientIngredientid = ingredientIngredientid;
-    }
+   /* @OneToMany
+    @JoinColumn(name="recipeid", referencedColumnName = "recipeingredientid")
+    private List<RecipeEntity> recipes;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RecipeIngredientEntity that = (RecipeIngredientEntity) o;
-
-        if (recipeRecipeid != that.recipeRecipeid) return false;
-        if (ingredientIngredientid != that.ingredientIngredientid) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = (int) (recipeRecipeid ^ (recipeRecipeid >>> 32));
-        result = 31 * result + (int) (ingredientIngredientid ^ (ingredientIngredientid >>> 32));
-        return result;
-    }
+    @OneToMany
+    @JoinColumn(name="ingredientid", referencedColumnName = "recipeingredientid")
+    private List<IngredientEntity> ingredients;*/
 }

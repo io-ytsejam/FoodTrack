@@ -1,53 +1,40 @@
 package com.backend.Models;
-import net.minidev.json.annotate.JsonIgnore;
-import org.aspectj.weaver.patterns.PerObject;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.util.List;
 
 @Entity
-@Table(name = "RECIPE", schema = "TEST", catalog = "")
+@Table(name="Recipe")
 public class RecipeEntity {
-    @Id
-    @Column(name = "RECIPEID")
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long recipeid;
-    private String name;
-    private String description;
-    private char ifexternal;
 
-    //private @Version @JsonIgnore Long version;
-    private @ManyToOne PersonEntity person;
+    @Id
+    @GeneratedValue
+    private long recipeId;
+
+    private String name;
+
+    private String description;
+
+    private char ifExternal;
 
     public RecipeEntity() {
     }
 
-    public RecipeEntity(String name, String description, char ifexternal, PersonEntity person){
+    public RecipeEntity(String name, String description, char ifExternal)
+    {
         this.name=name;
         this.description=description;
-        this.ifexternal=ifexternal;
-        this.person=person;
+        this.ifExternal=ifExternal;
     }
 
-    public long getRecipeid() {
-        return recipeid;
+    public long getRecipeId() {
+        return recipeId;
     }
 
-    public void setRecipeid(long recipeid) {
-        this.recipeid = recipeid;
+    public void setRecipeId(long recipeId) {
+        this.recipeId = recipeId;
     }
 
-    public PersonEntity getPerson(){
-        return person;
-    }
-
-    public void setPerson(PersonEntity person)
-    {
-        this.person=person;
-    }
-
-    @Basic
-    @Column(name = "NAME")
     public String getName() {
         return name;
     }
@@ -56,8 +43,6 @@ public class RecipeEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "DESCRIPTION")
     public String getDescription() {
         return description;
     }
@@ -66,33 +51,29 @@ public class RecipeEntity {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "IFEXTERNAL")
-    public char getIfexternal() {
-        return ifexternal;
+    public char getIfExternal() {
+        return ifExternal;
     }
 
-    public void setIfexternal(char ifexternal) {
-        this.ifexternal = ifexternal;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        RecipeEntity that = (RecipeEntity) o;
-
-        if (recipeid != that.recipeid) return false;
-        if (ifexternal != that.ifexternal) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (person != null ? !person.equals(that.person) : that.person != null) return false;
-        return true;
+    public void setIfExternal(char ifExternal) {
+        this.ifExternal = ifExternal;
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(recipeid, name, description, ifexternal, person);
+    public String toString() {
+        return "RecipeEntity{" +
+                "recipeId=" + recipeId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", ifExternal=" + ifExternal +
+                '}';
     }
+
+    /*@ManyToOne
+    @JoinColumn(name = "recipeingredientid")
+    private RecipeIngredientEntity recipeIngredientEntity;
+
+    @ManyToOne
+    @JoinColumn(name = "personid")
+    private PersonEntity personEntity;*/
 }

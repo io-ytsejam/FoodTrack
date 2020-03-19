@@ -6,11 +6,11 @@
 <hibernate-configuration>
 
     <session-factory>
-        <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-        <property name="connection.url">jdbc:oracle:thin:@localhost:1521:XE</property>
+        <property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
+        <property name="connection.url">jdbc:oracle:thin:@localhost:1521:XE:fooddb</property>
         <!--<property name="dialect">org.hibernate.dialect.Oracle12cDialect</property>-->
         <property name="dialect">org.hibernate.dialect.Oracle10gDialect</property>
-        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.hbm2ddl.auto">create</property>
 
         <property name="show_sql">true</property>
         <mapping class="com.backend.Models.CommentEntity"/>
@@ -29,5 +29,6 @@
         <mapping class="com.backend.Models.SettingEntity"/>
         <mapping class="com.backend.Models.StepEntity"/>
         <mapping class="com.backend.Models.StepRecipeEntity"/>
+        <mapping class="com.backend.PersonEntity"/>
     </session-factory>
 </hibernate-configuration>

@@ -1,26 +1,34 @@
 package com.backend.Models;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
-@Table(name = "INGREDIENT", schema = "TEST", catalog = "")
+@Table(name="Ingredient")
 public class IngredientEntity {
-    private long ingredientid;
-    private String name;
 
     @Id
-    @Column(name = "INGREDIENTID")
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    public long getIngredientid() {
-        return ingredientid;
+    @GeneratedValue
+    private long ingredientId;
+
+    private String name;
+
+    public IngredientEntity(String name)
+    {
+        this.name=name;
     }
 
-    public void setIngredientid(long ingredientid) {
-        this.ingredientid = ingredientid;
+    public IngredientEntity()
+    {}
+
+    public long getIngredientId() {
+        return ingredientId;
     }
 
-    @Basic
-    @Column(name = "NAME")
+    public void setIngredientId(long ingredientId) {
+        this.ingredientId = ingredientId;
+    }
+
     public String getName() {
         return name;
     }
@@ -30,22 +38,14 @@ public class IngredientEntity {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        IngredientEntity that = (IngredientEntity) o;
-
-        if (ingredientid != that.ingredientid) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-
-        return true;
+    public String toString() {
+        return "IngredientEntity{" +
+                "ingredientId=" + ingredientId +
+                ", name='" + name + '\'' +
+                '}';
     }
 
-    @Override
-    public int hashCode() {
-        int result = (int) (ingredientid ^ (ingredientid >>> 32));
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
-    }
+    //@ManyToOne
+   // @JoinColumn(name="recipeingredientid")
+    //private RecipeIngredientEntity recipeIngredientEntity;
 }
