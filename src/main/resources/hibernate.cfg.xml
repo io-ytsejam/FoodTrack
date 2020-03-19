@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+        <property name="connection.url">jdbc:oracle:thin:@localhost:1521:XE</property>
+        <property name="dialect">org.hibernate.dialect.Oracle12cDialect</property>
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <property name="show_sql">true</property>
+        <mapping class="Models.CommentEntity"/>
+        <mapping class="Models.HealthRestrictionEntity"/>
+        <mapping class="Models.IngredientEntity"/>
+        <mapping class="Models.PersonEntity"/>
+        <mapping class="Models.PersonPreferenceEntity"/>
+        <mapping class="Models.PersonRecipeEntity"/>
+        <mapping class="Models.PersonRestrictionEntity"/>
+        <mapping class="Models.PersonSettingEntity"/>
+        <mapping class="Models.PhotoEntity"/>
+        <mapping class="Models.PreferenceEntity"/>
+        <mapping class="Models.RatingEntity"/>
+        <mapping class="Models.RecipeEntity"/>
+        <mapping class="Models.RecipeIngredientEntity"/>
+        <mapping class="Models.SettingEntity"/>
+        <mapping class="Models.StepEntity"/>
+        <mapping class="Models.StepRecipeEntity"/>
+    </session-factory>
+</hibernate-configuration>
