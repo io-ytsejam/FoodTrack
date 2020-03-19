@@ -1,72 +1,54 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {Card} from "@material-ui/core";
-import CardHeader from "@material-ui/core/CardHeader";
-import Typography from "@material-ui/core/Typography";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
+import React, { Component } from 'react';
+import
+HorizontalList,
+{ DimmedExpandableCard } from '../UI/HorizontalList/HorizontalList';
+import { PropTypes } from 'prop-types';
 
 class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       randomRecipes: []
-    }
+    };
   }
   componentDidMount() {
     const { setIsReady } = this.props;
     setIsReady(false);
-    const apiKey = 'c79c6bea99154e7da483a920455b2d77';
+    const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
     const url = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10&`;
     fetch(url, { method: 'GET' })
-      .then(res => res.json())
-      .then(randomRecipes => {
-        this.setState({ randomRecipes: randomRecipes.recipes })
-        console.log(randomRecipes.recipes)
-      })
-      .then(() => setIsReady(true))
-      .catch(err => err.message)
+        .then((res) => res.json())
+        .then((randomRecipes) => {
+          this.setState({ randomRecipes: randomRecipes.recipes });
+          console.log(randomRecipes.recipes);
+        })
+        .then(() => setIsReady(true))
+        .catch((err) => err.message);
   }
 
   render() {
     const { randomRecipes } = this.state;
     return (
-      <>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-          gridGap: '5px'
-        }}>
-          {
-            randomRecipes && randomRecipes.map((recipe, key) => (
-              <Card key={key} style={{
-                margin: "5px"
-              }}>
-                <CardHeader title={recipe.title} />
-                <CardContent>
-                  <p>
-                    {
-                      recipe.summary
-                        .substr(0, 100)
-                        .replace(/<.*>/g, '') + '...'
-                    }
-                  </p>
-                  <CardMedia
-                    title={recipe.title}
-                    inputMode={"url"}
-                    component="img"
-                    image={recipe.image}
-                  />
-                </CardContent>
-              </Card>
-            ))
-          }
-        </div>
-      </>
+      <HorizontalList>
+        {
+          randomRecipes.map((recipe, index) => (
+            <DimmedExpandableCard
+              recipe={recipe}
+              key={index}
+              title={recipe.title}
+              image={recipe.image}
+              supportingText={recipe.summary}
+              ingredients={recipe.extendedIngredients}
+            />
+          ))
+        }
+      </HorizontalList>
     );
   }
 }
 
-Dashboard.propTypes = {};
+Dashboard.propTypes = {
+  setIsReady: PropTypes.func
+};
 
 export default Dashboard;

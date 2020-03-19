@@ -1,0 +1,151 @@
+// Container
+.horizontal-list
+  .list
+    display: flex
+    width: 100%
+    overflow: scroll hidden
+    // scroll-snap-type: x mandatory
+
+.list::-webkit-scrollbar
+  display: none
+
+// Cards
+.dimmed-expandable-card
+  backdrop-filter: blur(0px)
+  //transition-property: backdrop-filter
+  //transition-duration: .3s
+  //transition-timing-function: ease-in
+  scroll-snap-align: center
+  width: 300px
+  height: 200px
+  margin: 5px
+
+  .material-header
+    display: none
+  .card-header
+    position: relative
+    z-index: 1
+    width: 300px
+    height: 200px
+    border-radius: inherit
+    color: white
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.3), transparent)
+    p
+      text-shadow: 0 1px 2px black
+      padding: 10px
+      font-size: 1.3em
+      margin: 0
+
+  .material-card-override
+    position: relative
+    bottom: 200px
+    width: 300px
+    height: 200px
+    max-height: fit-content
+
+  .material-card-override--with-transition
+    transition-property: transform
+    transition-duration: .4s
+    transition-timing-function: cubic-bezier(0.35, 1.09, 0.68, 1)
+
+    .recipe-actions
+      height: 0
+      padding: 0
+      button
+        z-index: -1
+
+.dimmed-expandable-card:first-child
+  padding-left: 20px
+
+.dimmed-expandable-card:last-child
+  padding-right: 20px
+
+.dimmed-expandable-card.dimmed-expandable-card--expanded
+  position: absolute
+  overflow: hidden
+  top: 0
+  left: 0
+  margin: 0
+  padding: 5px
+  box-sizing: border-box
+  justify-content: center
+  background-color: rgba(0, 0, 0, 0.3)
+  backdrop-filter: blur(3px)
+  z-index: 2
+  display: flex
+  flex-direction: column
+  align-items: center
+  width: 100vw
+  height: 100vh
+
+  .material-card-override
+    @extend .material-card-override
+    // max-height: unset
+    //transform: perspective(1px) translateZ(0) translateY(50px)
+    height: 1000px
+    background-color: navajowhite
+    width: 100%
+    max-width: 600px
+    position: static
+    margin: 5px
+    p
+      overflow: hidden
+      position: relative
+      line-height: 1.2em
+      max-height: 6em
+      margin-top: -18px
+      text-align: justify
+      margin-right: -1em
+      padding-right: 1em
+
+    .recipe-actions
+      @extend .recipe-actions
+      padding: 0 8px
+      height: initial
+      button
+        z-index: 1
+
+    p:before
+      content: '. . .'
+      position: absolute
+      right: 1em
+      background-color: navajowhite
+      bottom: 0
+
+    p:after
+      content:
+      position: absolute
+      right: 0
+      width: 1em
+      height: 1em
+      margin-top: 0.2em
+      background: navajowhite
+
+    header
+      position: static
+      z-index: -1
+
+  .material-header
+    display: block
+    display: -webkit-box
+    -webkit-line-clamp: 2
+    box-sizing: border-box
+    max-height: 90px
+    -webkit-box-orient: vertical
+    overflow: hidden
+    text-overflow: ellipsis
+
+  .card-header
+    display: none
+
+  .ingredients-list
+    overflow: scroll hidden
+    //scroll-snap-type: x mandatory
+    scroll-padding: 0 8px
+
+  .ingredients-list .ingredient
+    scroll-snap-align: start
+    font-variant-caps: all-petite-caps
+
+  .ingredients-list::-webkit-scrollbar
+    display: none
