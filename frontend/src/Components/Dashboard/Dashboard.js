@@ -1,33 +1,29 @@
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {Card} from "@material-ui/core";
-import CardHeader from "@material-ui/core/CardHeader";
-import Typography from "@material-ui/core/Typography";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Container from "@material-ui/core/Container";
-import HorizontalList, {DimmedExpandableCard} from "../UI/HorizontalList/HorizontalList";
+import React, { Component } from 'react';
+import
+HorizontalList,
+{ DimmedExpandableCard } from '../UI/HorizontalList/HorizontalList';
+import { PropTypes } from 'prop-types';
 
 class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
       randomRecipes: []
-    }
+    };
   }
   componentDidMount() {
     const { setIsReady } = this.props;
     setIsReady(false);
-    const apiKey = 'c79c6bea99154e7da483a920455b2d77';
+    const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
     const url = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10&`;
     fetch(url, { method: 'GET' })
-      .then(res => res.json())
-      .then(randomRecipes => {
-        this.setState({ randomRecipes: randomRecipes.recipes })
-        console.log(randomRecipes.recipes)
-      })
-      .then(() => setIsReady(true))
-      .catch(err => err.message)
+        .then((res) => res.json())
+        .then((randomRecipes) => {
+          this.setState({ randomRecipes: randomRecipes.recipes });
+          console.log(randomRecipes.recipes);
+        })
+        .then(() => setIsReady(true))
+        .catch((err) => err.message);
   }
 
   render() {
@@ -37,12 +33,12 @@ class Dashboard extends Component {
         {
           randomRecipes.map((recipe, index) => (
             <DimmedExpandableCard
+              recipe={recipe}
               key={index}
               title={recipe.title}
               image={recipe.image}
-              supportingText={recipe.summary
-                .substr(0, 100)
-                .replace(/<.*>/g, '') + '...'}
+              supportingText={recipe.summary}
+              ingredients={recipe.extendedIngredients}
             />
           ))
         }
@@ -51,6 +47,8 @@ class Dashboard extends Component {
   }
 }
 
-Dashboard.propTypes = {};
+Dashboard.propTypes = {
+  setIsReady: PropTypes.func
+};
 
 export default Dashboard;

@@ -15,10 +15,10 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import History from'@material-ui/icons/History';
-import {Link} from "react-router-dom";
+import History from '@material-ui/icons/History';
+import { Link } from 'react-router-dom';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   grow: {
     flexGrow: 1,
   },
@@ -32,15 +32,15 @@ const useStyles = makeStyles(theme => ({
     },
   },
   search: {
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: fade(theme.palette.common.white, 0.15),
+    'position': 'relative',
+    'borderRadius': theme.shape.borderRadius,
+    'backgroundColor': fade(theme.palette.common.white, 0.15),
     '&:hover': {
       backgroundColor: fade(theme.palette.common.white, 0.25),
     },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
+    'marginRight': theme.spacing(2),
+    'marginLeft': 0,
+    'width': '100%',
     [theme.breakpoints.up('sm')]: {
       marginLeft: theme.spacing(3),
       width: 'auto',
@@ -80,7 +80,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Navbar = props => {
+const Navbar = (props) => {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -88,7 +88,7 @@ const Navbar = props => {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = event => {
+  const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -101,7 +101,7 @@ const Navbar = props => {
     handleMobileMenuClose();
   };
 
-  const handleMobileMenuOpen = event => {
+  const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
@@ -116,7 +116,9 @@ const Navbar = props => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <Link to="/user-profile">
+        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      </Link>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
     </Menu>
   );
@@ -162,12 +164,13 @@ const Navbar = props => {
     </Menu>
   );
 
-  const { pages } = props;
+  const { absoluteCardActive } = props;
   return (
     <div className={classes.grow}>
       <AppBar
-        position="fixed"
+        position={absoluteCardActive ? 'static' : 'fixed'}
         style={{
+          zIndex: 1,
           top: 0
         }}
       >

@@ -2,12 +2,24 @@ import React from 'react';
 import {Card} from "@material-ui/core";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
+import './HorizontalList.sass'
 import PropTypes from 'prop-types';
+import CardHeader from "@material-ui/core/CardHeader";
+import CardActions from "@material-ui/core/CardActions";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
+import Chip from "@material-ui/core/Chip";
+import IconButton from "@material-ui/core/IconButton";
+import { ArrowDownward } from "@material-ui/icons"
+import {Link} from "react-router-dom";
 
 const HorizontalList = props => {
   return (
-    <div className='horizontal-list'>
-      {props.children}
+    <div className="horizontal-list">
+      <h1>Random</h1>
+      <div className='list'>
+        {props.children}
+      </div>
     </div>
   );
 };
@@ -18,42 +30,95 @@ HorizontalList.propTypes = {
 
 export default HorizontalList;
 
+/* After card become expanded, show personal info, like how much it fits your
+* taste based on history, last time seen, last time cooked, source: (API|DB)
+* Maybe ingredients chips
+* So yeah */
 export const DimmedExpandableCard = props => {
+  const headerRef = React.createRef();
+  const mainCardRef = React.createRef();
+  const { recipe } = props;
   return(
-    <div style={{
-      width: "300px",
-      height: "200px",
-      margin: "5px"
-    }}>
-      <div
-        className="card-header"
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          width: "300px",
-          height: "200px",
-        }}
-      >
-        <h1 style={{ fontWeight: 300 }}>{props.title}</h1>
+    <div
+      className='dimmed-expandable-card'
+      ref={mainCardRef}
+      onClick={e => {
+        const mc = document.querySelector('.material-card-override');
+        if (mainCardRef.current.classList.contains('dimmed-expandable-card--expanded')) {
+          console.log(e.target);
+          mainCardRef.current.classList.remove('dimmed-expandable-card--expanded')
+          document.querySelector("header").style.position = 'fixed';
+          mc.classList.remove('material-card-override--with-transition');
+        } else {
+          mainCardRef.current.classList.add('dimmed-expandable-card--expanded');
+          mc.style.transform = 'translateY(1250px)';
+          setTimeout(() => {
+            mc.classList.add('material-card-override--with-transition');
+            mc.style.transform = 'translateY(0)';
+          });
+          document.querySelector("header").style.position = 'absolute';
+        }
+      }}
+    >
+      <div className="card-header">
+        <p>{props.title}</p>
       </div>
-      <Card key={props.key} style={{
-        position: "relative",
-        bottom: "200px",
-        width: "300px",
-        maxHeight: "200px"
-      }}>
+      <Card
+        key={props.key}
+        className='material-card-override'
+      >
+        <CardHeader
+          title={props.title}
+          ref={headerRef}
+          className='material-header'
+        />
         <CardMedia
           title={props.title}
           inputMode={"url"}
           component="img"
           image={props.image}
+          style={{
+            boxShadow: "0 0 4px black"
+          }}
         />
+        <Divider />
+        <CardActions
+          className='recipe-actions'
+        >
+          <Link to={`/recipe/${recipe.id}`}>
+            <Button
+              variant="contained"
+              color="secondary"
+            >
+              Recipe
+            </Button>
+          </Link>
+          <Button color='secondary'>
+            Shopping list
+          </Button>
+          <IconButton style={{ marginLeft: "auto" }}>
+            <ArrowDownward />
+          </IconButton>
+        </CardActions>
+        <Divider />
+        <CardActions
+          className="ingredients-list"
+        >
+          {
+            props.ingredients.map((ingredient, index) => (
+              <Chip
+                className="ingredient"
+                key={index}
+                variant="outlined" label={ingredient.name}
+              />
+            ))
+          }
+        </CardActions>
         <CardContent>
           <p>
             {
               props.supportingText
-                .substr(0, 100)
-                .replace(/<.*>/g, '') + '...'
+                .replace(/<(.*?)>/g, '')
             }
           </p>
         </CardContent>
