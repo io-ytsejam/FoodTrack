@@ -32,7 +32,7 @@ public class PersonEntityController {
     {
         this.repository=repository;
     }
-    @GetMapping(value = "/api/personAll")
+    @GetMapping(value = "/api/peopleAll")
     Iterable<PersonEntity> all() {
         return repository.findAll();
     }
@@ -44,17 +44,17 @@ public class PersonEntityController {
         return new ResponseEntity<PagedModel<PersonEntity>>(assembler.toModel(persons), HttpStatus.OK);
     }*/
 
-    @GetMapping(value = "/api/person/{id}")
+    @GetMapping(value = "/api/people/{id}")
     Optional<PersonEntity> one(@PathVariable Long id) {
         return repository.findById(id);
     }
 
-    @PostMapping(value = "/api/person}")
+    @PostMapping(value = "/api/people}")
     PersonEntity newPersonEntity(@RequestBody PersonEntity newPersonEntity) {
         return repository.save(newPersonEntity);
     }
 
-    @PostMapping("/api/person/{id}")
+    /*@PostMapping("/api/people/{id}")
     PersonEntity replacePersonEntity(@RequestBody PersonEntity newPersonEntity, @PathVariable Long id) {
 
         return repository.findById(id)
@@ -69,9 +69,9 @@ public class PersonEntityController {
                     newPersonEntity.setPersonid(id);
                     return repository.save(newPersonEntity);
                 });
-    }
+    }*/
 
-    @DeleteMapping("/api/person/{id}")
+    @DeleteMapping("/api/people/{id}")
     void deletePersonEntity(@PathVariable Long id) {
         repository.deleteById(id);
     }

@@ -1,6 +1,12 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "PERSON", schema = "TEST", catalog = "")
@@ -9,10 +15,36 @@ public class PersonEntity {
     @Column(name = "PERSONID")
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long personid;
+
+    @Basic
+    @Column(name = "NICKNAME")
     private String nickname;
-    private String password;
+
+    @Basic
+    @Column(name = "PASSWORD")
+    @JsonIgnore
+    private  String password;
+
+    @Basic
+    @Column(name = "FIRSTNAME")
     private String firstname;
+
+    @Basic
+    @Column(name = "LASTNAME")
     private String lastname;
+
+    @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<RecipeEntity> recipes = new ArrayList<RecipeEntity>();
+    public void addRecipe(RecipeEntity recipe)
+    {
+        this.recipes.add(recipe);
+        recipe.setPerson(this);
+    }
+
+
+
+    /*public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+    private String[] roles;*/
 
     //private @OneToMany List<RecipeEntity> recipes;
 
@@ -36,8 +68,7 @@ public class PersonEntity {
         this.personid = personid;
     }
 
-    @Basic
-    @Column(name = "NICKNAME")
+
     public String getNickname() {
         return nickname;
     }
@@ -46,18 +77,19 @@ public class PersonEntity {
         this.nickname = nickname;
     }
 
-    @Basic
-    @Column(name = "PASSWORD")
+
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassword(String password){
+        this.password=password;
     }
+    /*public void setPassword(String password) {
+        this.password=PASSWORD_ENCODER.encode(password);
+    }*/
 
-    @Basic
-    @Column(name = "FIRSTNAME")
+
     public String getFirstname() {
         return firstname;
     }
@@ -66,8 +98,7 @@ public class PersonEntity {
         this.firstname = firstname;
     }
 
-    @Basic
-    @Column(name = "LASTNAME")
+
     public String getLastname() {
         return lastname;
     }

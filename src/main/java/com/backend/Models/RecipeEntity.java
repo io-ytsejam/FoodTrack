@@ -3,7 +3,12 @@ import net.minidev.json.annotate.JsonIgnore;
 import org.aspectj.weaver.patterns.PerObject;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.OffsetDateTime;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "RECIPE", schema = "TEST", catalog = "")
@@ -12,17 +17,56 @@ public class RecipeEntity {
     @Column(name = "RECIPEID")
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long recipeid;
+
+    @Basic
+    @Column(name = "NAME")
     private String name;
+    @Basic
+    @Column(name = "DESCRIPTION")
     private String description;
+
+    @Basic
+    @Column(name = "IFEXTERNAL")
     private char ifexternal;
 
-    //private @Version @JsonIgnore Long version;
-    private @ManyToOne PersonEntity person;
+    //Do przetestowania (w bazie typ to RAW)
+    /*@Basic
+    @Column(name = "POSTED")
+    private OffsetDateTime posted;
+
+    @Basic
+    @Column(name = "EDITED")
+    private OffsetDateTime edited;*/
+
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
+    @JoinColumn(name = "personid")
+    private PersonEntity person;
+//private @Version @JsonIgnore Long version;
+
+    @ManyToMany
+    @JoinTable(name = "recipe_ingredient",
+            joinColumns = {@JoinColumn(name = "recipeid")},
+            inverseJoinColumns = {@JoinColumn(name = "ingredientid")})
+     private Set<IngredientEntity> ingredients = new HashSet<IngredientEntity>();
+
+     public void addIngredient(IngredientEntity p) {
+        this.ingredients.add(p);
+        p.getRecipes().add(this);
+    }
+
+    public void removeIngredient(IngredientEntity p) {
+        this.ingredients.remove(p);
+        p.getRecipes().remove(this);
+    }
+
+    public Set<IngredientEntity> getIngredients(){return ingredients;}
 
     public RecipeEntity() {
     }
 
-    public RecipeEntity(String name, String description, char ifexternal, PersonEntity person){
+    public RecipeEntity(String name, String description, char ifexternal
+            , PersonEntity person
+                        ){
         this.name=name;
         this.description=description;
         this.ifexternal=ifexternal;
@@ -38,16 +82,17 @@ public class RecipeEntity {
     }
 
     public PersonEntity getPerson(){
+
         return person;
     }
 
     public void setPerson(PersonEntity person)
     {
+
         this.person=person;
     }
 
-    @Basic
-    @Column(name = "NAME")
+
     public String getName() {
         return name;
     }
@@ -56,8 +101,7 @@ public class RecipeEntity {
         this.name = name;
     }
 
-    @Basic
-    @Column(name = "DESCRIPTION")
+
     public String getDescription() {
         return description;
     }
@@ -66,8 +110,7 @@ public class RecipeEntity {
         this.description = description;
     }
 
-    @Basic
-    @Column(name = "IFEXTERNAL")
+
     public char getIfexternal() {
         return ifexternal;
     }
@@ -93,6 +136,8 @@ public class RecipeEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(recipeid, name, description, ifexternal, person);
+        return Objects.hash(recipeid, name, description, ifexternal
+                , person
+        );
     }
 }

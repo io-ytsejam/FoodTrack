@@ -1,16 +1,29 @@
 package com.backend.Models;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "INGREDIENT", schema = "TEST", catalog = "")
 public class IngredientEntity {
-    private long ingredientid;
-    private String name;
-
     @Id
     @Column(name = "INGREDIENTID")
     @GeneratedValue(strategy=GenerationType.AUTO)
+    private long ingredientid;
+
+    @Basic
+    @Column(name = "NAME")
+    private String name;
+
+    @ManyToMany(mappedBy = "ingredients") private Set<RecipeEntity> recipes = new HashSet<RecipeEntity>(); //ignore for unidirectional?
+    public Set<RecipeEntity> getRecipes()
+    {
+        return recipes;
+    }
+
+
+
     public long getIngredientid() {
         return ingredientid;
     }
@@ -19,8 +32,7 @@ public class IngredientEntity {
         this.ingredientid = ingredientid;
     }
 
-    @Basic
-    @Column(name = "NAME")
+
     public String getName() {
         return name;
     }
@@ -41,6 +53,7 @@ public class IngredientEntity {
 
         return true;
     }
+
 
     @Override
     public int hashCode() {
