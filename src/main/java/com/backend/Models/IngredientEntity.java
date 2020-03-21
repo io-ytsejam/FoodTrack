@@ -16,13 +16,35 @@ public class IngredientEntity {
     @Column(name = "NAME")
     private String name;
 
-    @ManyToMany(mappedBy = "ingredients") private Set<RecipeEntity> recipes = new HashSet<RecipeEntity>(); //ignore for unidirectional?
+    @ManyToMany(mappedBy = "ingredients")
+    private Set<RecipeEntity> recipes = new HashSet<RecipeEntity>(); //ignore for unidirectional?
+
+    public void addRecipe(RecipeEntity recipeEntity) {
+        this.recipes.add(recipeEntity);
+        recipeEntity.getIngredients().add(this);
+    }
+
+    public void removeRecipe(RecipeEntity recipeEntity) {
+        this.recipes.remove(recipeEntity);
+        recipeEntity.getIngredients().remove(this);
+    }
+
     public Set<RecipeEntity> getRecipes()
     {
         return recipes;
     }
 
+    public IngredientEntity() {
+    }
 
+    public IngredientEntity(String name)
+    {
+        this.name=name;
+    }
+
+    public void setRecipes(Set<RecipeEntity> recipes) {
+        this.recipes = recipes;
+    }
 
     public long getIngredientid() {
         return ingredientid;
@@ -31,7 +53,6 @@ public class IngredientEntity {
     public void setIngredientid(long ingredientid) {
         this.ingredientid = ingredientid;
     }
-
 
     public String getName() {
         return name;
@@ -54,7 +75,6 @@ public class IngredientEntity {
         return true;
     }
 
-
     @Override
     public int hashCode() {
         int result = (int) (ingredientid ^ (ingredientid >>> 32));
@@ -62,3 +82,4 @@ public class IngredientEntity {
         return result;
     }
 }
+
