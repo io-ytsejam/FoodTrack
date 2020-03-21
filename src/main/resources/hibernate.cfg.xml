@@ -17,12 +17,14 @@
 
         <mapping class="com.backend.Models.IngredientEntity"/>
         <mapping class="com.backend.Models.PersonEntity"/>
-
+        <mapping class="com.backend.Models.CommentEntity"/>
+        <mapping class="com.backend.Models.HealthRestrictionEntity"/>
+        <mapping class="com.backend.Models.PhotoEntity"/>
+        <mapping class="com.backend.Models.PreferenceEntity"/>
+        <mapping class="com.backend.Models.RatingEntity"/>
+        <mapping class="com.backend.Models.SettingEntity"/>
+        <mapping class="com.backend.Models.StepEntity"/>
         <!--<mapping class="com.backend.Models.PersonRecipeEntity"/>-->
-
-
-
-
 
         <mapping class="com.backend.Models.RecipeEntity"/>
         <!--<mapping class="com.backend.Models.RecipeIngredientEntity"/>-->
