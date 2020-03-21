@@ -1,7 +1,9 @@
 package com.backend.Models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,17 +19,12 @@ public class PreferenceEntity {
     @Column(name = "CATEGORY")
     private String category;
 
-    @ManyToMany(mappedBy = "preferences")
-    private Set<PersonEntity> personEntities = new HashSet<>();
+    @OneToMany(mappedBy = "preferenceEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PersonPreferenceEntity> personPreferenceEntities = new ArrayList<>();
 
-    public void addPerson(PersonEntity personEntity) {
-        this.personEntities.add(personEntity);
-        personEntity.getPreferences().add(this);
-    }
-
-    public void removePerson(PersonEntity personEntity) {
-        this.personEntities.remove(personEntity);
-        personEntity.getPreferences().remove(this);
+    public void addPersonPreference(PersonPreferenceEntity personPreferenceEntity) {
+        this.personPreferenceEntities.add(personPreferenceEntity);
+        personPreferenceEntity.setPreferenceEntity(this);
     }
 
     public PreferenceEntity() {
@@ -38,12 +35,12 @@ public class PreferenceEntity {
         this.category=category;
     }
 
-    public Set<PersonEntity> getPersonEntities() {
-        return personEntities;
+    public List<PersonPreferenceEntity> getPersonPreferenceEntities() {
+        return personPreferenceEntities;
     }
 
-    public void setPersonEntities(Set<PersonEntity> personEntities) {
-        this.personEntities = personEntities;
+    public void setPersonPreferenceEntities(List<PersonPreferenceEntity> personPreferenceEntities) {
+        this.personPreferenceEntities = personPreferenceEntities;
     }
 
     public long getPreferenceid() {
@@ -53,7 +50,6 @@ public class PreferenceEntity {
     public void setPreferenceid(long preferenceid) {
         this.preferenceid = preferenceid;
     }
-
 
     public String getCategory() {
         return category;

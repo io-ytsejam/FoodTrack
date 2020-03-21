@@ -1,8 +1,8 @@
 package com.backend.Models;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "HEALTH_RESTRICTION", schema = "TEST", catalog = "")
@@ -15,17 +15,20 @@ public class HealthRestrictionEntity {
     @Column(name = "NAME")
     private String name;
 
-    @ManyToMany(mappedBy = "healthRestrictionEntities")
-    private Set<PersonEntity> personEntities = new HashSet<PersonEntity>();
+    @OneToMany(mappedBy = "healthRestrictionEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<HealthRestrictionPersonEntity> healthRestrictionPersonEntities = new ArrayList<>();
 
-    public void addPerson(PersonEntity personEntity) {
-        this.personEntities.add(personEntity);
-        personEntity.getHealthRestrictionEntities().add(this);
+    public void addHealth(HealthRestrictionPersonEntity healthRestrictionPersonEntity) {
+        this.healthRestrictionPersonEntities.add(healthRestrictionPersonEntity);
+        healthRestrictionPersonEntity.setHealthRestrictionEntity(this);
     }
 
-    public void removePerson(PersonEntity personEntity) {
-        this.personEntities.remove(personEntity);
-        personEntity.getHealthRestrictionEntities().remove(this);
+    public List<HealthRestrictionPersonEntity> getHealthRestrictionPersonEntities() {
+        return healthRestrictionPersonEntities;
+    }
+
+    public void setHealthRestrictionPersonEntities(List<HealthRestrictionPersonEntity> healthRestrictionPersonEntities) {
+        this.healthRestrictionPersonEntities = healthRestrictionPersonEntities;
     }
 
     public HealthRestrictionEntity() {
@@ -34,14 +37,6 @@ public class HealthRestrictionEntity {
     public HealthRestrictionEntity(String name)
     {
         this.name=name;
-    }
-
-    public Set<PersonEntity> getPersonEntities() {
-        return personEntities;
-    }
-
-    public void setPersonEntities(Set<PersonEntity> personEntities) {
-        this.personEntities = personEntities;
     }
 
     public long getHealthrestrictionid() {

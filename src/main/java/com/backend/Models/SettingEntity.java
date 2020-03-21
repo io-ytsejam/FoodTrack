@@ -1,7 +1,9 @@
 package com.backend.Models;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,28 +19,23 @@ public class SettingEntity {
     @Column(name = "NAME")
     private String name;
 
-    @ManyToMany(mappedBy = "settings")
-    private Set<PersonEntity> personEntities = new HashSet<PersonEntity>();
+    @OneToMany(mappedBy = "settingEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PersonSettingEntity> personSettingEntities = new ArrayList<>();
 
-    public void addPerson(PersonEntity personEntity) {
-        this.personEntities.add(personEntity);
-        personEntity.getSettings().add(this);
+    public void addPersonSetting(PersonSettingEntity personSettingEntity) {
+        this.personSettingEntities.add(personSettingEntity);
+        personSettingEntity.setSettingEntity(this);
     }
 
-    public void removePerson(PersonEntity personEntity) {
-        this.personEntities.remove(personEntity);
-        personEntity.getSettings().remove(this);
+    public List<PersonSettingEntity> getPersonSettingEntities() {
+        return personSettingEntities;
+    }
+
+    public void setPersonSettingEntities(List<PersonSettingEntity> personSettingEntities) {
+        this.personSettingEntities = personSettingEntities;
     }
 
     public SettingEntity() {
-    }
-
-    public Set<PersonEntity> getPersonEntities() {
-        return personEntities;
-    }
-
-    public void setPersonEntities(Set<PersonEntity> personEntities) {
-        this.personEntities = personEntities;
     }
 
     public SettingEntity(String name)

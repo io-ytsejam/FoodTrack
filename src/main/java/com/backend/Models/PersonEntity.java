@@ -38,23 +38,14 @@ public class PersonEntity {
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RecipeEntity> recipes = new ArrayList<RecipeEntity>();
 
-    @ManyToMany
-    @JoinTable(name = "healthrestriction_person",
-            joinColumns = {@JoinColumn(name = "personid")},
-            inverseJoinColumns = {@JoinColumn(name = "healthrestrictionid")})
-    private Set<HealthRestrictionEntity> healthRestrictionEntities = new HashSet<>();
+    @OneToMany(mappedBy = "personEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PersonPreferenceEntity> personPreferenceEntities = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "person_preference",
-            joinColumns = {@JoinColumn(name = "personid")},
-            inverseJoinColumns = {@JoinColumn(name = "preferenceid")})
-    private Set<PreferenceEntity> preferences = new HashSet<>();
+    @OneToMany(mappedBy = "personEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<HealthRestrictionPersonEntity> healthRestrictionPersonEntities = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(name = "person_setting",
-            joinColumns = {@JoinColumn(name = "personid")},
-            inverseJoinColumns = {@JoinColumn(name = "settingid")})
-    private Set<SettingEntity> settings = new HashSet<SettingEntity>();
+    @OneToMany(mappedBy = "personEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PersonSettingEntity> personSettingEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CommentEntity> comments = new ArrayList<>();
@@ -68,64 +59,12 @@ public class PersonEntity {
         recipe.setPerson(this);
     }
 
-    public void addSetting(SettingEntity settingEntity)
-    {
-        this.settings.add(settingEntity);
-        settingEntity.getPersonEntities().add(this);
-    }
-
-    public void removeSetting (SettingEntity settingEntity)
-    {
-        this.settings.remove(settingEntity);
-        settingEntity.getPersonEntities().remove(this);
-    }
-
-    public void addPreference(PreferenceEntity preferenceEntity)
-    {
-        this.preferences.add(preferenceEntity);
-        preferenceEntity.getPersonEntities().add(this);
-    }
-
-    public void removePreference (PreferenceEntity preferenceEntity)
-    {
-        this.preferences.remove(preferenceEntity);
-        preferenceEntity.getPersonEntities().remove(this);
-    }
-
-    public void addRestriction(HealthRestrictionEntity healthRestrictionEntity)
-    {
-        this.healthRestrictionEntities.add(healthRestrictionEntity);
-        healthRestrictionEntity.getPersonEntities().add(this);
-    }
-
-    public void removeRestriction (HealthRestrictionEntity healthRestrictionEntity)
-    {
-        this.healthRestrictionEntities.remove(healthRestrictionEntity);
-        healthRestrictionEntity.getPersonEntities().remove(this);
-    }
-
     public List<RecipeEntity> getRecipes() {
         return recipes;
     }
 
     public void setRecipes(List<RecipeEntity> recipes) {
         this.recipes = recipes;
-    }
-
-    public Set<HealthRestrictionEntity> getHealthRestrictionEntities() {
-        return healthRestrictionEntities;
-    }
-
-    public void setHealthRestrictionEntities(Set<HealthRestrictionEntity> healthRestrictionEntities) {
-        this.healthRestrictionEntities = healthRestrictionEntities;
-    }
-
-    public Set<SettingEntity> getSettings() {
-        return settings;
-    }
-
-    public void setSettings(Set<SettingEntity> settings) {
-        this.settings = settings;
     }
 
     public List<RatingEntity> getRatings() {
@@ -144,6 +83,30 @@ public class PersonEntity {
         this.comments = comments;
     }
 
+    public List<PersonPreferenceEntity> getPersonPreferenceEntities() {
+        return personPreferenceEntities;
+    }
+
+    public void setPersonPreferenceEntities(List<PersonPreferenceEntity> personPreferenceEntities) {
+        this.personPreferenceEntities = personPreferenceEntities;
+    }
+
+    public void addPersonPreference(PersonPreferenceEntity personPreferenceEntity) {
+        this.personPreferenceEntities.add(personPreferenceEntity);
+        personPreferenceEntity.setPersonEntity(this);
+    }
+
+    public void addPersonSetting(PersonSettingEntity personSettingEntity) {
+        this.personSettingEntities.add(personSettingEntity);
+        personSettingEntity.setPersonEntity(this);
+    }
+
+    public void addPersonHealth(HealthRestrictionPersonEntity healthRestrictionPersonEntity)
+    {
+        this.healthRestrictionPersonEntities.add(healthRestrictionPersonEntity);
+        healthRestrictionPersonEntity.setPersonEntity(this);
+    }
+
     public void addComment(CommentEntity comment)
     {
         this.comments.add(comment);
@@ -154,14 +117,6 @@ public class PersonEntity {
     {
         this.ratings.add(ratingEntity);
         ratingEntity.setPerson(this);
-    }
-
-    public Set<PreferenceEntity> getPreferences() {
-        return preferences;
-    }
-
-    public void setPreferences(Set<PreferenceEntity> preferences) {
-        this.preferences = preferences;
     }
 
     /*public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
@@ -182,6 +137,22 @@ public class PersonEntity {
 
     public long getPersonid() {
         return personid;
+    }
+
+    public List<HealthRestrictionPersonEntity> getHealthRestrictionPersonEntities() {
+        return healthRestrictionPersonEntities;
+    }
+
+    public void setHealthRestrictionPersonEntities(List<HealthRestrictionPersonEntity> healthRestrictionPersonEntities) {
+        this.healthRestrictionPersonEntities = healthRestrictionPersonEntities;
+    }
+
+    public List<PersonSettingEntity> getPersonSettingEntities() {
+        return personSettingEntities;
+    }
+
+    public void setPersonSettingEntities(List<PersonSettingEntity> personSettingEntities) {
+        this.personSettingEntities = personSettingEntities;
     }
 
     public void setPersonid(long personid) {
