@@ -38,11 +38,9 @@ public class PersonRegistrationController
         if (existing != null){
             result.rejectValue("nickname", null, "There is already an account registered with that username");
         }
-
         if (result.hasErrors()){
             return "registration";
         }
-
         userService.save(userDto);
         return "redirect:/registration?success";
     }

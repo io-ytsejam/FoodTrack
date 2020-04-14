@@ -38,7 +38,7 @@ public class PersonEntityController {
         return new ResponseEntity<PagedModel<PersonEntity>>(assembler.toModel(persons), HttpStatus.OK);
     }*/
 
-    /*@GetMapping(value = "/api/people/{id}")
+    @GetMapping(value = "/api/people/{id}")
     Optional<PersonEntity> one(@PathVariable Long id) {
         return repository.findById(id);
     }
@@ -68,16 +68,5 @@ public class PersonEntityController {
     @DeleteMapping("/api/people/{id}")
     void deletePersonEntity(@PathVariable Long id) {
         repository.deleteById(id);
-    }*/
-
-    @GetMapping("/login")
-    public String login(Model model, String error, String logout) {
-        if (error != null)
-            model.addAttribute("error", "Your username and password is invalid.");
-
-        if (logout != null)
-            model.addAttribute("message", "You have been logged out successfully.");
-
-        return "login";
     }
 }
