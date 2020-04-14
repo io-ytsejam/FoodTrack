@@ -1,32 +1,26 @@
 package com.backend.Controllers;
 
-import java.util.Collections;
 import java.util.Optional;
 
+import com.backend.Dto.UserRegistrationDto;
 import com.backend.Models.PersonEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.PagedModel;
-import org.springframework.hateoas.server.RepresentationModelAssembler;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import com.backend.Repositories.PersonEntityRepository;
+import com.backend.Services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 public class PersonEntityController {
     private final PersonEntityRepository repository;
-    //private final
+
+    @Autowired
+    private UserService userService;
+
     //private final RecipeEntityRepository recipeRepository;
-    //private final
 
     PersonEntityController(PersonEntityRepository repository)
     {
@@ -44,7 +38,7 @@ public class PersonEntityController {
         return new ResponseEntity<PagedModel<PersonEntity>>(assembler.toModel(persons), HttpStatus.OK);
     }*/
 
-    @GetMapping(value = "/api/people/{id}")
+    /*@GetMapping(value = "/api/people/{id}")
     Optional<PersonEntity> one(@PathVariable Long id) {
         return repository.findById(id);
     }
@@ -54,7 +48,7 @@ public class PersonEntityController {
         return repository.save(newPersonEntity);
     }
 
-    /*@PostMapping("/api/people/{id}")
+    @PostMapping("/api/people/{id}")
     PersonEntity replacePersonEntity(@RequestBody PersonEntity newPersonEntity, @PathVariable Long id) {
 
         return repository.findById(id)
@@ -69,10 +63,21 @@ public class PersonEntityController {
                     newPersonEntity.setPersonid(id);
                     return repository.save(newPersonEntity);
                 });
-    }*/
+    }
 
     @DeleteMapping("/api/people/{id}")
     void deletePersonEntity(@PathVariable Long id) {
         repository.deleteById(id);
+    }*/
+
+    @GetMapping("/login")
+    public String login(Model model, String error, String logout) {
+        if (error != null)
+            model.addAttribute("error", "Your username and password is invalid.");
+
+        if (logout != null)
+            model.addAttribute("message", "You have been logged out successfully.");
+
+        return "login";
     }
 }

@@ -8,12 +8,10 @@
     <session-factory>
         <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
         <property name="connection.url">jdbc:oracle:thin:@localhost:1521:XE</property>
-        <!--<property name="dialect">org.hibernate.dialect.Oracle12cDialect</property>-->
         <property name="dialect">org.hibernate.dialect.Oracle12cDialect</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <property name="show_sql">true</property>
-
 
         <mapping class="com.backend.Models.IngredientEntity"/>
         <mapping class="com.backend.Models.PersonEntity"/>
@@ -27,12 +25,8 @@
         <mapping class="com.backend.Models.PersonPreferenceEntity"/>
         <mapping class="com.backend.Models.HealthRestrictionPersonEntity"/>
         <mapping class="com.backend.Models.PersonSettingEntity"/>
-        <!--<mapping class="com.backend.Models.PersonRecipeEntity"/>-->
-
         <mapping class="com.backend.Models.RecipeEntity"/>
-        <!--<mapping class="com.backend.Models.RecipeIngredientEntity"/>-->
-
-
+        <mapping class="com.backend.Models.RoleEntity"/>
 
     </session-factory>
 </hibernate-configuration>

@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "PERSON", schema = "TEST", catalog = "")
@@ -52,6 +49,19 @@ public class PersonEntity {
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RatingEntity> ratings = new ArrayList<>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "person_role",
+            joinColumns = {@JoinColumn(name = "personid")},
+            inverseJoinColumns = {@JoinColumn(name = "roleid")})
+    private Collection<RoleEntity> roles;
+
+    public PersonEntity(String firstName, String lastName, String email, String password, Collection<RoleEntity> roles) {
+        this.firstname = firstName;
+        this.lastname = lastName;
+        this.password = password;
+        this.roles = roles;
+    }
 
     public void addRecipe(RecipeEntity recipe)
     {
@@ -119,11 +129,6 @@ public class PersonEntity {
         ratingEntity.setPerson(this);
     }
 
-    /*public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
-    private String[] roles;*/
-
-    //private @OneToMany List<RecipeEntity> recipes;
-
     public PersonEntity() {
     }
 
@@ -174,9 +179,6 @@ public class PersonEntity {
     public void setPassword(String password){
         this.password=password;
     }
-    /*public void setPassword(String password) {
-        this.password=PASSWORD_ENCODER.encode(password);
-    }*/
 
     public String getFirstname() {
         return firstname;
@@ -222,5 +224,13 @@ public class PersonEntity {
     @Override
     public String toString(){
         return this.firstname+" "+this.lastname;
+    }
+
+    public Collection<RoleEntity> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Collection<RoleEntity> roles) {
+        this.roles = roles;
     }
 }

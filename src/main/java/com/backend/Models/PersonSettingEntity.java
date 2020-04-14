@@ -9,7 +9,7 @@ import java.util.Objects;
 @Table(name = "PERSON_SETTING", schema = "TEST", catalog = "")
 public class PersonSettingEntity {
     @Id
-    @Column(name = "HEALTHRESTRICTIONPERSONID")
+    @Column(name = "PERSON_SETTING_ID")
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long healthRestrictionPersonid;
 

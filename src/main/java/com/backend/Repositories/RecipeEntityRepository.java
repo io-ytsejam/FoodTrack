@@ -1,4 +1,4 @@
-package com.backend.Controllers;
+package com.backend.Repositories;
 
 import com.backend.Models.IngredientEntity;
 import com.backend.Models.RecipeEntity;
