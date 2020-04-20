@@ -1,0 +1,9 @@
+com\backend\Models\PersonEntity.class
+com\backend\BackendApplication.class
+com\backend\Models\IngredientEntity.class
+com\backend\Models\RecipeEntity.class
+backend\main\java\com\backend\TestController.class
+backend\main\java\com\backend\Test.class
+com\backend\Controllers\RecipeEntityRepository.class
+com\backend\Controllers\PersonEntityController.class
+com\backend\Controllers\PersonEntityRepository.class
