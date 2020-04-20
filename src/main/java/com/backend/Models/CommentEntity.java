@@ -3,7 +3,7 @@ package com.backend.Models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "COMMENTARY", schema = "TEST")
+@Table(name = "COMMENTARY", schema = "FDTRCK")
 public class CommentEntity {
     @Id
     @Column(name = "COMMENTID")

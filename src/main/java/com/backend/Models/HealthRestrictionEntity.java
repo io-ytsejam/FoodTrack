@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "HEALTH_RESTRICTION", schema = "TEST", catalog = "")
+@Table(name = "HEALTH_RESTRICTION", schema = "FDTRCK", catalog = "")
 public class HealthRestrictionEntity {
     @Id
     @Column(name = "HEALTHRESTRICTIONID")

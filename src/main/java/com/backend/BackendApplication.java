@@ -16,10 +16,6 @@ import com.backend.Models.*;
 import com.backend.Controllers.*;
 
 @SpringBootApplication
-@EnableTransactionManagement
-@EnableJpaRepositories
-@ComponentScan("com.backend.Controllers")
-@ComponentScan("com.backend.Services")
 public class BackendApplication{
 
 	private static final Logger log = LoggerFactory.getLogger(BackendApplication.class);

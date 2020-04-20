@@ -7,17 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @Controller
 @RequestMapping("/registration")
-public class PersonRegistrationController
-{
+public class PersonRegistrationController {
+
     @Autowired
     private UserService userService;
 
@@ -32,17 +29,17 @@ public class PersonRegistrationController
     }
 
     @PostMapping
-    public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto, BindingResult result){
+    public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto, BindingResult result) {
 
         PersonEntity existing = userService.findByNickname(userDto.getNickname());
-        if (existing != null){
+        if (existing != null) {
             result.rejectValue("nickname", null, "There is already an account registered with that username");
         }
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             return "registration";
         }
         userService.save(userDto);
         return "redirect:/registration?success";
     }
-
 }
+

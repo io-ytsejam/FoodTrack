@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "PERSON", schema = "TEST", catalog = "")
+@Table(name = "PERSON", schema = "FDTRCK", catalog = "")
 public class PersonEntity {
     @Id
     @Column(name = "PERSONID")

@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "STEP", schema = "TEST", catalog = "")
+@Table(name = "STEP", schema = "FDTRCK", catalog = "")
 public class StepEntity {
     @Id
     @Column(name = "STEPID")

@@ -3,7 +3,7 @@ package com.backend.Models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ROLE", schema = "TEST", catalog = "")
+@Table(name = "ROLE", schema = "FDTRCK", catalog = "")
 public class RoleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

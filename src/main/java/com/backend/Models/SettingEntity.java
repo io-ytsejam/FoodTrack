@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "SETTING", schema = "TEST", catalog = "")
+@Table(name = "SETTING", schema = "FDTRCK", catalog = "")
 public class SettingEntity {
 
     @Id

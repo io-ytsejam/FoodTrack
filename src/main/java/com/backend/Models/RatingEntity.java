@@ -3,7 +3,7 @@ package com.backend.Models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "RATING", schema = "TEST", catalog = "")
+@Table(name = "RATING", schema = "FDTRCK", catalog = "")
 public class RatingEntity {
     @Id
     @Column(name = "RATINGID")
