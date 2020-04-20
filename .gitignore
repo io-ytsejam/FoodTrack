@@ -6,3 +6,5 @@ frontend/.idea
 backend/.idea
 backend/.env
 backend/.vscode/
+target
+.idea
