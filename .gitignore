@@ -6,5 +6,6 @@ frontend/.idea
 backend/.idea
 backend/.env
 backend/.vscode/
-target
-.idea
+target/
+.idea/
+src/main/java/com/backend/Security/SecurityConstants.java
