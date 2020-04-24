@@ -17,7 +17,7 @@ public class StepEntity {
     private String stepdescription;
 
     @ManyToMany(mappedBy = "steps")
-    private Set<RecipeEntity> recipes = new HashSet<RecipeEntity>();
+    private Set<RecipeEntity> recipes = new HashSet<RecipeEntity>(); //need many to many?
 
     public void addRecipe(RecipeEntity recipeEntity) {
         this.recipes.add(recipeEntity);

@@ -1,10 +1,13 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name = "RECIPE", schema = "FDTRCK", catalog = "")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","person"})
 public class RecipeEntity {
     @Id
     @Column(name = "RECIPEID")
@@ -98,6 +101,10 @@ public class RecipeEntity {
         this.ifexternal=ifexternal;
         this.person=person;
     }
+
+    public String getRecipePersonNickname(){return person.getNickname();}
+
+    public long getRecipePersonid(){return person.getPersonid();}
 
     public long getRecipeid() {
         return recipeid;
