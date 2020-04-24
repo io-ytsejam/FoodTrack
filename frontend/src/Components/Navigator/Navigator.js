@@ -54,6 +54,7 @@ class Navigator extends Component {
 
   componentDidMount() {
     console.log(this.props.user);
+
     // this.props.signIn({ name: 'ytsejam', id: 2137 })
   }
 
@@ -79,42 +80,42 @@ class Navigator extends Component {
             <div className="content">
               <TransitionGroup key={window.location.key}>
                 <CSSTransition timeout={500} classNames={'fade'}>
-                  <Switch location={window.location}>
-                    {/* Main page */}
-                    <Route exact path="/">
-                      <Dashboard
-                        setIsReady={this.setIsReady}
-                      />
-                    </Route>
-                    {/* Cooking history */}
-                    <Route path="/history">
-                      <History/>
-                    </Route>
-                    {/* User profile */}
-                    <Route path="/user-profile">
-                      {
-                        isSignedIn?
-                          <Profile />:
-                          <Login />
-                      }
-                    </Route>
-                    {/* Sign in */}
-                    <Route path="/sign-in">
-                      <SignIn />
-                    </Route>
-                    {/* Sign up */}
-                    <Route path="/sign-up">
-                      <SignUp />
-                    </Route>
-                    <Route
-                      path="/recipe/:id"
-                      component={(props) =>
-                        <ErrorBoundary>
+                  <ErrorBoundary>
+                    <Switch location={window.location}>
+                      {/* Main page */}
+                      <Route exact path="/">
+                        <Dashboard
+                          setIsReady={this.setIsReady}
+                        />
+                      </Route>
+                      {/* Cooking history */}
+                      <Route path="/history">
+                        <History/>
+                      </Route>
+                      {/* User profile */}
+                      <Route path="/user-profile">
+                        {
+                          isSignedIn?
+                            <Profile />:
+                            <Login />
+                        }
+                      </Route>
+                      {/* Sign in */}
+                      <Route path="/sign-in">
+                        <SignIn />
+                      </Route>
+                      {/* Sign up */}
+                      <Route path="/sign-up">
+                        <SignUp />
+                      </Route>
+                      <Route
+                        path="/recipe/:id"
+                        component={(props) =>
                           <Recipe {...props} />
-                        </ErrorBoundary>
-                      }
-                    />
-                  </Switch>
+                        }
+                      />
+                    </Switch>
+                  </ErrorBoundary>
                 </CSSTransition>
               </TransitionGroup>
             </div>
@@ -127,7 +128,7 @@ class Navigator extends Component {
 
 Navigator.propTypes = {
   user: PropTypes.object,
-  isSingedIn: PropTypes.bool
+  isSignedIn: PropTypes.bool
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navigator);

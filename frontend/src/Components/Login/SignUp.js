@@ -33,6 +33,24 @@ class SignUp extends Component {
         <form
           onSubmit={(event) => {
             event.preventDefault();
+            const formData = new FormData();
+            formData.append('firstName', this.state.name);
+            formData.append('lastName', this.state.lastName);
+            formData.append('nickname', this.state.userName);
+            formData.append('password', this.state.password);
+            formData.append('confirmPassword', this.state.password);
+
+            fetch('/registration', {
+              method: 'POST',
+              body: formData,
+              mode: 'no-cors'
+            }).then((res) => {
+              console.log(res);
+            })
+                .catch((err) => {
+                  console.error(err);
+                });
+
             alert('Sign up with: ' + JSON.stringify(this.state));
           }}
         >

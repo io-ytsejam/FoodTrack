@@ -8,7 +8,9 @@ class Dashboard extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      randomRecipes: []
+      recommendedRecipes: [],
+      recentRecipes: [],
+      randomRecsRecipes: []
     };
   }
   componentDidMount() {
@@ -19,30 +21,77 @@ class Dashboard extends Component {
     fetch(url, { method: 'GET' })
         .then((res) => res.json())
         .then((randomRecipes) => {
-          this.setState({ randomRecipes: randomRecipes.recipes });
+          this.setState({ recommendedRecipes: randomRecipes.recipes });
           console.log(randomRecipes.recipes);
         })
         .then(() => setIsReady(true))
         .catch((err) => err.message);
+
+    // Read recent from local storage and set to state
+    // After that, ask API if it lacking some recipe,
+    // if yes, update and rerender :)
+    this.setState({ recentRecipes: [] });
+
+    // Show something completely new, be spontaneous
+    this.setState({ randomRecsRecipes: [] });
   }
 
   render() {
-    const { randomRecipes } = this.state;
+    const { recommendedRecipes, recentRecipes, randomRecsRecipes } = this.state;
     return (
-      <HorizontalList>
-        {
-          randomRecipes.map((recipe, index) => (
-            <DimmedExpandableCard
-              recipe={recipe}
-              key={index}
-              title={recipe.title}
-              image={recipe.image}
-              supportingText={recipe.summary}
-              ingredients={recipe.extendedIngredients}
-            />
-          ))
-        }
-      </HorizontalList>
+      <>
+        <HorizontalList
+          title="Recommendations"
+        >
+          {
+            recommendedRecipes.map((recipe, index) => (
+              <DimmedExpandableCard
+                recipe={recipe}
+                key={index}
+                index={index}
+                title={recipe.title}
+                image={recipe.image}
+                supportingText={recipe.summary}
+                ingredients={recipe.extendedIngredients}
+              />
+            ))
+          }
+        </HorizontalList>
+        <HorizontalList
+          title="Recently viewed"
+        >
+          {
+            recentRecipes.map((recipe, index) => (
+              <DimmedExpandableCard
+                recipe={recipe}
+                key={index}
+                index={index}
+                title={recipe.title}
+                image={recipe.image}
+                supportingText={recipe.summary}
+                ingredients={recipe.extendedIngredients}
+              />
+            ))
+          }
+        </HorizontalList>
+        <HorizontalList
+          title="Try something new"
+        >
+          {
+            randomRecsRecipes.map((recipe, index) => (
+              <DimmedExpandableCard
+                recipe={recipe}
+                key={index}
+                index={index}
+                title={recipe.title}
+                image={recipe.image}
+                supportingText={recipe.summary}
+                ingredients={recipe.extendedIngredients}
+              />
+            ))
+          }
+        </HorizontalList>
+      </>
     );
   }
 }
