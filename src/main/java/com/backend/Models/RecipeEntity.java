@@ -118,6 +118,10 @@ public class RecipeEntity {
         this.ingredients = ingredients;
     }
 
+    public void addAllIngredients(Collection<IngredientEntity> newIngredients){this.ingredients.addAll(newIngredients);}
+
+    public void removeSomeIngredients(Collection<IngredientEntity> oldIngredients){this.ingredients.removeAll(oldIngredients);}
+
     public Set<StepEntity> getSteps() {
         return steps;
     }
@@ -126,12 +130,24 @@ public class RecipeEntity {
         this.steps = steps;
     }
 
+    public void addAllSteps(Collection<StepEntity> newSteps) {this.steps.addAll(newSteps);}
+
+    public void removeSomeSteps(Collection<StepEntity> oldSteps) {this.steps.removeAll(oldSteps);}
+
     public List<PhotoEntity> getPhotoEntities() {
         return photoEntities;
     }
 
     public void setPhotoEntities(List<PhotoEntity> photoEntities) {
         this.photoEntities = photoEntities;
+    }
+
+    public void removeAllPhotoEntities(){photoEntities.clear();}
+
+    public void removeSomePhotoEntities(Collection<PhotoEntity> oldPhotoEntities){this.photoEntities.removeAll(oldPhotoEntities);}
+
+    public void addAllPhotoEntities(List<PhotoEntity> newPhotoEntities){
+            photoEntities.addAll(newPhotoEntities);
     }
 
     public List<RatingEntity> getRatings() {

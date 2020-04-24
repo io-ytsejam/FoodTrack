@@ -15,7 +15,7 @@ public class IngredientEntityController {
     @Autowired
     private IngredientEntityRepository ingredientRepository;
 
-    @GetMapping("/api/getAllIngredients")
+    @GetMapping("/api/ingredients")
     public Page<IngredientEntity> getIngredients(Pageable pageable)
     {
         return ingredientRepository.findAll(pageable);

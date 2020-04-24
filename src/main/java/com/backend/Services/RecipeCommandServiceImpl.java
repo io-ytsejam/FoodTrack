@@ -6,6 +6,8 @@ import com.backend.Models.RecipeEntity;
 import com.backend.Repositories.IngredientEntityRepository;
 import com.backend.Repositories.RecipeEntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -45,24 +47,38 @@ public class RecipeCommandServiceImpl implements RecipeCommandService {
     }
 
     @Override
-    public RecipeEntity updateRecipe(long id,RecipeDto recipeDto)
+    public RecipeEntity updateRecipe(RecipeEntity newRecipe,Long id)
     {
         Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
         if(recipeRepository.findById(id).isPresent() &&
                 recipeRepository.findById(id).get().getRecipePersonNickname() == authentication.getName())
         {
-            RecipeEntity existingRecipe = recipeRepository.findById(id).get();
-            existingRecipe.setName(recipeDto.getName());
-            existingRecipe.setDescription(recipeDto.getDescription());
-            existingRecipe.setIngredients(recipeDto.getIngredients());
-            existingRecipe.setPhotoEntities(recipeDto.getPhotoEntities());
-            existingRecipe.setSteps(recipeDto.getSteps());
+            return recipeRepository.findById(id)
+                    .map(recipe -> {
+                        recipe.setName(newRecipe.getName());
+                        recipe.setDescription(newRecipe.getDescription());
+                        recipe.setIfexternal(newRecipe.getIfexternal());
+                        recipe.setIngredients(newRecipe.getIngredients());
 
-            RecipeEntity updatedRecipe = recipeRepository.save(existingRecipe);
-            return updatedRecipe;
+                        return recipeRepository.save(recipe);
+                    })
+                    .orElseGet(() -> {
+                        newRecipe.setRecipeid(id);
+                        return recipeRepository.save(newRecipe);
+                    });
             }
 
         else
             return null;
+    }
+
+    @Override
+    public Page<RecipeEntity> getAllRecipes(Pageable pageable) {
+        return recipeRepository.findAll(pageable);
+    }
+
+    @Override
+    public Page<RecipeEntity> findByPersonNickname(String nickname, Pageable pageable) {
+        return recipeRepository.findByPersonNickname(nickname,pageable);
     }
 }
