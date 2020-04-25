@@ -17,6 +17,10 @@ public class CommentEntity {
     @JoinColumn(name = "personid")
     private PersonEntity person;
 
+    @ManyToOne(optional = false,fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipeid")
+    private RecipeEntity recipe;
+
     public CommentEntity(long commentid, String content)
     {
         this.commentid=commentid;
