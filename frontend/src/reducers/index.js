@@ -1,6 +1,10 @@
 import { combineReducers } from 'redux';
-import userSessionReducer from './userSessionReducer';
+import userSession from './userSession';
+import cooking from './cooking';
+import loading from './loading';
 
 export default combineReducers({
-  userSession: userSessionReducer,
+  userSession,
+  cooking,
+  loading
 });

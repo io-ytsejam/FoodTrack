@@ -44,7 +44,8 @@ export const DimmedExpandableCard = (props) => {
       className='dimmed-expandable-card'
       ref={mainCardRef}
       onClick={(e) => {
-        const mc = document.querySelector('.material-card-override');
+        console.log(e.target);
+        const mc = e.target.closest('.dimmed-expandable-card').children[1];
         if (mainCardRef.current.classList.contains('dimmed-expandable-card--expanded')) {
           console.log(e.target);
           mainCardRef.current.classList.remove('dimmed-expandable-card--expanded');

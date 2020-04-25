@@ -3,8 +3,11 @@ import CardActions from '@material-ui/core/CardActions';
 import { Link } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
+import { connect } from 'react-redux';
+import { clearLoading } from '../../actions/loading';
+import { PropTypes } from 'prop-types';
 
-export default class ErrorBoundary extends React.Component {
+class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = { hasError: false };
@@ -20,6 +23,7 @@ export default class ErrorBoundary extends React.Component {
     // You can also log the error to an error reporting service
     // logErrorToMyService(error, errorInfo);
     this.setState({ error, errorInfo });
+    this.props.clearLoading();
   }
 
   render() {
@@ -51,3 +55,10 @@ export default class ErrorBoundary extends React.Component {
     return this.props.children;
   }
 }
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.object,
+  clearLoading: PropTypes.func.isRequired
+};
+
+export default connect(null, { clearLoading })(ErrorBoundary);

@@ -8,8 +8,7 @@ import {
   Route
 } from 'react-router-dom';
 import {
-  TransitionGroup,
-  CSSTransition
+  TransitionGroup
 } from 'react-transition-group';
 import { ThemeProvider } from '@material-ui/core';
 
@@ -20,6 +19,7 @@ import Dashboard from '../Dashboard/Dashboard';
 import './Navigator.sass';
 import MainLoader from '../UI/Loaders/MainLoader/MainLoader';
 import { userSignIn } from '../../actions/userSession';
+import { increaseLoading } from '../../actions/loading';
 import { connect } from 'react-redux';
 import Login from '../Login/Login';
 import SignUp from '../Login/SignUp';
@@ -27,17 +27,7 @@ import SignIn from '../Login/SignIn';
 import Profile from '../User/Profile';
 import Recipe from '../Recipe/Recipe';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
-
-const mapStateToProps = (state) => ({
-  user: state.userSession,
-  isSignedIn: Boolean(state.userSession?.id)
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  signIn: (payload) => {
-    dispatch(userSignIn(payload));
-  }
-});
+import SplashScreen from '../../SplashScreen/SplashScreen';
 
 /* eslint-disable no-invalid-this */
 class Navigator extends Component {
@@ -66,10 +56,13 @@ class Navigator extends Component {
 
   render() {
     const { isReady } = this.state;
-    const { isSignedIn } = this.props;
+    const { isSignedIn, isLoading, increaseLoading } = this.props;
     return (
       <>
         <ThemeProvider theme={theme}>
+          {
+            isLoading > 0 ? <SplashScreen/> : undefined
+          }
           <Router>
             {
               !isReady?
@@ -79,44 +72,39 @@ class Navigator extends Component {
             <Navbar/>
             <div className="content">
               <TransitionGroup key={window.location.key}>
-                <CSSTransition timeout={500} classNames={'fade'}>
-                  <ErrorBoundary>
-                    <Switch location={window.location}>
-                      {/* Main page */}
-                      <Route exact path="/">
-                        <Dashboard
-                          setIsReady={this.setIsReady}
-                        />
-                      </Route>
-                      {/* Cooking history */}
-                      <Route path="/history">
-                        <History/>
-                      </Route>
-                      {/* User profile */}
-                      <Route path="/user-profile">
-                        {
+                <ErrorBoundary>
+                  <Switch location={window.location}>
+                    {/* Main page */}
+                    <Route exact path="/">
+                      <Dashboard
+                        setIsReady={this.setIsReady}
+                      />
+                    </Route>
+                    {/* Cooking history */}
+                    <Route path="/history">
+                      <History/>
+                    </Route>
+                    {/* User profile */}
+                    <Route path="/user-profile">
+                      {
                           isSignedIn?
                             <Profile />:
                             <Login />
-                        }
-                      </Route>
-                      {/* Sign in */}
-                      <Route path="/sign-in">
-                        <SignIn />
-                      </Route>
-                      {/* Sign up */}
-                      <Route path="/sign-up">
-                        <SignUp />
-                      </Route>
-                      <Route
-                        path="/recipe/:id"
-                        component={(props) =>
-                          <Recipe {...props} />
-                        }
-                      />
-                    </Switch>
-                  </ErrorBoundary>
-                </CSSTransition>
+                      }
+                    </Route>
+                    {/* Sign in */}
+                    <Route path="/sign-in">
+                      <SignIn />
+                    </Route>
+                    {/* Sign up */}
+                    <Route path="/sign-up">
+                      <SignUp />
+                    </Route>
+                    <Route path="/recipe/:id">
+                      <Recipe />;
+                    </Route>
+                  </Switch>
+                </ErrorBoundary>
               </TransitionGroup>
             </div>
           </Router>
@@ -131,4 +119,10 @@ Navigator.propTypes = {
   isSignedIn: PropTypes.bool
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Navigator);
+const mapStateToProps = (state) => ({
+  user: state.userSession,
+  isSignedIn: Boolean(state.userSession?.id),
+  isLoading: state.loading.loading
+});
+
+export default connect(mapStateToProps, { userSignIn, increaseLoading })(Navigator);

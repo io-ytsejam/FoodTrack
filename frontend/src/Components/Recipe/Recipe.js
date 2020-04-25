@@ -10,6 +10,10 @@ import Button from '@material-ui/core/Button';
 import AccessTime from '@material-ui/icons/AccessTime';
 import { LocalDining } from '@material-ui/icons';
 import Grid from '@material-ui/core/Grid';
+import ProgressBar from './ProgressBar/ProgressBar';
+import { connect } from 'react-redux';
+import { increaseLoading, decreaseLoading } from '../../actions/loading';
+import { withRouter } from 'react-router-dom';
 
 class Recipe extends Component {
   constructor(props) {
@@ -20,12 +24,16 @@ class Recipe extends Component {
       },
       error: undefined,
 
-      wheelThrottling: false
+      wheelThrottling: false,
+
+      currentStep: 0
     };
   }
 
   /* eslint-disable no-invalid-this */
   componentDidMount = async () => {
+    const { increaseLoading, decreaseLoading } = this.props;
+    increaseLoading();
     const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
     const recipeID = this.props.match.params.id;
     const thirdPartyApi =
@@ -56,7 +64,8 @@ class Recipe extends Component {
     response.json()
         .then((recipe) => {
           this.setState({ recipe });
-        }).catch((error) => this.setState({ error }));
+        }).catch((error) => this.setState({ error }))
+        .finally(() => decreaseLoading());
   };
 
   /** Throws error
@@ -70,7 +79,7 @@ class Recipe extends Component {
 
   render() {
     this.throwComponentError();
-    const { recipe } = this.state;
+    const { recipe, currentStep } = this.state;
     return (
       <Grid container spacing={2}>
         <Grid item xs={12} md={5}>
@@ -140,22 +149,22 @@ class Recipe extends Component {
           <div className="secondary-section"
             onWheel={(e) => {
               // This is so much hack
-              document.body.style.overflowY = 'hidden';
-              document.body.style.maxWidth = (parseInt(window.getComputedStyle(document.body).width) - 15).toString() + 'px';
-              document.querySelector('header').style.maxWidth = (parseInt(window.getComputedStyle(document.body).width) - 15).toString() + 'px';
               e.preventDefault();
               document.querySelector('#steps').scrollIntoView();
               if (!this.state.wheelThrottling) {
                 const activeStep = document.querySelector('.recipe--active');
+                const { currentStep } = this.state;
                 const { deltaY } = e;
                 if (deltaY > 0 && activeStep.nextElementSibling) {
                   console.log(e.deltaY);
                   activeStep.classList.remove('recipe--active');
                   activeStep.nextElementSibling.classList.add('recipe--active');
+                  this.setState({ currentStep: currentStep + 1 });
                 } else if (deltaY < 0 && activeStep.previousElementSibling) {
                   console.log(e.deltaY);
                   activeStep.classList.remove('recipe--active');
                   activeStep.previousElementSibling.classList.add('recipe--active');
+                  this.setState({ currentStep: currentStep - 1 });
                 }
                 this.setState((state) =>
                   ({ wheelThrottling: !state.wheelThrottling }),
@@ -163,9 +172,6 @@ class Recipe extends Component {
                   setTimeout(() => {
                     this.setState((state) =>
                       ({ wheelThrottling: !state.wheelThrottling }));
-                    document.body.style.overflowY = '';
-                    document.body.style.maxWidth = '';
-                    document.querySelector('header').style.maxWidth = '';
                   }, 50);
                 });
               }
@@ -179,6 +185,10 @@ class Recipe extends Component {
                   className={!key ? 'recipe recipe--active' : 'recipe'}
                   style={{ padding: '20px', marginTop: '-5px', marginBottom: '-5px' }}>
                   <p>{step.step}</p>
+                  <ProgressBar
+                    currentStep={currentStep}
+                    index={key}
+                  />
                 </Paper>
               ))
             }
@@ -193,4 +203,4 @@ Recipe.propTypes = {
   match: PropTypes.object
 };
 
-export default Recipe;
+export default connect(null, { increaseLoading, decreaseLoading })(withRouter(Recipe));

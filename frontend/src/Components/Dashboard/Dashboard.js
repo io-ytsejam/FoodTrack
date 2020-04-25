@@ -3,6 +3,8 @@ import
 HorizontalList,
 { DimmedExpandableCard } from '../UI/HorizontalList/HorizontalList';
 import { PropTypes } from 'prop-types';
+import { increaseLoading, decreaseLoading } from '../../actions/loading';
+import { connect } from 'react-redux';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -14,8 +16,8 @@ class Dashboard extends Component {
     };
   }
   componentDidMount() {
-    const { setIsReady } = this.props;
-    setIsReady(false);
+    const { increaseLoading, decreaseLoading } = this.props;
+    increaseLoading();
     const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
     const url = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10&`;
     fetch(url, { method: 'GET' })
@@ -24,8 +26,8 @@ class Dashboard extends Component {
           this.setState({ recommendedRecipes: randomRecipes.recipes });
           console.log(randomRecipes.recipes);
         })
-        .then(() => setIsReady(true))
-        .catch((err) => err.message);
+        .catch((err) => err.message)
+        .finally(() => decreaseLoading());
 
     // Read recent from local storage and set to state
     // After that, ask API if it lacking some recipe,
@@ -41,7 +43,7 @@ class Dashboard extends Component {
     return (
       <>
         <HorizontalList
-          title="Recommendations"
+          title="Recommended"
         >
           {
             recommendedRecipes.map((recipe, index) => (
@@ -97,7 +99,8 @@ class Dashboard extends Component {
 }
 
 Dashboard.propTypes = {
-  setIsReady: PropTypes.func
+  increaseLoading: PropTypes.func,
+  decreaseLoading: PropTypes.func
 };
 
-export default Dashboard;
+export default connect(null, { increaseLoading, decreaseLoading })(Dashboard);
