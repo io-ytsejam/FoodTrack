@@ -6,7 +6,7 @@ let style = {};
 const SplashScreen = (props) => {
   return (
     <div style={style}>
-      <img src='foodtrack192.png' alt='fdtrck'/>
+      <img src='/foodtrack192.png' alt='fdtrck'/>
       <RiseLoader />
     </div>
   );

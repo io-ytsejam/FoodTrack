@@ -19,7 +19,6 @@ class SignUp extends Component {
   }
 
   handleChange = (event) => {
-    console.log(event.target.value);
     this.setState({
       ...this.state,
       [event.target.name]: event.target.value

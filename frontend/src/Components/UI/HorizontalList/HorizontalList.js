@@ -44,10 +44,8 @@ export const DimmedExpandableCard = (props) => {
       className='dimmed-expandable-card'
       ref={mainCardRef}
       onClick={(e) => {
-        console.log(e.target);
         const mc = e.target.closest('.dimmed-expandable-card').children[1];
         if (mainCardRef.current.classList.contains('dimmed-expandable-card--expanded')) {
-          console.log(e.target);
           mainCardRef.current.classList.remove('dimmed-expandable-card--expanded');
           document.querySelector('header').style.position = 'fixed';
           mc.classList.remove('material-card-override--with-transition');
@@ -67,7 +65,7 @@ export const DimmedExpandableCard = (props) => {
             sibling.style.left = (310).toString() + 'px';
             sibling = sibling.nextSibling;
           }
-          mc.style.transform = 'translateY(1250px)';
+          mc.style.transform = 'translateY(1250px) scale3d(.4, .4, 1)';
           setTimeout(() => {
             mc.classList.add('material-card-override--with-transition');
             mc.style.transform = 'translateY(0)';

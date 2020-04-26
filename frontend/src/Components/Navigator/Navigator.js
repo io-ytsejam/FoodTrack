@@ -44,14 +44,13 @@ class Navigator extends Component {
 
   componentDidMount() {
     console.log(this.props.user);
+    Notification
+        .requestPermission()
+        .then((status) => {
+          console.log(status);
+        });
 
     // this.props.signIn({ name: 'ytsejam', id: 2137 })
-  }
-
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.user !== prevProps.user) {
-      console.log(this.props.user);
-    }
   }
 
   render() {

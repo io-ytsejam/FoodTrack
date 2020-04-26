@@ -7,3 +7,9 @@ export const STOP_TIME = 'STOP_TIME';
 export const INCREASE_LOADING = 'INCREASE_LOADING';
 export const DECREASE_LOADING = 'DECREASE_LOADING';
 export const CLEAR_LOADING = 'CLEAR_LOADING';
+
+export const NEXT_STEP = 'NEXT_STEP';
+export const PREV_STEP = 'PREV_STEP';
+
+export const RAISE_TIME = 'RAISE_TIME';
+export const LOWER_TIME = 'LOWER_TIME';

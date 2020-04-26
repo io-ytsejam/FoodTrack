@@ -10,10 +10,12 @@ import Button from '@material-ui/core/Button';
 import AccessTime from '@material-ui/icons/AccessTime';
 import { LocalDining } from '@material-ui/icons';
 import Grid from '@material-ui/core/Grid';
-import ProgressBar from './ProgressBar/ProgressBar';
 import { connect } from 'react-redux';
 import { increaseLoading, decreaseLoading } from '../../actions/loading';
+import { nextStep, prevStep, raiseTime, lowerTime, setTime } from '../../actions/cooking';
 import { withRouter } from 'react-router-dom';
+import Tomatometer from './Tomatometer/Tomatometer';
+import Step from './Step/Step';
 
 class Recipe extends Component {
   constructor(props) {
@@ -23,10 +25,7 @@ class Recipe extends Component {
         analyzedInstructions: []
       },
       error: undefined,
-
-      wheelThrottling: false,
-
-      currentStep: 0
+      wheelThrottling: false
     };
   }
 
@@ -68,6 +67,22 @@ class Recipe extends Component {
         .finally(() => decreaseLoading());
   };
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.inProgress !== this.props.inProgress && this.props.inProgress) {
+      this.setState({
+        cookingProgressInterval: setInterval(() => {
+          this.props.raiseTime();
+        }, 1000) });
+    }
+    if (prevProps.inProgress !== this.props.inProgress && !this.props.inProgress) {
+      clearInterval(this.state.cookingProgressInterval);
+    }
+    if (this.props.inProgress && (this.props.passedTime.minutes * 60 + this.props.passedTime.seconds >= this.props.totalTime) && this.props.passedTime.seconds) {
+      this.props.setTime(-1);
+      console.log('STOP');
+    }
+  }
+
   /** Throws error
    * @throws {Error} */
   throwComponentError = () => {
@@ -79,12 +94,13 @@ class Recipe extends Component {
 
   render() {
     this.throwComponentError();
-    const { recipe, currentStep } = this.state;
+    const { recipe } = this.state;
+    const { inProgress, passedTime } = this.props;
     return (
       <Grid container spacing={2}>
         <Grid item xs={12} md={5}>
           <div className='main-section'>
-            <h1>{recipe?.title}</h1>
+            <h2>{recipe?.title}</h2>
             <Paper
               style={{
                 backgroundColor: 'white',
@@ -142,29 +158,44 @@ class Recipe extends Component {
             // scrollSnapType: 'y mandatory'
           }}
         >
-          <h1 id='steps'>
-            <a href="#steps">Steps</a>
-          </h1>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}
+          >
+            <h3 id='steps'>
+              <a href="#steps">{
+                inProgress ?
+                  `Passed ${passedTime.minutes}:${passedTime.seconds}` :
+                  'Ready'
+              }</a>
+            </h3>
+            <Tomatometer
+              readyInMinutes={recipe.readyInMinutes}
+            />
+          </div>
           <Divider style={{ width: '-webkit-fill-available' }} />
           <div className="secondary-section"
             onWheel={(e) => {
               // This is so much hack
-              e.preventDefault();
+              // e.preventDefault();
               document.querySelector('#steps').scrollIntoView();
               if (!this.state.wheelThrottling) {
                 const activeStep = document.querySelector('.recipe--active');
-                const { currentStep } = this.state;
+                const { nextStep, prevStep } = this.props;
                 const { deltaY } = e;
                 if (deltaY > 0 && activeStep.nextElementSibling) {
-                  console.log(e.deltaY);
+                  // Scroll down
                   activeStep.classList.remove('recipe--active');
                   activeStep.nextElementSibling.classList.add('recipe--active');
-                  this.setState({ currentStep: currentStep + 1 });
+                  nextStep();
                 } else if (deltaY < 0 && activeStep.previousElementSibling) {
-                  console.log(e.deltaY);
+                  // Scroll up
                   activeStep.classList.remove('recipe--active');
                   activeStep.previousElementSibling.classList.add('recipe--active');
-                  this.setState({ currentStep: currentStep - 1 });
+                  prevStep();
                 }
                 this.setState((state) =>
                   ({ wheelThrottling: !state.wheelThrottling }),
@@ -172,24 +203,22 @@ class Recipe extends Component {
                   setTimeout(() => {
                     this.setState((state) =>
                       ({ wheelThrottling: !state.wheelThrottling }));
-                  }, 50);
+                  }, 500);
                 });
               }
             }}
           >
             {
               recipe.analyzedInstructions[0]?.steps?.map((step, key) => (
-                <Paper
-                  elevation={3}
-                  key={key}
-                  className={!key ? 'recipe recipe--active' : 'recipe'}
-                  style={{ padding: '20px', marginTop: '-5px', marginBottom: '-5px' }}>
-                  <p>{step.step}</p>
-                  <ProgressBar
-                    currentStep={currentStep}
-                    index={key}
-                  />
-                </Paper>
+                <Step
+                  step={step}
+                  index={key}
+                  time={
+                    /* recipe.readyInMinutes **/
+                    (80/recipe.analyzedInstructions[0].steps.length) +
+                    (80/recipe.analyzedInstructions[0].steps.length) * key
+                  }
+                />
               ))
             }
           </div>
@@ -200,7 +229,28 @@ class Recipe extends Component {
 }
 
 Recipe.propTypes = {
-  match: PropTypes.object
+  match: PropTypes.object,
+  inProgress: PropTypes.bool,
+  currentStep: PropTypes.number,
+  nextStep: PropTypes.func,
+  prevStep: PropTypes.func,
+  passedTime: PropTypes.object
 };
 
-export default connect(null, { increaseLoading, decreaseLoading })(withRouter(Recipe));
+const mapStateToProps = (state) => ({
+  inProgress: state.cooking.inProgress,
+  currentStep: state.cooking.currentStep,
+  totalTime: state.cooking.total,
+  passedTime: state.cooking.passed
+});
+
+export default connect(
+    mapStateToProps, {
+      increaseLoading,
+      decreaseLoading,
+      nextStep,
+      prevStep,
+      raiseTime,
+      lowerTime,
+      setTime
+    })(withRouter(Recipe));
