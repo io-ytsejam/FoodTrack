@@ -15,7 +15,7 @@ class ProgressBar extends Component {
   }
 
   render() {
-    const { progress, stepTime, inProgress } = this.props;
+    const { progress, stepTime, inProgress, total } = this.props;
     const { throttleSlider } = this.state;
     const passedTime = 5.4;
     return (
@@ -30,16 +30,18 @@ class ProgressBar extends Component {
         >
         </div>
         <input
-          value={!this.state.timeChanging || this.props.progress}
+          // value={!this.state.timeChanging || this.props.progress}
           onChange={(e) => {
             console.log('New time: ', e.target.value * stepTime / 100);
             console.log('Passed time in input: ', this.props.passedTime);
             const change = e.target.value * stepTime / 100;
-            if (Math.abs(this.props.passedTime - change) > stepTime * 1/40) {
+            if (Math.abs(this.props.passedTime - change) > 1) {
+              console.log('UPDATING IN INPUT>>>');
               this.props.updateTime(Math.round(change));
             }
           }}
           onMouseEnter={(e) => {
+            e.target.value = this.props.progress;
             if (inProgress) {
               this.props.pauseResumeTime();
             }
@@ -47,7 +49,7 @@ class ProgressBar extends Component {
             e.target.style.opacity = 1;
           }}
           onMouseLeave={(e) => {
-            if (!inProgress) {
+            if (!inProgress && total) {
               this.props.pauseResumeTime();
             }
             this.setState({ timeChanging: false });
@@ -78,7 +80,7 @@ class ProgressBar extends Component {
             opacity: 0
           }}
           min={1}
-          max={this.state.timeChanging ? 100 : stepTime}
+          max={100}
         />
       </div>
     );
@@ -90,7 +92,8 @@ ProgressBar.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  inProgress: state.cooking.inProgress
+  inProgress: state.cooking.inProgress,
+  total: state.cooking.total
 });
 
 export default connect(mapStateToProps, { pauseResumeTime })(ProgressBar);

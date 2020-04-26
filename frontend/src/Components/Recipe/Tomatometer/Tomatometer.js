@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setTime, pauseResumeTime, stopTime } from '../../../actions/cooking';
+import { nextStep, prevStep } from '../../../actions/cooking';
 import IconButton from '@material-ui/core/IconButton';
 import PlayCircleOutlineIcon from '@material-ui/icons/PlayCircleOutline';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
@@ -11,7 +12,9 @@ import Paper from '@material-ui/core/Paper';
 
 class Tomatometer extends Component {
   render() {
-    const { inProgress, totalTime, setTime, stopTime, pauseResumeTime, readyInMinutes } = this.props;
+    const { inProgress, totalTime, setTime, stopTime, pauseResumeTime, readyInMinutes,
+      nextStep, prevStep
+    } = this.props;
     const handlePauseResume = (e) => {
       if (!totalTime) {
         return setTime(readyInMinutes * 60);
@@ -22,7 +25,7 @@ class Tomatometer extends Component {
       <div>
         <Paper>
           <IconButton>
-            <SkipPreviousIcon />
+            <SkipPreviousIcon onClick={prevStep} />
           </IconButton>
           <IconButton>
             {
@@ -32,7 +35,7 @@ class Tomatometer extends Component {
             }
           </IconButton>
           <IconButton>
-            <SkipNextIcon />
+            <SkipNextIcon onClick={nextStep} />
           </IconButton>
         </Paper>
       </div>
@@ -53,8 +56,10 @@ Tomatometer.propTypes = {
   totalTime: PropTypes.number.isRequired,
   setTime: PropTypes.func.isRequired,
   stopTime: PropTypes.func.isRequired,
-  pauseResumeTime: PropTypes.func.isRequired
+  pauseResumeTime: PropTypes.func.isRequired,
+  nextStep: PropTypes.func.isRequired,
+  prevStep: PropTypes.func.isRequired
 };
 
 export default connect(mapStateToProps,
-    { setTime, stopTime, pauseResumeTime })(Tomatometer);
+    { setTime, stopTime, pauseResumeTime, nextStep, prevStep })(Tomatometer);

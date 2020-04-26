@@ -215,8 +215,8 @@ class Recipe extends Component {
                   index={key}
                   time={
                     /* recipe.readyInMinutes **/
-                    (80/recipe.analyzedInstructions[0].steps.length) +
-                    (80/recipe.analyzedInstructions[0].steps.length) * key
+                    (recipe.readyInMinutes*60/recipe.analyzedInstructions[0].steps.length) +
+                    (recipe.readyInMinutes*60/recipe.analyzedInstructions[0].steps.length) * key
                   }
                 />
               ))
