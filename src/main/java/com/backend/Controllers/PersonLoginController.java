@@ -50,4 +50,12 @@ public class PersonLoginController {
         final String token = jwtTokenUtil.generateToken(user);
         return ResponseEntity.ok(new AuthToken(token,loginUser.getUsername()));
     }
+
+    @GetMapping("/api/isLogged")
+    public ResponseEntity isLogged(@RequestHeader String token)
+    {
+        String username=jwtTokenUtil.getUsernameFromToken(token);
+        Boolean result= jwtTokenUtil.validateToken(token,userService.loadUserByUsername(username));
+        return ResponseEntity.ok(result);
+    }
 }
