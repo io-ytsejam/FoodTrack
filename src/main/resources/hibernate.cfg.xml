@@ -16,6 +16,7 @@
         <property name="show_sql">true</property>
 
         <mapping class="com.backend.Models.IngredientEntity"/>
+        <mapping class="com.backend.Models.RecommendationEntity"/>
         <mapping class="com.backend.Models.PersonEntity"/>
         <mapping class="com.backend.Models.CommentEntity"/>
         <mapping class="com.backend.Models.HealthRestrictionEntity"/>

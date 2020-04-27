@@ -56,6 +56,12 @@ public class PersonEntity {
             inverseJoinColumns = {@JoinColumn(name = "roleid")})
     private Collection<RoleEntity> roles;
 
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "person_recommendation",
+            joinColumns = {@JoinColumn(name = "personid")},
+            inverseJoinColumns = {@JoinColumn(name = "recommendation_id")})
+    private Set<RecommendationEntity> recommendationEntities = new HashSet<RecommendationEntity>();
+
     public PersonEntity(String firstName, String lastName, String email, String password, Collection<RoleEntity> roles) {
         this.firstname = firstName;
         this.lastname = lastName;
@@ -100,6 +106,7 @@ public class PersonEntity {
     public void setPersonPreferenceEntities(List<PersonPreferenceEntity> personPreferenceEntities) {
         this.personPreferenceEntities = personPreferenceEntities;
     }
+
 
     public void addPersonPreference(PersonPreferenceEntity personPreferenceEntity) {
         this.personPreferenceEntities.add(personPreferenceEntity);
@@ -158,6 +165,14 @@ public class PersonEntity {
 
     public void setPersonSettingEntities(List<PersonSettingEntity> personSettingEntities) {
         this.personSettingEntities = personSettingEntities;
+    }
+
+    public Set<RecommendationEntity> getRecommendationEntities() {
+        return recommendationEntities;
+    }
+
+    public void setRecommendationEntities(Set<RecommendationEntity> recommendationEntities) {
+        this.recommendationEntities = recommendationEntities;
     }
 
     public void setPersonid(long personid) {
