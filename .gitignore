@@ -9,3 +9,6 @@ backend/.vscode/
 target/
 .idea/
 src/main/java/com/backend/Security/SecurityConstants.java
+backend/bin
+backend/obj
+backend/out

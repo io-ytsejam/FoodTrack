@@ -1,9 +1,11 @@
+[![Build status](https://dev.azure.com/uni-proj81GE16s5gd/foodtrack/_apis/build/status/fdtrck%20-%20CI)](https://dev.azure.com/uni-proj81GE16s5gd/foodtrack/_build/latest?definitionId=1)
+
 # FoodTrack
 
 This is very basic template of REST API returning five records of forecast under /api/weatherforecast, 
 and React frontend printing those records. 
 
-## How run this?
+## How to run this?
 
 For now you can run backend and frontend separately for development purposes, or using `docker-compose`  with
 production build of frontend served by Nginx.

@@ -57,6 +57,9 @@ public class RecipeEntity {
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RatingEntity> ratings = new ArrayList<RatingEntity>();
 
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<CommentEntity> comments = new ArrayList<>();
+
     public void addRating(RatingEntity ratingEntity)
     {
         this.ratings.add(ratingEntity);
