@@ -1,11 +1,14 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "INGREDIENT", schema = "FDTRCK", catalog = "")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","recipes"})
 public class IngredientEntity {
     @Id
     @Column(name = "INGREDIENTID")

@@ -1,0 +1,41 @@
+.main-section
+  //max-width: 750px
+
+  .preparation-details-wrapper
+    background-color: white
+    padding: 10px
+
+  .chips
+    justify-content: center
+
+  .chips > div
+    margin: 2px
+    flex-wrap: wrap
+    min-height: 32px
+    height: unset
+    background-color: transparent
+
+.secondary-section
+  display: flex
+  flex-direction: column
+  scroll-snap-align: start
+  scroll-snap-type: y mandatory
+  overflow-y: scroll
+  height: 100%
+  .recipe
+    transition: .4s ease transform
+    font-size: 1.5em
+    margin: 0 40px
+    background-color: #fafafa
+    scroll-snap-align: start
+
+    p
+      font-size: 20px
+
+  .recipe.recipe--active
+    font-size: 2em
+    transform: scale(1.1)
+    background-color: white
+
+.secondary-section::-webkit-scrollbar
+  display: none

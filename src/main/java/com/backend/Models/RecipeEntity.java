@@ -1,10 +1,13 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.*;
 
 @Entity
 @Table(name = "RECIPE", schema = "FDTRCK", catalog = "")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","person"})
 public class RecipeEntity {
     @Id
     @Column(name = "RECIPEID")
@@ -102,6 +105,10 @@ public class RecipeEntity {
         this.person=person;
     }
 
+    public String getRecipePersonNickname(){return person.getNickname();}
+
+    public long getRecipePersonid(){return person.getPersonid();}
+
     public long getRecipeid() {
         return recipeid;
     }
@@ -114,6 +121,10 @@ public class RecipeEntity {
         this.ingredients = ingredients;
     }
 
+    public void addAllIngredients(Collection<IngredientEntity> newIngredients){this.ingredients.addAll(newIngredients);}
+
+    public void removeSomeIngredients(Collection<IngredientEntity> oldIngredients){this.ingredients.removeAll(oldIngredients);}
+
     public Set<StepEntity> getSteps() {
         return steps;
     }
@@ -122,12 +133,24 @@ public class RecipeEntity {
         this.steps = steps;
     }
 
+    public void addAllSteps(Collection<StepEntity> newSteps) {this.steps.addAll(newSteps);}
+
+    public void removeSomeSteps(Collection<StepEntity> oldSteps) {this.steps.removeAll(oldSteps);}
+
     public List<PhotoEntity> getPhotoEntities() {
         return photoEntities;
     }
 
     public void setPhotoEntities(List<PhotoEntity> photoEntities) {
         this.photoEntities = photoEntities;
+    }
+
+    public void removeAllPhotoEntities(){photoEntities.clear();}
+
+    public void removeSomePhotoEntities(Collection<PhotoEntity> oldPhotoEntities){this.photoEntities.removeAll(oldPhotoEntities);}
+
+    public void addAllPhotoEntities(List<PhotoEntity> newPhotoEntities){
+            photoEntities.addAll(newPhotoEntities);
     }
 
     public List<RatingEntity> getRatings() {

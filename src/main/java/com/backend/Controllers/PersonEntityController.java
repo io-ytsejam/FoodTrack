@@ -7,9 +7,13 @@ import com.backend.Models.PersonEntity;
 import com.backend.Repositories.PersonEntityRepository;
 import com.backend.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
@@ -41,6 +45,15 @@ public class PersonEntityController {
     @GetMapping(value = "/api/people/{id}")
     Optional<PersonEntity> one(@PathVariable Long id) {
         return repository.findById(id);
+    }
+
+    @GetMapping(value = "/api/people/user")
+    RedirectView currentUser()
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(!(authentication instanceof AnonymousAuthenticationToken) )
+            return new RedirectView("/api/people/"+repository.findByNickname(authentication.getName()).getPersonid());
+        return new RedirectView("/register");
     }
 
     @PostMapping(value = "/api/people}")
