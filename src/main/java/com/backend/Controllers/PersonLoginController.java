@@ -31,12 +31,12 @@ public class PersonLoginController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/login")
+    @GetMapping("/api/login")
     public String login(Model model) {
         return "login";
     }
 
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @RequestMapping(value = "/api/login", method = RequestMethod.POST)
     public ResponseEntity register(@RequestBody LoginUser loginUser) throws AuthenticationException {
 
         final Authentication authentication = authenticationManager.authenticate(

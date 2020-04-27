@@ -35,7 +35,7 @@ public class RecommendationController {
     @Autowired
     UserServiceImpl userService;
 
-    @GetMapping("/index/recs")
+    @GetMapping("/api/recs")
     public ResponseEntity getRecs(@RequestHeader String token) throws ResourceNotFoundException
     {
         String username=jwtTokenUtil.getUsernameFromToken(token);
@@ -53,7 +53,7 @@ public class RecommendationController {
         return ResponseEntity.ok().body(jsons_bournes);
     }
 
-    @PostMapping("/index/search")
+    @PostMapping("/api/search")
     public ResponseEntity recipeSearch(@RequestHeader Long id, @RequestHeader String token) throws ResourceNotFoundException
     {
         String username=jwtTokenUtil.getUsernameFromToken(token);

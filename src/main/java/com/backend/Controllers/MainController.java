@@ -12,7 +12,7 @@ import java.util.UUID;
 
 @Controller
 public class MainController {
-    @GetMapping("/")
+    @GetMapping("/api")
     public String root() {
         return "index";
     }
