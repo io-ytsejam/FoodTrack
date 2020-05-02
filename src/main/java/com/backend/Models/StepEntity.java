@@ -1,11 +1,14 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "STEP", schema = "FDTRCK", catalog = "")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","recipes"})
 public class StepEntity {
     @Id
     @Column(name = "STEPID")

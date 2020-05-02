@@ -1,6 +1,8 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -9,6 +11,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "PERSON", schema = "FDTRCK", catalog = "")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","comments"})
 public class PersonEntity {
     @Id
     @Column(name = "PERSONID")
@@ -71,8 +74,22 @@ public class PersonEntity {
 
     public void addRecipe(RecipeEntity recipe)
     {
-        this.recipes.add(recipe);
-        recipe.setPerson(this);
+        addRecipe(recipe,true);
+    }
+
+    void addRecipe(RecipeEntity recipe,boolean set)
+    {
+        if(recipe!=null){
+            if(getRecipes().contains(recipe)){
+                getRecipes().set(getRecipes().indexOf(recipe),recipe);
+            }
+            else{
+                getRecipes().add(recipe);
+            }
+            if(set){
+                recipe.setPerson(this,false);
+            }
+        }
     }
 
     public List<RecipeEntity> getRecipes() {
@@ -248,4 +265,5 @@ public class PersonEntity {
     public void setRoles(Collection<RoleEntity> roles) {
         this.roles = roles;
     }
+
 }

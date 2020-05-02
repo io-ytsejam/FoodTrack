@@ -1,5 +1,6 @@
 package com.backend.Repositories;
 
+import com.backend.Models.CommentEntity;
 import com.backend.Models.IngredientEntity;
 import com.backend.Models.RecipeEntity;
 import org.springframework.data.domain.Page;

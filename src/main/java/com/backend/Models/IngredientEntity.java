@@ -16,7 +16,7 @@ public class IngredientEntity {
     private long ingredientid;
 
     @Basic
-    @Column(name = "NAME")
+    @Column(name = "NAME",unique=true,nullable = false)
     private String name;
 
     @ManyToMany(mappedBy = "ingredients")

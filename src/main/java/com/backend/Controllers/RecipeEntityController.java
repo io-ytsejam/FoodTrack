@@ -1,163 +1,201 @@
 package com.backend.Controllers;
 
-import com.backend.Models.IngredientEntity;
+import com.backend.BackendApplication;
+import com.backend.Dto.RecipeAddDto;
+import com.backend.Dto.RecipeAddRemoveElementsDto;
+import com.backend.Models.CommentEntity;
 import com.backend.Models.RecipeEntity;
 import com.backend.Repositories.RecipeEntityRepository;
+import com.backend.Services.RecipeCommandService;
 import com.backend.Services.UserService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.naming.AuthenticationException;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.Optional;
 
-//SWITCH TO DTOS TO NOT ADD COMMENTS/RATINGS WHEN CREATING RECIPE
+/*
+Get comments for given recipe id: @GetMapping(/api/recipes/{id}/comments?{page,size}) @PathVariable Long id
 
+Post new recipe: @PostMapping(/api/recipes)
+Body: String name, char ifexternal, String description, Collection{ optional Long ingredientid, String name },
+(needs testing) Collection{ optional Long stepid, String stepdescription },(needs testing) Collection( optional Long photoid, String photoLink)
+Response header: Location - link to new recipe
+
+(unfinished) Replace existing recipe: @PutMapping(/api/recipes/{id})
+
+(unfinished) Add elements to existing recipe: @PostMapping(/api/recipes/{id}
+
+Get all recipes as page: @GetMapping(/api/recipes?{page,size})
+
+Get recipe by id: @GetMapping(/api/recipes/{id}) @PathVariable Long id
+
+Get recipes by current user as page: @GetMapping(/api/recipes/user?{page,size})
+
+Delete recipe with given id: @DeleteMapping (/api/recipes/{id})
+
+Add comment to recipe with given id: @PostMapping(/api/recipes/{id}/comment)
+Body: String content
+
+Rate recipe with given id: @PostMapping(/api/recipes/{id}/rate?{value}) @RequestParam Long value
+
+*/
+//SWITCH TO DTOS TO NOT ADD COMMENTS/RATINGS WHEN CREATING RECIPE
 @RestController
 public class RecipeEntityController{
 
-    /*@Autowired
-    private RecipeCommandService recipeCommandService; *///temporary?
+    @Autowired
+    private RecipeCommandService recipeCommandService; //temporary?
 
     @Autowired
     private RecipeEntityRepository recipeRepository; //temporary?
 
-    @Autowired
-    private UserService userService;
+    /*@Autowired
+    private UserService userService;*/
+
+    private Logger logger=LoggerFactory.getLogger(BackendApplication.class);
+
+
+    @GetMapping("/api/recipes/{id}/comments")
+    public ResponseEntity<Page<CommentEntity>> getCommentsForRecipe(@PathVariable @NotBlank Long id,Pageable pageable)
+            throws ResourceNotFoundException
+    {
+        HttpHeaders responseheaders=new HttpHeaders();
+        try{
+            responseheaders.add("Location","/api/recipes/"+id);
+            return ResponseEntity.ok(recipeCommandService.getCommentsByRecipeid(id,pageable));
+        } catch (ResourceNotFoundException e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+    }
+
+
 
     @PostMapping("/api/recipes")
-    public ResponseEntity<String> postRecipe(@RequestBody RecipeEntity newRecipe)
+    public ResponseEntity<RecipeEntity> postRecipe(@Valid @NonNull @RequestBody RecipeAddDto recipeDto)
+            throws BadCredentialsException
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        HttpHeaders responseHeaders = new HttpHeaders();
         if (!(authentication instanceof AnonymousAuthenticationToken))
         {
-            newRecipe.setPerson(userService.findByNickname(authentication.getName()));
-            if(!newRecipe.getRatings().isEmpty()) //||newRecipe.getComments !=null //SWITCH TO DTO
-                return new ResponseEntity<>("Can't add ratings",HttpStatus.BAD_REQUEST);
-            recipeRepository.save(newRecipe);
-            return new ResponseEntity("/api/recipes",HttpStatus.CREATED);
-        }else
-            return new ResponseEntity("/register",HttpStatus.FORBIDDEN);
-
+            RecipeEntity recipe = recipeCommandService.createRecipe(recipeDto,authentication.getName());
+            responseHeaders.add("Location","/api/recipes/"+recipe.getRecipeid());
+            return new ResponseEntity(recipe,responseHeaders,HttpStatus.OK);
+        }
+        throw new BadCredentialsException("Anonymous user cannot post recipes");
     }
 
-    //SWITCH TO DTO
+    //done need testing
     @PostMapping("/api/recipes/{id}")
-    public ResponseEntity<RecipeEntity> addToRecipe(@RequestBody RecipeEntity newRecipe,@PathVariable Long id)
+    public ResponseEntity<RecipeEntity> addToRecipe(@RequestBody RecipeAddRemoveElementsDto recipeDto, @PathVariable Long id)
+     throws BadCredentialsException,ResourceNotFoundException
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        HttpHeaders responseheaders=new HttpHeaders();
         if (!(authentication instanceof AnonymousAuthenticationToken)){
-            if(authentication.getName().equals(recipeRepository.findById(id).get().getRecipePersonNickname())){
-            return new ResponseEntity(recipeRepository.findById(id)
-                    .map(recipe -> {
-                        if(newRecipe.getName()!=null)
-                            recipe.setName(newRecipe.getName());
-                        if(newRecipe.getDescription()!=null)
-                            recipe.setDescription(newRecipe.getDescription());
-                        if(!newRecipe.getIngredients().isEmpty())
-                            recipe.addAllPhotoEntities(newRecipe.getPhotoEntities());
-                        if(!newRecipe.getIngredients().isEmpty())
-                            recipe.addAllIngredients(newRecipe.getIngredients());
-                        if(!newRecipe.getSteps().isEmpty())
-                            recipe.addAllSteps(newRecipe.getSteps());
-                        return  recipeRepository.save(recipe);
-                    }),HttpStatus.ACCEPTED);}
-            else
-            {
-                newRecipe.setRecipeid(id);
-                newRecipe.setPerson(userService.findByNickname(authentication.getName()));
-                return new ResponseEntity<>(recipeRepository.save(newRecipe),HttpStatus.ACCEPTED);
+            try{
+                RecipeEntity recipe = recipeCommandService.addToRecipe(recipeDto,id,authentication.getName());
+                responseheaders.add("Location","/api/recipes/"+recipe.getRecipeid());
+            return new ResponseEntity(recipe,responseheaders,HttpStatus.OK);
+            } catch (BadCredentialsException | ResourceNotFoundException e) {
+                logger.error(e.getMessage());
+                throw e;
             }
         }else
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        {
+            logger.error("Anonymous user can't modify recipe");
+            throw new BadCredentialsException("Anonymous user can't modify recipe");
+        }
     }
 
-    //done //add comments //switch to dto
+    //done need testing
     @PutMapping("/api/recipes/{id}")
-    public ResponseEntity<String> replaceRecipe(@RequestBody RecipeEntity newRecipe,@PathVariable Long id)
+    public ResponseEntity<RecipeEntity> replaceRecipe(@RequestBody @Valid @NonNull RecipeAddDto recipeDto,
+                                                @PathVariable Long id)
+            throws BadCredentialsException,ResourceNotFoundException
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            if (recipeRepository.findById(id).isPresent() &&
-                    recipeRepository.findById(id).get().getRecipePersonNickname().equals(authentication.getName())) {
-                recipeRepository.findById(id)
-                        .map(recipe -> {
-                            recipe.setName(newRecipe.getName());
-                            recipe.setDescription(newRecipe.getDescription());
-                            recipe.setIfexternal(newRecipe.getIfexternal());
-                            recipe.setIngredients(newRecipe.getIngredients());
-                            recipe.setDescription(newRecipe.getDescription());
-                            recipe.setSteps(newRecipe.getSteps());
-                            //recipe.setPhotoEntities(newRecipe.getPhotoEntities());
-                            recipe.removeAllPhotoEntities();
-                            recipe.addAllPhotoEntities(newRecipe.getPhotoEntities());
-                            return recipeRepository.save(recipe);
-                        });
-                return new ResponseEntity<>("/api/recipes/" + id
-                        , HttpStatus.CREATED);
-            } else
-                return new ResponseEntity<>("/index",HttpStatus.FORBIDDEN);
-
-        } else
-            return new ResponseEntity<>("/register",HttpStatus.FORBIDDEN);
+        HttpHeaders responseheaders=new HttpHeaders();
+        if (!(authentication instanceof AnonymousAuthenticationToken)){
+            try{
+                RecipeEntity recipe = recipeCommandService.replaceRecipe(recipeDto,id,authentication.getName());
+                responseheaders.add("Location","/api/recipes/"+recipe.getRecipeid());
+                return new ResponseEntity(recipe,responseheaders,HttpStatus.OK);
+            } catch (BadCredentialsException | ResourceNotFoundException e) {
+                logger.error(e.getMessage());
+                throw e;
+            }
+        }else
+        {
+            logger.error("Anonymous user can't modify recipe");
+            throw new BadCredentialsException("Anonymous user can't modify recipe");
+        }
     }
 
-    //tbd
+    //done
     @GetMapping("/api/recipes")
-    public Page<RecipeEntity> getRecipes(Pageable pageable)
+    public Page<RecipeEntity> getRecipes(Pageable pageable) throws BadCredentialsException
     {
-        return recipeRepository.findAll(pageable);
+        return recipeCommandService.getAllRecipes(pageable);
     }
 
     //done
     @GetMapping("/api/recipes/{id}")
-    public ResponseEntity<Optional<RecipeEntity>> getRecipeWithId(@PathVariable Long id)
+    public ResponseEntity<RecipeEntity> getRecipeWithId(@PathVariable Long id) throws ResourceNotFoundException
     {
-        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            if (recipeRepository.findById(id).isPresent()){
-                return new ResponseEntity<>(recipeRepository.findById(id),HttpStatus.ACCEPTED);
-            }
-            else
-                return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-        }else
-            return new ResponseEntity<>(null,HttpStatus.FORBIDDEN);
+        RecipeEntity recipe;
+        try {
+            recipe = recipeCommandService.findByRecipeid(id);
+        } catch (ResourceNotFoundException e) {
+            logger.error("No recipe found with given id / @Get \"/api/recipes/"+id+"\"");
+            throw e;
+        }
+        return ResponseEntity.ok(recipe);
     }
-
+    //done
     @GetMapping("/api/recipes/user")
-    public ResponseEntity<Page<RecipeEntity>> getCurrentUserRecipes(Pageable pageable) throws AuthenticationException
+    public ResponseEntity<Page<RecipeEntity>> getCurrentUserRecipes(Pageable pageable) throws BadCredentialsException
     {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        //security config automatically denies access?
-
-        if(!(authentication instanceof AnonymousAuthenticationToken)) {
-            return ResponseEntity.ok(recipeRepository.findByPersonNickname(
-                    authentication.getName(), pageable));
-        }else
-        return (ResponseEntity<Page<RecipeEntity>>) ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT);
+        if(authentication instanceof AnonymousAuthenticationToken)
+            throw new BadCredentialsException("Cannot authenticate user");
+        return ResponseEntity.ok(recipeCommandService.findByPersonNickname(authentication.getName(),pageable));
     }
 
     //done
     @DeleteMapping("/api/recipes/{id}")
-    public ResponseEntity<String> deleteRecipe(@PathVariable Long id) {
+    public ResponseEntity deleteRecipe(@PathVariable Long id) throws
+            BadCredentialsException,ResourceNotFoundException{
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            if (recipeRepository.findById(id).isPresent()) {
-                if (recipeRepository.findById(id).get().getRecipePersonNickname().equals(authentication.getName())) {
-                    recipeRepository.deleteById(id);
-                    return new ResponseEntity<>("/api/recipes/user",HttpStatus.ACCEPTED);
-                }else
-                    return new ResponseEntity<>("Unauthorized delete attempt",HttpStatus.FORBIDDEN);
-            } else
-                return new ResponseEntity<>("No recipe with given id", HttpStatus.NOT_FOUND);
-        } else
-            return new ResponseEntity<>("/register", HttpStatus.FORBIDDEN);
+        if (authentication instanceof AnonymousAuthenticationToken) {
+            throw new BadCredentialsException(("Anonymous user can't modify recipe"));
+        }
+        try{
+        recipeCommandService.deleteByRecipeId(id,authentication.getName());
+        } catch (BadCredentialsException | ResourceNotFoundException e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+        return new ResponseEntity(HttpStatus.OK);
     }
 
 
@@ -186,5 +224,48 @@ public class RecipeEntityController{
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }else
             return new ResponseEntity(HttpStatus.FORBIDDEN);
+    }
+
+    //done
+    @PostMapping("/api/recipes/{id}/comment")
+    public ResponseEntity<RecipeEntity> addComment(@RequestBody @NotBlank String content, @PathVariable Long id)
+            throws ResourceNotFoundException,BadCredentialsException
+    {
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        RecipeEntity recipe;
+        if(authentication instanceof AnonymousAuthenticationToken)
+            throw new BadCredentialsException("Anonymous user can't post comments");
+        try {
+             recipe = recipeCommandService.addComment(content, id, authentication.getName());
+        } catch (ResourceNotFoundException e) {
+            logger.error(e.getMessage());
+            throw e;
+        }
+        responseHeaders.add("Location","/api/recipes/"+id);
+        return new ResponseEntity(recipe,responseHeaders,HttpStatus.OK);
+    }
+
+
+    @PostMapping("/api/recipes/{id}/rate")
+    public ResponseEntity<RecipeEntity> rateRecipe(@RequestParam Long value,@PathVariable Long id) throws
+            ResourceNotFoundException,BadCredentialsException
+    {
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        HttpHeaders responseHeaders = new HttpHeaders();
+        if(!(authentication instanceof AnonymousAuthenticationToken))
+        {
+            RecipeEntity recipe;
+            try{
+            recipe= recipeCommandService.rateRecipe(value,id,authentication.getName());}
+            catch (ResourceNotFoundException e) {
+                logger.error(e.getMessage());
+                throw e;
+            }
+            responseHeaders.add("Location","/api/recipes/"+id);
+            return new ResponseEntity(recipe
+                    ,responseHeaders,HttpStatus.CREATED);
+        }
+        throw new BadCredentialsException("Anonymous users can't rate recipes");
     }
 }

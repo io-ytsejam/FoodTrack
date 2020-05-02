@@ -1,16 +1,20 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "COMMENTARY", schema = "FDTRCK")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","person","recipe"})
 public class CommentEntity {
     @Id
     @Column(name = "COMMENTID")
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long commentid;
     @Basic
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT",nullable = false)
     private String content;
 
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
@@ -52,6 +56,20 @@ public class CommentEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    @JsonGetter
+    public Long getPersonid(){return person.getPersonid();}
+
+    @JsonGetter
+    public Long getRecipeid(){return recipe.getRecipeid();}
+
+    public RecipeEntity getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(RecipeEntity recipe) {
+        this.recipe = recipe;
     }
 
     @Override
