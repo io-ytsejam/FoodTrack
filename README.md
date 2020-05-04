@@ -1,3 +1,10 @@
+docker-compose build
+
+docker-compose run -d --service-ports --name frontend frontend
+
+docker-compose down
+
+
 [![Build status](https://dev.azure.com/uni-proj81GE16s5gd/foodtrack/_apis/build/status/fdtrck%20-%20CI)](https://dev.azure.com/uni-proj81GE16s5gd/foodtrack/_build/latest?definitionId=1)
 
 # FoodTrack
@@ -5,7 +12,7 @@
 This is very basic template of REST API returning five records of forecast under /api/weatherforecast, 
 and React frontend printing those records. 
 
-## How to run this?
+## How to run this? 
 
 For now you can run backend and frontend separately for development purposes, or using `docker-compose`  with
 production build of frontend served by Nginx.
@@ -23,7 +30,7 @@ yarn start
 ```
 Frontend should start on http://localhost
 
-* Build backend
+* Build backend OUTDATED DON'T DO IT :) 
 ```
 cd backend/
 dotnet publish -c Release -o out
