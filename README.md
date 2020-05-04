@@ -1,3 +1,5 @@
+Z głownego folderu:
+
 docker-compose build
 
 docker-compose run -d --service-ports --name frontend frontend
