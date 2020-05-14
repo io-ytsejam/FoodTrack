@@ -5,6 +5,7 @@ const initialState = {
   lastName: '',
   username: '',
   id: '',
+  authToken: ''
 };
 
 export default (state = initialState, action) => {

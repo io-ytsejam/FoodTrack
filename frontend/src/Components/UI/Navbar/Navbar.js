@@ -16,7 +16,9 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import History from '@material-ui/icons/History';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { userSignIn } from '../../../actions/userSession';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -106,22 +108,6 @@ const Navbar = (props) => {
   };
 
   const menuId = 'primary-search-account-menu';
-  const renderMenu = (
-    <Menu
-      anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-      id={menuId}
-      keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-      open={isMenuOpen}
-      onClose={handleMenuClose}
-    >
-      <Link to="/user-profile">
-        <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      </Link>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-    </Menu>
-  );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
   const renderMobileMenu = (
@@ -159,12 +145,12 @@ const Navbar = (props) => {
         >
           <AccountCircle />
         </IconButton>
-        <p>Profile</p>
+        <p>{'USER_NAME'}</p>
       </MenuItem>
     </Menu>
   );
 
-  const { absoluteCardActive } = props;
+  const { absoluteCardActive, username, userSignIn, history } = props;
   return (
     <div className={classes.grow}>
       <AppBar
@@ -184,7 +170,12 @@ const Navbar = (props) => {
             <MenuIcon />
           </IconButton>
           <Link to="/">
-            <Typography title="Go to home page" className={classes.title} variant="h6" noWrap>
+            <Typography
+              title="Go to home page"
+              className={classes.title}
+              variant="h6"
+              noWrap
+            >
               Food Track
             </Typography>
           </Link>
@@ -240,9 +231,37 @@ const Navbar = (props) => {
         </Toolbar>
       </AppBar>
       {renderMobileMenu}
-      {renderMenu}
+      <Menu
+        anchorEl={anchorEl}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        id={menuId}
+        keepMounted
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isMenuOpen}
+        onClose={handleMenuClose}
+      >
+        {
+          username ? <div>
+            <MenuItem>Logged as {username}</MenuItem>
+            <MenuItem onClick={() => {
+              localStorage.setItem('username', '');
+              localStorage.setItem('authToken', '');
+              userSignIn(null);
+              history.push('/logout');
+              handleMenuClose();
+            }}>Logout</MenuItem>
+          </div> :
+            <Link to="/user-profile">
+              <MenuItem onClick={handleMenuClose}>Sign up</MenuItem>
+            </Link>
+        }
+      </Menu>
     </div>
   );
 };
 
-export default Navbar;
+const mapStateToProps = (state) => ({
+  username: state.userSession.username
+});
+
+export default connect(mapStateToProps, { userSignIn })(withRouter(Navbar));

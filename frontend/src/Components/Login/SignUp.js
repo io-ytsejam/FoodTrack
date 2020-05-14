@@ -14,7 +14,9 @@ class SignUp extends Component {
       name: '',
       lastName: '',
       userName: '',
-      password: ''
+      password: '',
+
+      registrationError: undefined
     };
   }
 
