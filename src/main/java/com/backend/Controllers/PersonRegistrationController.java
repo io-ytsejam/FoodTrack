@@ -29,7 +29,7 @@ public class PersonRegistrationController {
     }
 
     @PostMapping
-    public String registerUserAccount(@ModelAttribute("user") @Valid UserRegistrationDto userDto, BindingResult result) {
+    public String registerUserAccount(@RequestBody @Valid UserRegistrationDto userDto, BindingResult result) {
 
         PersonEntity existing = userService.findByNickname(userDto.getNickname());
         if (existing != null) {
@@ -39,7 +39,7 @@ public class PersonRegistrationController {
             return "registration";
         }
         userService.save(userDto);
-        return "redirect:/registration?success";
+        return "redirect:/api/registration?success";
     }
 }
 
