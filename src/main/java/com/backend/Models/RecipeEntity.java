@@ -47,7 +47,7 @@ public class RecipeEntity {
             inverseJoinColumns = {@JoinColumn(name = "ingredientid")})
      private Set<IngredientEntity> ingredients = new HashSet<IngredientEntity>();
 
-    @ManyToMany//cascade?
+    @ManyToMany(cascade = CascadeType.PERSIST)//cascade?
     @JoinTable(name = "recipe_step",
             joinColumns = {@JoinColumn(name = "recipeid")},
             inverseJoinColumns = {@JoinColumn(name = "stepid")})
