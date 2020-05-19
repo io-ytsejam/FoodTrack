@@ -231,4 +231,9 @@ public class RecipeCommandServiceImpl implements RecipeCommandService {
             throw new BadCredentialsException("Can't delete someone else's recipe");
         recipeRepository.deleteById(recipeId);
     }
+
+    @Override
+    public Page<RecipeEntity> findByNameLike(String name, Pageable pageable) {
+        return recipeRepository.findAllByNameLikeIgnoreCase(name,pageable);
+    }
 }

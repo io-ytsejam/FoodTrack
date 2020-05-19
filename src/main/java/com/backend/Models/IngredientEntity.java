@@ -20,7 +20,7 @@ public class IngredientEntity {
     private String name;
 
     @ManyToMany(mappedBy = "ingredients")
-    private Set<RecipeEntity> recipes = new HashSet<RecipeEntity>(); //ignore for unidirectional?
+    private Set<RecipeEntity> recipes = new HashSet<RecipeEntity>();
 
     public void addRecipe(RecipeEntity recipeEntity) {
         this.recipes.add(recipeEntity);

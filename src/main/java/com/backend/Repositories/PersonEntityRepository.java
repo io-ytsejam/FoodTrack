@@ -7,8 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.backend.Models.PersonEntity;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
 
-@RepositoryRestResource(collectionResourceRel = "people",path = "people")
+@Repository//RestResource(collectionResourceRel = "people",path = "people")
 public interface PersonEntityRepository extends JpaRepository<PersonEntity, Long> {
     Page<PersonEntity> findByLastname(@Param("name")String lastName, Pageable pageable);
     PersonEntity findByPersonid(@Param("id")long id);

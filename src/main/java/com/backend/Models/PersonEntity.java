@@ -11,7 +11,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "PERSON", schema = "FDTRCK", catalog = "")
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","comments"})
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","comments","personSettingEntities"})
 public class PersonEntity {
     @Id
     @Column(name = "PERSONID")
@@ -19,7 +19,7 @@ public class PersonEntity {
     private long personid;
 
     @Basic
-    @Column(name = "NICKNAME")
+    @Column(name = "NICKNAME",unique = true)
     private String nickname;
 
     @Basic
@@ -34,6 +34,10 @@ public class PersonEntity {
     @Basic
     @Column(name = "LASTNAME")
     private String lastname;
+
+    /*@Basic
+    @Column(name = "PRIVACY_FLAGS")
+    private Long privacyflags;*/
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RecipeEntity> recipes = new ArrayList<RecipeEntity>();

@@ -29,12 +29,4 @@ public class IngredientEntityController {
         ingredientRepository.deleteById(id);
         return new ResponseEntity("abcd", HttpStatus.ACCEPTED);
     }
-
-    /*@GetMapping("/api/test")
-    public ResponseEntity<String> test(@RequestParam String name)
-    {
-        if(ingredientRepository.existsIngredientEntityByName(name))
-            return new ResponseEntity("true",HttpStatus.CREATED);
-        return new ResponseEntity("false",HttpStatus.CREATED);
-    }*/
 }

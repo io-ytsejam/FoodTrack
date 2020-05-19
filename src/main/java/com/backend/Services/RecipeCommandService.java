@@ -27,4 +27,5 @@ public interface RecipeCommandService { //not used
     public RecipeEntity findByRecipeid(Long recipeId) throws ResourceNotFoundException;
     public void deleteByRecipeId(Long recipeId,String username) throws
             BadCredentialsException,ResourceNotFoundException;
+    public Page<RecipeEntity> findByNameLike(String name,Pageable pageable);
 }

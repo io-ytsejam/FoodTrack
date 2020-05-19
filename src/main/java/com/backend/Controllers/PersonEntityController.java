@@ -1,7 +1,9 @@
 package com.backend.Controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.backend.Dto.UserRegistrationDto;
 import com.backend.Models.CommentEntity;
@@ -13,10 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -45,10 +51,21 @@ public class PersonEntityController {
     {
         this.repository=repository;
     }
-    @GetMapping(value = "/api/peopleAll")
-    Iterable<PersonEntity> all() {
-        return repository.findAll();
+    @GetMapping(value = "/api/people")
+    Page<PersonEntity> all(Pageable pageable) {
+
+        return repository.findAll(pageable).map(person ->
+        {
+            if(person.getPersonSettingEntities().stream().
+                    anyMatch(setting -> {if(setting.getValue()=='t' &&
+                            setting.getSettingEntity().getName().equals("privacy"))return true;
+                        return false;}))
+            {person.setFirstname("");
+                person.setLastname("");}
+            return person;
+        });
     }
+
 
     /*@GetMapping(value = "/test")
     HttpEntity<PagedModel<PersonEntity>> persons(Pageable pageable, PagedResourcesAssembler<PersonEntity> assembler)
@@ -58,8 +75,20 @@ public class PersonEntityController {
     }*/
 
     @GetMapping(value = "/api/people/{id}")
-    Optional<PersonEntity> one(@PathVariable Long id) {
-        return repository.findById(id);
+    PersonEntity one(@PathVariable Long id) throws ResourceNotFoundException {
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        PersonEntity person = repository.findById(id).orElse(null);
+        if(person != null) {
+            if(person.getNickname().equals(authentication.getName()))
+                return person;
+            if(person.getPersonSettingEntities().stream().
+                    anyMatch(setting -> {if(setting.getValue()=='t' &&
+                            setting.getSettingEntity().getName().equals("privacy"))return true;
+                    return false;}))
+            {person.setFirstname("");
+            person.setLastname("");}
+            return person;
+        }else throw new ResourceNotFoundException("No person with given id");
     }
 
     @GetMapping(value = "/api/people/user")

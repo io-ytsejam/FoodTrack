@@ -127,6 +127,7 @@ public class RecipeEntity {
         this.person=person;
     }
 
+    @JsonGetter
     public String getRecipePersonNickname(){return person.getNickname();}
 
     public long getRecipePersonid(){return person.getPersonid();}

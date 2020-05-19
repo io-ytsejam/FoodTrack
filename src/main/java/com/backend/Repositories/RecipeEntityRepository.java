@@ -24,4 +24,5 @@ public interface RecipeEntityRepository extends JpaRepository<RecipeEntity, Long
 @Repository
 public interface RecipeEntityRepository extends JpaRepository<RecipeEntity,Long>{
     Page<RecipeEntity> findByPersonNickname(String nickname,Pageable pageable);
+    Page<RecipeEntity> findAllByNameLikeIgnoreCase(String name,Pageable pageable);
 }
