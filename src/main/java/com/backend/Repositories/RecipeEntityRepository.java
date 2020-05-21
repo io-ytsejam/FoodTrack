@@ -1,5 +1,6 @@
 package com.backend.Repositories;
 
+import com.backend.Models.CommentEntity;
 import com.backend.Models.IngredientEntity;
 import com.backend.Models.RecipeEntity;
 import org.springframework.data.domain.Page;
@@ -23,4 +24,5 @@ public interface RecipeEntityRepository extends JpaRepository<RecipeEntity, Long
 @Repository
 public interface RecipeEntityRepository extends JpaRepository<RecipeEntity,Long>{
     Page<RecipeEntity> findByPersonNickname(String nickname,Pageable pageable);
+    Page<RecipeEntity> findAllByNameLikeIgnoreCase(String name,Pageable pageable);
 }

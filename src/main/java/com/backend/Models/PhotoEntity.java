@@ -1,9 +1,12 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "PHOTO", schema = "FDTRCK", catalog = "")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","recipeEntity"})
 public class PhotoEntity {
 
     @Id
@@ -11,8 +14,8 @@ public class PhotoEntity {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long photoid;
 
-    @Basic
-    @Column(name = "PHOTO_LINK")
+    @Lob
+    @Column(name = "PHOTO",columnDefinition = "CLOB NOT NULL")
     private String photoLink;
 
     @ManyToOne(optional = false,fetch = FetchType.LAZY)

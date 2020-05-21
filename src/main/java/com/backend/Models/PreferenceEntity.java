@@ -16,7 +16,7 @@ public class PreferenceEntity {
     private long preferenceid;
 
     @Basic
-    @Column(name = "CATEGORY")
+    @Column(name = "CATEGORY",unique = true)
     private String category;
 
     @OneToMany(mappedBy = "preferenceEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)

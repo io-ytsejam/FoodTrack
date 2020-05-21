@@ -1,7 +1,16 @@
-version: "2"
+version: "3.7"
 services:
   frontend:
-    image: node:13.8.0-slim
+    build: ./frontend/
+#    build:
+#      context: https://github.com/mialek/FoodTrack.git#:frontend
+    image: frontend
+#node:13.8.0-slim
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
     restart: always
     ports:
       - "80:3000"
@@ -10,13 +19,29 @@ services:
       - CHOKIDAR_USEPOOLING=true
     volumes: 
       - ./frontend:/frontend
-    command: yarn start
-#   depends_on:
-#     - backend
+#    command: yarn start
+    depends_on:
+      - backend
+    container_name: fdtrck_frontend
+    networks: {fdtrck-bridge}
 
-# backend:
-#   build: ./backend/Dockerfile
-#   image: backend
-#   restart: always
-#   ports:
-#     - "8080:5000"
+
+  backend:
+#    build: ./
+#      context: https://github.com/mialek/FoodTrack.git
+    build: ./
+    image: backend
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+    restart: always
+    ports:
+      - "5000:5000"
+    container_name: fdtrck_backend
+    networks: {fdtrck-bridge}
+networks:
+  fdtrck-bridge:
+    driver: bridge
+    name: fdtrck_bridge

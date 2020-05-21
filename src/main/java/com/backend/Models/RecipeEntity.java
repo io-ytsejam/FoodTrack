@@ -1,9 +1,11 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "RECIPE", schema = "FDTRCK", catalog = "")
@@ -45,7 +47,7 @@ public class RecipeEntity {
             inverseJoinColumns = {@JoinColumn(name = "ingredientid")})
      private Set<IngredientEntity> ingredients = new HashSet<IngredientEntity>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)//cascade?
     @JoinTable(name = "recipe_step",
             joinColumns = {@JoinColumn(name = "recipeid")},
             inverseJoinColumns = {@JoinColumn(name = "stepid")})
@@ -59,6 +61,21 @@ public class RecipeEntity {
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<CommentEntity> comments = new ArrayList<>();
+
+    public void addComment(CommentEntity commentEntity)
+    {
+        this.comments.add(commentEntity);
+        commentEntity.setRecipe(this);
+    }
+
+    public void removeComment(CommentEntity commentEntity){
+        if(this.comments.contains(commentEntity)){
+            comments.remove(commentEntity);
+            commentEntity.setRecipe(null);
+        }
+    }
+
+    public List<CommentEntity> getComments(){return comments;}
 
     public void addRating(RatingEntity ratingEntity)
     {
@@ -92,6 +109,11 @@ public class RecipeEntity {
         p.getRecipes().remove(this);
     }
 
+    public void removePhoto(PhotoEntity p){
+        this.photoEntities.remove(p);
+        p.setRecipeEntity(null);
+    }
+
     public Set<IngredientEntity> getIngredients(){return ingredients;}
 
     public RecipeEntity() {
@@ -105,6 +127,7 @@ public class RecipeEntity {
         this.person=person;
     }
 
+    @JsonGetter
     public String getRecipePersonNickname(){return person.getNickname();}
 
     public long getRecipePersonid(){return person.getPersonid();}
@@ -121,9 +144,17 @@ public class RecipeEntity {
         this.ingredients = ingredients;
     }
 
-    public void addAllIngredients(Collection<IngredientEntity> newIngredients){this.ingredients.addAll(newIngredients);}
+    public void addAllIngredients(Collection<IngredientEntity> newIngredients){
+        for(IngredientEntity i: newIngredients) {
+            addIngredient(i);
+        }
+    }
 
-    public void removeSomeIngredients(Collection<IngredientEntity> oldIngredients){this.ingredients.removeAll(oldIngredients);}
+    public void removeSomeIngredients(Collection<IngredientEntity> oldIngredients){
+        for(IngredientEntity i: oldIngredients) {
+            removeIngredient(i);
+        }
+    }
 
     public Set<StepEntity> getSteps() {
         return steps;
@@ -133,10 +164,16 @@ public class RecipeEntity {
         this.steps = steps;
     }
 
-    public void addAllSteps(Collection<StepEntity> newSteps) {this.steps.addAll(newSteps);}
-
-    public void removeSomeSteps(Collection<StepEntity> oldSteps) {this.steps.removeAll(oldSteps);}
-
+    public void addAllSteps(Collection<StepEntity> newSteps){
+        for(StepEntity i: newSteps) {
+            addStep(i);
+        }
+    }
+    public void removeSomeSteps(Collection<StepEntity> oldSteps){
+        for(StepEntity i: oldSteps) {
+            removeStep(i);
+        }
+    }
     public List<PhotoEntity> getPhotoEntities() {
         return photoEntities;
     }
@@ -145,12 +182,20 @@ public class RecipeEntity {
         this.photoEntities = photoEntities;
     }
 
-    public void removeAllPhotoEntities(){photoEntities.clear();}
+    public void removeAllPhotoEntities(){
+        for(PhotoEntity i:photoEntities)
+            removePhoto(i);
+    }
 
-    public void removeSomePhotoEntities(Collection<PhotoEntity> oldPhotoEntities){this.photoEntities.removeAll(oldPhotoEntities);}
-
+    public void removeSomePhotoEntities(Collection<PhotoEntity> oldPhotoEntities){
+        for(PhotoEntity i: oldPhotoEntities) {
+            removePhoto(i);
+        }
+    }
     public void addAllPhotoEntities(List<PhotoEntity> newPhotoEntities){
-            photoEntities.addAll(newPhotoEntities);
+        for(PhotoEntity i: newPhotoEntities) {
+            addPhoto(i);
+        }
     }
 
     public List<RatingEntity> getRatings() {
@@ -168,7 +213,14 @@ public class RecipeEntity {
 
     public void setPerson(PersonEntity person)
     {
+        setPerson(person,true);
+    }
+
+    void setPerson(PersonEntity person,boolean add)
+    {
         this.person=person;
+        if(person!=null && add)
+            person.addRecipe(this,false);
     }
 
     public String getName() {
@@ -215,5 +267,17 @@ public class RecipeEntity {
         return Objects.hash(recipeid, name, description, ifexternal
                 , person
         );
+    }
+
+    @JsonGetter
+    public long getAvgRating() {
+        long count = getRatings().size();
+        if(count==0)
+            return 0;
+        long sum=0;
+        List<Long> ratings = getRatings().stream().map(RatingEntity::getValue).collect(Collectors.toUnmodifiableList());
+        for (Long i :ratings)
+            sum+=i;
+        return sum/count;
     }
 }

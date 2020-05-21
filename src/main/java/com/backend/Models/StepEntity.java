@@ -1,11 +1,14 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "STEP", schema = "FDTRCK", catalog = "")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","recipes"})
 public class StepEntity {
     @Id
     @Column(name = "STEPID")
@@ -15,6 +18,10 @@ public class StepEntity {
     @Basic
     @Column(name = "STEPDESCRIPTION")
     private String stepdescription;
+
+    @Basic
+    @Column(name = "TIME")
+    private long time;
 
     @ManyToMany(mappedBy = "steps")
     private Set<RecipeEntity> recipes = new HashSet<RecipeEntity>(); //need many to many?
@@ -61,6 +68,14 @@ public class StepEntity {
         this.stepdescription = stepdescription;
     }
 
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -69,6 +84,7 @@ public class StepEntity {
         StepEntity that = (StepEntity) o;
 
         if (stepid != that.stepid) return false;
+        if (time != that.time) return false;
         if (stepdescription != null ? !stepdescription.equals(that.stepdescription) : that.stepdescription != null)
             return false;
 
@@ -79,6 +95,7 @@ public class StepEntity {
     public int hashCode() {
         int result = (int) (stepid ^ (stepid >>> 32));
         result = 31 * result + (stepdescription != null ? stepdescription.hashCode() : 0);
+        result = 31 * result + (int) (time ^ (time >>> 32));
         return result;
     }
 }

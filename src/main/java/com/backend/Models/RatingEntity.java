@@ -1,9 +1,13 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "RATING", schema = "FDTRCK", catalog = "")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","person","recipe"})
 public class RatingEntity {
     @Id
     @Column(name = "RATINGID")
@@ -11,7 +15,7 @@ public class RatingEntity {
     private long ratingid;
 
     @Basic
-    @Column(name = "VALUE")
+    @Column(name = "VALUE",nullable = false)
     private long value;
 
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
@@ -21,6 +25,12 @@ public class RatingEntity {
     @ManyToOne(optional = false,fetch = FetchType.LAZY)
     @JoinColumn(name = "recipeid")
     private RecipeEntity recipe;
+
+    @JsonGetter
+    public Long getPersonid(){return person.getPersonid();}
+
+    @JsonGetter
+    public String getPersonNickname(){return person.getNickname();}
 
     public PersonEntity getPerson() {
         return person;

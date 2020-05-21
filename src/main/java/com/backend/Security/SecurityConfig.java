@@ -4,6 +4,7 @@ import com.backend.Services.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -52,11 +53,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().
                 authorizeRequests()
-                .antMatchers("/api/login","/api/registration","/js/**",
+                .antMatchers("/js/**","/api",
                         "/css/**",
                         "/img/**",
-                        "/webjars/**","/api/**").permitAll()
-                .anyRequest().authenticated()
+                        "/webjars/**").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/recipes/**","/api/people/**",
+                        "/api/recs/**","/api/login","/api/registration").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/login","/api/registration").permitAll()
+                .antMatchers("/api/recipes/**").authenticated()
+                .anyRequest().hasRole("ADMIN")
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
