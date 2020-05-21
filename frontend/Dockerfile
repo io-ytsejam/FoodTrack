@@ -2,9 +2,7 @@
 FROM node:8 as react-build
 WORKDIR /frontend
 COPY . ./
-#RUN npm start
 RUN npm rebuild node-sass
-#RUN npm install
 RUN yarn
 RUN yarn build
 
