@@ -1,9 +1,17 @@
 package com.backend.Controllers;
 
 import com.backend.Dto.UserRegistrationDto;
+import com.backend.Models.AuthToken;
+import com.backend.Models.LoginUser;
 import com.backend.Models.PersonEntity;
+import com.backend.Security.JwtTokenUtil;
 import com.backend.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +22,12 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/api/registration")
 public class PersonRegistrationController {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
     private UserService userService;
@@ -28,6 +42,7 @@ public class PersonRegistrationController {
         return "registration";
     }
 
+    @ResponseBody
     @PostMapping
     public String registerUserAccount(@RequestBody @Valid UserRegistrationDto userDto, BindingResult result) {
 
@@ -36,10 +51,21 @@ public class PersonRegistrationController {
             result.rejectValue("nickname", null, "There is already an account registered with that username");
         }
         if (result.hasErrors()) {
-            return "registration";
+            //return "redirect:/api/registration";
+            return result.getAllErrors().toString();
         }
         userService.save(userDto);
-        return "redirect:/api/registration?success";
+        //return "redirect:/api/registration?success";
+        final Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        userDto.getNickname(),
+                        userDto.getPassword()
+                )
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        final PersonEntity user = userService.findByNickname(userDto.getNickname());
+        final String token = jwtTokenUtil.generateToken(user);
+        return new AuthToken(token,userDto.getNickname()).getToken();
     }
 }
 

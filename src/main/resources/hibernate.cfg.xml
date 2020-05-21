@@ -7,7 +7,7 @@
 
     <session-factory>
         <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-        <property name="connection.url">jdbc:oracle:thin:@13.81.115.127:1521:cdb1</property>
+        <property name="connection.url">jdbc:oracle:thin:@fdtrck.westeurope.cloudapp.azure.com:1521:cdb1</property>
         <property name="connection.username">fdtrck</property>
         <property name="connection.password"></property>
         <property name="dialect">org.hibernate.dialect.Oracle12cDialect</property>
