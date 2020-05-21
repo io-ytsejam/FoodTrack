@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { TextField } from '@material-ui/core';
 import { PropTypes } from 'prop-types';
 import InputAdornment from '@material-ui/core/InputAdornment';
@@ -72,7 +72,6 @@ class SignIn extends Component {
     if (this.state.loginError) {
       throw this.state.loginError;
     }
-    const { userSession } = this.props;
     return (
       <div>
         <h1>Sign in</h1>

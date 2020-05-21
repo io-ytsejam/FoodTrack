@@ -1,12 +1,21 @@
+.main-section::-webkit-scrollbar
+  display: none
 .main-section
   //max-width: 750px
+  max-height: calc(100vh - 84px)
+  overflow: hidden scroll
 
   .preparation-details-wrapper
     background-color: white
     padding: 10px
+    maxWidth: 750px
+    padding: 0
+    display: flex
+    flexWrap: wrap
 
   .chips
-    justify-content: center
+    justify-content: space-between
+    display: flex
 
   .chips > div
     margin: 2px

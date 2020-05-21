@@ -12,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 
 class Tomatometer extends Component {
   render() {
-    const { inProgress, totalTime, setTime, stopTime, pauseResumeTime, readyInMinutes,
+    const { inProgress, totalTime, setTime, pauseResumeTime, readyInMinutes,
       nextStep, prevStep
     } = this.props;
     const handlePauseResume = (e) => {
@@ -24,18 +24,20 @@ class Tomatometer extends Component {
     return (
       <div>
         <Paper>
-          <IconButton>
-            <SkipPreviousIcon onClick={prevStep} />
+          <IconButton onClick={prevStep} >
+            <SkipPreviousIcon />
           </IconButton>
-          <IconButton>
+          <IconButton
+            onClick={(e) => handlePauseResume(e)}
+          >
             {
               inProgress ?
-                <PauseCircleOutlineIcon onClick={(e) => handlePauseResume(e)} /> :
-                <PlayCircleOutlineIcon onClick={(e) => handlePauseResume(e)} />
+                <PauseCircleOutlineIcon /> :
+                <PlayCircleOutlineIcon />
             }
           </IconButton>
-          <IconButton>
-            <SkipNextIcon onClick={nextStep} />
+          <IconButton onClick={nextStep}>
+            <SkipNextIcon />
           </IconButton>
         </Paper>
       </div>

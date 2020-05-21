@@ -5,7 +5,7 @@ import Navbar from '../UI/Navbar/Navbar';
 import {
   BrowserRouter as Router,
   Switch,
-  Route, Redirect, withRouter
+  Route, withRouter
 } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core';
 
@@ -26,6 +26,7 @@ import Recipe from '../Recipe/Recipe';
 import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import SplashScreen from '../../SplashScreen/SplashScreen';
 import { setRedirectURL, setRedirected } from '../../actions/redirect';
+import WelcomeScreen from '../WelcomeScreen/WelcomeScreen';
 
 /* eslint-disable no-invalid-this */
 class Navigator extends Component {
@@ -43,22 +44,19 @@ class Navigator extends Component {
   history = undefined
 
   verifySession = (history, userSignIn) => {
-    const getCookie = (name) =>
-      document.cookie.replace(new RegExp('(?:(?:^|.*;\s*)'+ name +
-        '\s*\=\s*([^;]*).*$)|^.*$'), '$1');
-
     const username = localStorage.getItem('username');
     const authToken = localStorage.getItem('authToken');
 
     userSignIn({ username, authToken });
 
     if (!authToken) {
+      localStorage.setItem('username', '');
       return history.push('/welcome');
     }
 
     fetch('/api/isLogged', {
       headers: {
-        token: getCookie('auth-token')
+        token: authToken
       }
     })
         .then((res) => {
@@ -78,11 +76,11 @@ class Navigator extends Component {
   }
 
   componentDidMount() {
-    const { userSignIn, history, location, redirect, setRedirected, setRedirectURL } = this.props;
+    const { userSignIn, history } = this.props;
 
     const getCookie = (name) =>
-      document.cookie.replace(new RegExp('(?:(?:^|.*;\s*)'+ name +
-        '\s*\=\s*([^;]*).*$)|^.*$'), '$1');
+      document.cookie.replace(new RegExp('(?:(?:^|.*;s*)'+ name +
+        's*=s*([^;]*).*$)|^.*$'), '$1');
 
     this.verifySession(history, userSignIn);
     console.log('TOKEN: ', getCookie('auth-token'));
@@ -108,7 +106,7 @@ class Navigator extends Component {
 
   render() {
     const { isReady } = this.state;
-    const { isSignedIn, isLoading, redirect, increaseLoading, user } = this.props;
+    const { isSignedIn, isLoading } = this.props;
     return (
       <>
         <ThemeProvider theme={theme}>
@@ -133,7 +131,7 @@ class Navigator extends Component {
                   />
                 </Route>
                 <Router path="/welcome">
-                  <h1>WELCOME</h1>
+                  <WelcomeScreen />
                 </Router>
                 {/* Cooking history */}
                 <Route path="/history">
@@ -155,8 +153,11 @@ class Navigator extends Component {
                 <Route path="/sign-up">
                   <SignUp />
                 </Route>
+                <Route path="/recipe/new">
+                  <h1>XDDD</h1>
+                </Route>
                 <Route path="/recipe/:id">
-                  <Recipe />;
+                  <Recipe />
                 </Route>
               </Switch>
             </ErrorBoundary>

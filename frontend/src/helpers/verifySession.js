@@ -16,7 +16,7 @@ const verifySession = (history, userSignIn) => {
 
   fetch('/api/isLogged', {
     headers: {
-      token: getCookie('auth-token')
+      token: authToken
     }
   })
       .then((res) => {
