@@ -18,8 +18,9 @@ class Step extends React.Component {
   updateTime = (props) => (time) => {
     const { raiseTime, lowerTime } = props;
     console.log('UPDATING...', time);
-    const change = time - (props.passedTime.minutes * 60 + props.passedTime.seconds);
-    lowerTime((props.passedTime.minutes * 60 + props.passedTime.seconds) - time);
+    /* const change = time - (props.passedTime.minutes * 60 + props.passedTime.seconds);
+    lowerTime((props.passedTime.minutes * 60 + props.passedTime.seconds) - time);*/
+    const change = time;
     if (change > 0) {
       console.log('RAISING...', change);
       raiseTime(change);

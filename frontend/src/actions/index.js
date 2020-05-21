@@ -13,3 +13,6 @@ export const PREV_STEP = 'PREV_STEP';
 
 export const RAISE_TIME = 'RAISE_TIME';
 export const LOWER_TIME = 'LOWER_TIME';
+
+export const SET_REDIRECT_URL = 'SET_REDIRECT_URL';
+export const SET_REDIRECTED = 'SET_REDIRECTED';

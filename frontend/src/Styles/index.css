@@ -12,6 +12,7 @@ body {
   --primary-main: #ffebcd;
   --primary-light: #ffef6e;
   --secondar--main: #dc143c;
+  overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5, h6 {

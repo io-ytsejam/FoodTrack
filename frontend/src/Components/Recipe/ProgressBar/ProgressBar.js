@@ -5,19 +5,53 @@ import { pauseResumeTime } from '../../../actions/cooking';
 import './ProgressBar.sass';
 
 class ProgressBar extends Component {
-  state = {
-    max: 0,
-    timeChanging: false,
-    throttleSlider: false
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      timeChanging: false,
+      throttleSlider: false,
+      currentMax: 0
+    };
+    this.sliderRef = React.createRef();
+  }
+
   componentDidMount() {
-    this.setState({ max: this.props.time });
+    const slider = this.sliderRef.current;
+    document.addEventListener('mouseleave', () => {
+      const { inProgress, pauseResumeTime, total } = this.props;
+      if (!inProgress && total) {
+        pauseResumeTime();
+      }
+      this.setState({ timeChanging: false });
+      slider.style.opacity = 0;
+    });
+  }
+
+
+  componentDidUpdate(prevProps) {
+    const { progress, stepTime } = this.props;
+    if (prevProps.progress !== this.props.progress) {
+      if (prevProps.stepTime !== stepTime) {
+        this.prevValue = 0;
+      } else {
+        this.prevValue = this.sliderRef.current.value;
+      }
+      this.sliderRef.current.value = (progress / 100) * stepTime;
+    }
+  }
+
+  prevValue = 0;
+
+  delay = () => {
+    return new Promise((res) => {
+      setTimeout(() => {
+        res();
+      }, 300);
+    });
   }
 
   render() {
     const { progress, stepTime, inProgress, total } = this.props;
-    const { throttleSlider } = this.state;
-    const passedTime = 5.4;
     return (
       <div
         className='progress-bar progress-bar--active'
@@ -30,18 +64,12 @@ class ProgressBar extends Component {
         >
         </div>
         <input
+          ref={this.sliderRef}
           // value={!this.state.timeChanging || this.props.progress}
-          onChange={(e) => {
-            console.log('New time: ', e.target.value * stepTime / 100);
-            console.log('Passed time in input: ', this.props.passedTime);
-            const change = e.target.value * stepTime / 100;
-            if (Math.abs(this.props.passedTime - change) > 1) {
-              console.log('UPDATING IN INPUT>>>');
-              this.props.updateTime(Math.round(change));
-            }
-          }}
+          // onChange={this.changeTime}
           onMouseEnter={(e) => {
-            e.target.value = this.props.progress;
+            this.prevValue = e.target.value;
+            e.target.value = (this.props.progress / 100) * stepTime;
             if (inProgress) {
               this.props.pauseResumeTime();
             }
@@ -56,21 +84,8 @@ class ProgressBar extends Component {
             e.target.style.opacity = 0;
           }}
           onMouseUp={(e) => {
-            return;
-            /* console.log(e.nativeEvent.target.value);
-            console.log('New time: ', e.target.value * stepTime / 100);
-            console.log('Passed time in input: ', this.props.passedTime);
-            const change = e.target.value * stepTime / 100;
-            if (Math.abs(this.props.passedTime - change) > stepTime * 1/40) {
-              this.props.updateTime(Math.round(change));
-            }*/
-            console.log(e.nativeEvent.target.value);
-            console.log('New time: ', e.nativeEvent.target.value * stepTime / 100);
-            console.log('Passed time in input: ', this.props.passedTime);
-            const change = e.nativeEvent.target.value * stepTime / 100;
-            if (Math.abs(this.props.passedTime - change) > stepTime * 1/40) {
-              this.props.updateTime(Math.round(change));
-            }
+            this.props.updateTime(e.target.value - this.prevValue);
+            // e.target.value = (progress / 100) * stepTime;
           }}
           type='range'
           style={{
@@ -80,7 +95,7 @@ class ProgressBar extends Component {
             opacity: 0
           }}
           min={1}
-          max={100}
+          max={stepTime}
         />
       </div>
     );
@@ -88,7 +103,7 @@ class ProgressBar extends Component {
 }
 
 ProgressBar.propTypes = {
-  progress: PropTypes.number.isRequired
+  progress: PropTypes.number
 };
 
 const mapStateToProps = (state) => ({

@@ -1,14 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './Recipe.sass';
-import { Container } from '@material-ui/core';
-import Fastfood from '@material-ui/icons/Fastfood';
-import Paper from '@material-ui/core/Paper';
-import Chip from '@material-ui/core/Chip';
 import Divider from '@material-ui/core/Divider';
-import Button from '@material-ui/core/Button';
-import AccessTime from '@material-ui/icons/AccessTime';
-import { LocalDining } from '@material-ui/icons';
 import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
 import { increaseLoading, decreaseLoading } from '../../actions/loading';
@@ -16,6 +9,9 @@ import { nextStep, prevStep, raiseTime, lowerTime, setTime } from '../../actions
 import { withRouter } from 'react-router-dom';
 import Tomatometer from './Tomatometer/Tomatometer';
 import Step from './Step/Step';
+import Summary from './Summary/Summary';
+import Header from './Header/Header';
+import Ingredients from './Ingredients/Ingredients';
 
 class Recipe extends Component {
   constructor(props) {
@@ -27,6 +23,7 @@ class Recipe extends Component {
       error: undefined,
       wheelThrottling: false
     };
+    this.summaryRef = React.createRef();
   }
 
   /* eslint-disable no-invalid-this */
@@ -68,18 +65,57 @@ class Recipe extends Component {
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {
-    if (prevProps.inProgress !== this.props.inProgress && this.props.inProgress) {
+    const { inProgress, passedTime, totalTime, raiseTime } = this.props;
+    const { cookingProgressInterval } = this.state;
+    if (prevProps.inProgress !== inProgress && inProgress) {
       this.setState({
         cookingProgressInterval: setInterval(() => {
-          this.props.raiseTime();
+          raiseTime();
         }, 1000) });
     }
-    if (prevProps.inProgress !== this.props.inProgress && !this.props.inProgress) {
-      clearInterval(this.state.cookingProgressInterval);
+    if (prevProps.inProgress !== inProgress && !inProgress) {
+      clearInterval(cookingProgressInterval);
     }
-    if (this.props.inProgress && (this.props.passedTime.minutes * 60 + this.props.passedTime.seconds >= this.props.totalTime) && this.props.passedTime.seconds) {
+    if (inProgress &&
+      (passedTime.minutes * 60 + passedTime.seconds >= totalTime) && passedTime.seconds) {
       this.props.setTime(-1);
       console.log('STOP');
+    }
+  }
+
+  getStepTime = (recipe, index) =>
+    (recipe.readyInMinutes*60/recipe.analyzedInstructions[0].steps.length) +
+    (recipe.readyInMinutes*60/recipe.analyzedInstructions[0].steps.length) * index
+
+  scrollSteps = (e) => {
+    // return;
+    // This is so much hack
+    // e.preventDefault();
+    document.querySelector('#steps').scrollIntoView();
+    if (!this.state.wheelThrottling) {
+      const activeStep = document.querySelector('.recipe--active');
+      if (!activeStep) return;
+      const { nextStep, prevStep } = this.props;
+      const { deltaY } = e;
+      if (deltaY > 0 && activeStep.nextElementSibling) {
+        // Scroll down
+        activeStep.classList.remove('recipe--active');
+        activeStep.nextElementSibling.classList.add('recipe--active');
+        nextStep();
+      } else if (deltaY < 0 && activeStep.previousElementSibling) {
+        // Scroll up
+        activeStep.classList.remove('recipe--active');
+        activeStep.previousElementSibling.classList.add('recipe--active');
+        prevStep();
+      }
+      this.setState((state) =>
+        ({ wheelThrottling: !state.wheelThrottling }),
+      () => {
+        setTimeout(() => {
+          this.setState((state) =>
+            ({ wheelThrottling: !state.wheelThrottling }));
+        }, 500);
+      });
     }
   }
 
@@ -100,46 +136,9 @@ class Recipe extends Component {
       <Grid container spacing={2}>
         <Grid item xs={12} md={5}>
           <div className='main-section'>
-            <h2>{recipe?.title}</h2>
-            <Paper
-              style={{
-                backgroundColor: 'white',
-                padding: '10px'
-              }}>
-              <Container
-                className='preparation-details-wrapper'
-                style={{
-                  // height: '50px',
-                  maxWidth: '750px',
-                  padding: '0',
-                  display: 'flex',
-                  flexWrap: 'wrap'
-                }}>
-                <Grid container spacing={3} style={{ justifyContent: 'space-between' }}>
-                  <Grid item xs={12} sm={12} lg={7} >
-                    <div
-                      className='chips'
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between'
-                      }}>
-                      <Chip avatar={<Fastfood />} label={'Plates: ' + recipe.servings} />
-                      <Divider orientation='vertical' color={'black'} flexItem={true} />
-                      <Chip avatar={<AccessTime />}
-                        label={'Timing: '+ recipe.readyInMinutes} />
-                      <Divider orientation='vertical' flexItem={true}/>
-                      <Chip avatar={<LocalDining />} label={'Level: ' + null} />
-                    </div>
-                  </Grid>
-                  <Grid item xs={12} sm={12} lg={4}>
-                    <Button
-                      variant='outlined'
-                      style={{ float: 'right', width: '100%', minWidth: '130px' }}
-                    >more details</Button>
-                  </Grid>
-                </Grid>
-              </Container>
-            </Paper>
+            <h3>{recipe?.title}</h3>
+            <Header recipe={recipe} />
+            <Ingredients recipe={recipe} />
             <img
               src={recipe?.image}
               alt={recipe?.title}
@@ -149,6 +148,7 @@ class Recipe extends Component {
                 boxShadow: '1px 1px 8px black',
               }}
             />
+            <Summary recipe={recipe} />
           </div>
         </Grid>
         <Grid item xs={12} md={7}
@@ -178,46 +178,14 @@ class Recipe extends Component {
           </div>
           <Divider style={{ width: '-webkit-fill-available' }} />
           <div className="secondary-section"
-            onWheel={(e) => {
-              // This is so much hack
-              // e.preventDefault();
-              document.querySelector('#steps').scrollIntoView();
-              if (!this.state.wheelThrottling) {
-                const activeStep = document.querySelector('.recipe--active');
-                const { nextStep, prevStep } = this.props;
-                const { deltaY } = e;
-                if (deltaY > 0 && activeStep.nextElementSibling) {
-                  // Scroll down
-                  activeStep.classList.remove('recipe--active');
-                  activeStep.nextElementSibling.classList.add('recipe--active');
-                  nextStep();
-                } else if (deltaY < 0 && activeStep.previousElementSibling) {
-                  // Scroll up
-                  activeStep.classList.remove('recipe--active');
-                  activeStep.previousElementSibling.classList.add('recipe--active');
-                  prevStep();
-                }
-                this.setState((state) =>
-                  ({ wheelThrottling: !state.wheelThrottling }),
-                () => {
-                  setTimeout(() => {
-                    this.setState((state) =>
-                      ({ wheelThrottling: !state.wheelThrottling }));
-                  }, 500);
-                });
-              }
-            }}
+            onWheel={this.scrollSteps}
           >
             {
               recipe.analyzedInstructions[0]?.steps?.map((step, key) => (
                 <Step
                   step={step}
                   index={key}
-                  time={
-                    /* recipe.readyInMinutes **/
-                    (recipe.readyInMinutes*60/recipe.analyzedInstructions[0].steps.length) +
-                    (recipe.readyInMinutes*60/recipe.analyzedInstructions[0].steps.length) * key
-                  }
+                  time={this.getStepTime(recipe, key)}
                 />
               ))
             }

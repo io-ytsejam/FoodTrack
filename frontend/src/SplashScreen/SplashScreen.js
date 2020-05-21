@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { RiseLoader } from 'react-spinners';
 
 let style = {};
@@ -24,10 +23,6 @@ style = {
   zIndex: 69,
   backgroundColor: 'wheat',
   flexDirection: 'column'
-};
-
-SplashScreen.propTypes = {
-
 };
 
 export default SplashScreen;
