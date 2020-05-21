@@ -2,34 +2,29 @@
 <!DOCTYPE hibernate-configuration PUBLIC
         "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
-
 <hibernate-configuration>
-
     <session-factory>
         <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-        <property name="connection.url">jdbc:oracle:thin:@fdtrck.westeurope.cloudapp.azure.com:1521:cdb1</property>
-        <property name="connection.username">fdtrck</property>
-        <property name="connection.password">fdtrck</property>
+        <property name="connection.url">jdbc:oracle:thin:@localhost:1521:XE</property>
         <property name="dialect">org.hibernate.dialect.Oracle12cDialect</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <property name="show_sql">true</property>
-
-        <mapping class="com.backend.Models.IngredientEntity"/>
-        <mapping class="com.backend.Models.RecommendationEntity"/>
-        <mapping class="com.backend.Models.PersonEntity"/>
-        <mapping class="com.backend.Models.CommentEntity"/>
-        <mapping class="com.backend.Models.HealthRestrictionEntity"/>
-        <mapping class="com.backend.Models.PhotoEntity"/>
-        <mapping class="com.backend.Models.PreferenceEntity"/>
-        <mapping class="com.backend.Models.RatingEntity"/>
-        <mapping class="com.backend.Models.SettingEntity"/>
-        <mapping class="com.backend.Models.StepEntity"/>
-        <mapping class="com.backend.Models.PersonPreferenceEntity"/>
-        <mapping class="com.backend.Models.HealthRestrictionPersonEntity"/>
-        <mapping class="com.backend.Models.PersonSettingEntity"/>
-        <mapping class="com.backend.Models.RecipeEntity"/>
-        <mapping class="com.backend.Models.RoleEntity"/>
-
+        <mapping class="Models.CommentEntity"/>
+        <mapping class="Models.HealthRestrictionEntity"/>
+        <mapping class="Models.IngredientEntity"/>
+        <mapping class="Models.PersonEntity"/>
+        <mapping class="Models.PersonPreferenceEntity"/>
+        <mapping class="Models.PersonRecipeEntity"/>
+        <mapping class="Models.PersonRestrictionEntity"/>
+        <mapping class="Models.PersonSettingEntity"/>
+        <mapping class="Models.PhotoEntity"/>
+        <mapping class="Models.PreferenceEntity"/>
+        <mapping class="Models.RatingEntity"/>
+        <mapping class="Models.RecipeEntity"/>
+        <mapping class="Models.RecipeIngredientEntity"/>
+        <mapping class="Models.SettingEntity"/>
+        <mapping class="Models.StepEntity"/>
+        <mapping class="Models.StepRecipeEntity"/>
     </session-factory>
 </hibernate-configuration>
