@@ -20,7 +20,7 @@ class Dashboard extends Component {
     const { increaseLoading, decreaseLoading } = this.props;
     increaseLoading();
     // const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
-    const apiKey = '502cf6be941843b1899001da2db18cd8';
+    const apiKey = '3b2eff55d72c4e59b6ca95f82dceaacd';
     console.log(process?.env.REACT_APP_SPOONACULAR_API_KEY);
     const url = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10&`;
     fetch(url, { method: 'GET' })
