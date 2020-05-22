@@ -1,19 +1,3 @@
-# Stage 1
-FROM node:8 as react-build
-WORKDIR /frontend
-COPY ./frontend ./
-RUN npm rebuild node-sass
-RUN yarn
-RUN yarn build
-
-# Stage 2 - the production environment
-FROM nginx:alpine
-COPY ./frontend/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=react-build /frontend/build /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
-
-
 # Stage 3
 FROM openjdk:15-jdk-alpine as build
 WORKDIR /workspace/app
