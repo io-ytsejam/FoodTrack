@@ -15,5 +15,5 @@ RUN ./mvnw install -DskipTests
 FROM openjdk:15-jdk-alpine
 VOLUME /tmp
 COPY --from=build /workspace/app/target/*.jar app.jar
-EXPOSE 81
-ENTRYPOINT ["java","-jar","/app.jar","--server.port=81"]
+EXPOSE 5000
+ENTRYPOINT ["java","-jar","/app.jar","--server.port=5000"]
