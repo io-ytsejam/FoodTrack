@@ -52,8 +52,9 @@ public class PersonLoginController {
     }
 
     @GetMapping("/api/isLogged")
-    public ResponseEntity isLogged(@RequestHeader String token)
+    public ResponseEntity isLogged(@RequestHeader("Authorization") String token)
     {
+        token=token.substring(7);
         String username=jwtTokenUtil.getUsernameFromToken(token);
         Boolean result= jwtTokenUtil.validateToken(token,userService.loadUserByUsername(username));
         return ResponseEntity.ok(result);
