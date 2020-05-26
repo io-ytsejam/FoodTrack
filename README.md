@@ -1,3 +1,6 @@
+Przykładowy request do thumbnails:
+/api/recipes/thumbnails?size=2&like=%a%&sort=name,asc
+
 Z głownego folderu:
 
 docker-compose build

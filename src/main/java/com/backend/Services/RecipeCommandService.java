@@ -4,28 +4,32 @@ import com.backend.Dto.RecipeAddDto;
 import com.backend.Dto.RecipeAddRemoveElementsDto;
 import com.backend.Models.CommentEntity;
 import com.backend.Models.RecipeEntity;
+import com.backend.Models.RecipeThumbnail;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 
 public interface RecipeCommandService { //not used
-    public RecipeEntity createRecipe(RecipeAddDto recipeDto,String username);
-    public RecipeEntity replaceRecipe(RecipeAddDto recipeDto,Long id,String username) throws
+    RecipeEntity createRecipe(RecipeAddDto recipeDto,String username);
+    RecipeEntity replaceRecipe(RecipeAddDto recipeDto,Long id,String username) throws
             BadCredentialsException,ResourceNotFoundException;
-    public Page<RecipeEntity> findByPersonNickname (String nickname,Pageable pageable);
-    public Page<RecipeEntity> getAllRecipes(Pageable pageable);
-    public RecipeEntity saveRecipe(RecipeEntity recipeEntity);
-    public RecipeEntity addToRecipe(RecipeAddRemoveElementsDto recipeDto,Long id, String username) throws
+    Page<RecipeEntity> findByPersonNickname (String nickname,Pageable pageable);
+    Page<RecipeEntity> getAllRecipes(Pageable pageable);
+    RecipeEntity saveRecipe(RecipeEntity recipeEntity);
+    RecipeEntity addToRecipe(RecipeAddRemoveElementsDto recipeDto,Long id, String username) throws
             BadCredentialsException, ResourceNotFoundException;
-    public RecipeEntity addComment(String content,Long recipeId,String username) throws
+    RecipeEntity addComment(String content,Long recipeId,String username) throws
             ResourceNotFoundException;
-    public Page<CommentEntity> getCommentsByRecipeid(Long recipeId,Pageable pageable) throws
+    Page<CommentEntity> getCommentsByRecipeid(Long recipeId,Pageable pageable) throws
             ResourceNotFoundException;
-    public RecipeEntity rateRecipe(long value,Long recipeId,String username) throws
+    RecipeEntity rateRecipe(long value,Long recipeId,String username) throws
             ResourceNotFoundException;
-    public RecipeEntity findByRecipeid(Long recipeId) throws ResourceNotFoundException;
-    public void deleteByRecipeId(Long recipeId,String username) throws
+    RecipeEntity findByRecipeid(Long recipeId) throws ResourceNotFoundException;
+    void deleteByRecipeId(Long recipeId,String username) throws
             BadCredentialsException,ResourceNotFoundException;
-    public Page<RecipeEntity> findByNameLike(String name,Pageable pageable);
+    Page<RecipeEntity> findByNameLike(String name,Pageable pageable);
+    Page<RecipeThumbnail> getRecipeThumbnails(Pageable pageable, Sort sort);
+    Page<RecipeThumbnail> getRecipeThumbnailsNameLike(String name,Pageable pageable,Sort sort);
 }

@@ -5,28 +5,26 @@ import com.backend.Dto.RecipeAddDto;
 import com.backend.Dto.RecipeAddRemoveElementsDto;
 import com.backend.Models.CommentEntity;
 import com.backend.Models.RecipeEntity;
+import com.backend.Models.RecipeThumbnail;
 import com.backend.Repositories.RecipeEntityRepository;
 import com.backend.Services.RecipeCommandService;
-import com.backend.Services.UserService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import javax.naming.AuthenticationException;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import java.util.Optional;
@@ -62,13 +60,10 @@ Rate recipe with given id: @PostMapping(/api/recipes/{id}/rate?{value}) @Request
 public class RecipeEntityController{
 
     @Autowired
-    private RecipeCommandService recipeCommandService; //temporary?
+    private RecipeCommandService recipeCommandService;
 
     @Autowired
-    private RecipeEntityRepository recipeRepository; //temporary?
-
-    /*@Autowired
-    private UserService userService;*/
+    private RecipeEntityRepository recipeRepository;
 
     private Logger logger=LoggerFactory.getLogger(BackendApplication.class);
 
@@ -104,7 +99,6 @@ public class RecipeEntityController{
         throw new BadCredentialsException("Anonymous user cannot post recipes");
     }
 
-    //done need testing
     @PostMapping("/api/recipes/{id}")
     public ResponseEntity<RecipeEntity> addToRecipe(@RequestBody RecipeAddRemoveElementsDto recipeDto, @PathVariable Long id)
      throws BadCredentialsException,ResourceNotFoundException
@@ -127,7 +121,6 @@ public class RecipeEntityController{
         }
     }
 
-    //done need testing
     @PutMapping("/api/recipes/{id}")
     public ResponseEntity<RecipeEntity> replaceRecipe(@RequestBody @Valid @NonNull RecipeAddDto recipeDto,
                                                 @PathVariable Long id)
@@ -151,14 +144,12 @@ public class RecipeEntityController{
         }
     }
 
-    //done
     @GetMapping("/api/recipes")
     public Page<RecipeEntity> getRecipes(Pageable pageable) throws BadCredentialsException
     {
         return recipeCommandService.getAllRecipes(pageable);
     }
 
-    //done
     @GetMapping("/api/recipes/{id}")
     public ResponseEntity<RecipeEntity> getRecipeWithId(@PathVariable Long id) throws ResourceNotFoundException
     {
@@ -171,7 +162,7 @@ public class RecipeEntityController{
         }
         return ResponseEntity.ok(recipe);
     }
-    //done
+
     @GetMapping("/api/recipes/user")
     public ResponseEntity<Page<RecipeEntity>> getCurrentUserRecipes(Pageable pageable) throws BadCredentialsException
     {
@@ -181,7 +172,6 @@ public class RecipeEntityController{
         return ResponseEntity.ok(recipeCommandService.findByPersonNickname(authentication.getName(),pageable));
     }
 
-    //done
     @DeleteMapping("/api/recipes/{id}")
     public ResponseEntity deleteRecipe(@PathVariable Long id) throws
             BadCredentialsException,ResourceNotFoundException{
@@ -226,7 +216,6 @@ public class RecipeEntityController{
             return new ResponseEntity(HttpStatus.FORBIDDEN);
     }
 
-    //done
     @PostMapping("/api/recipes/{id}/comment")
     public ResponseEntity<RecipeEntity> addComment(@RequestBody @NotBlank String content, @PathVariable Long id)
             throws ResourceNotFoundException,BadCredentialsException
@@ -267,5 +256,25 @@ public class RecipeEntityController{
                     ,responseHeaders,HttpStatus.CREATED);
         }
         throw new BadCredentialsException("Anonymous users can't rate recipes");
+    }
+
+    /*@GetMapping("/api/recipes/thumbnails")
+    public Page<RecipeThumbnail> getRecipeThumbnails(Pageable pageable, Sort sort)
+    {
+        return recipeCommandService.getRecipeThumbnails(pageable,sort);
+    }*/
+
+    @GetMapping("/api/recipes/search")
+    public Page<RecipeEntity> getRecipesLike(@RequestParam("like") String name,Pageable pageable)
+    {
+        return recipeCommandService.findByNameLike(name,pageable);
+    }
+
+    @GetMapping("/api/recipes/thumbnails")
+    public Page<RecipeThumbnail> getRecipeThumbnailsLike(
+            @Nullable @RequestParam("like") String name, Pageable pageable, Sort sort)
+    {
+        return recipeCommandService.getRecipeThumbnailsNameLike(
+                name==null?"%":name,pageable,sort);
     }
 }

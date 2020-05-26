@@ -30,7 +30,8 @@ class Recipe extends Component {
   componentDidMount = async () => {
     const { increaseLoading, decreaseLoading } = this.props;
     increaseLoading();
-    const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
+    const apiKey = '3b2eff55d72c4e59b6ca95f82dceaacd';
+    console.log(process?.env.REACT_APP_SPOONACULAR_API_KEY);
     const recipeID = this.props.match.params.id;
     const thirdPartyApi =
       `https://api.spoonacular.com/recipes/${recipeID}/information?apiKey=${apiKey}`;

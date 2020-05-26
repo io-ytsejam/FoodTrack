@@ -5,10 +5,10 @@ import com.backend.Dto.RecipeAddRemoveElementsDto;
 import com.backend.Models.*;
 import com.backend.Repositories.IngredientEntityRepository;
 import com.backend.Repositories.RecipeEntityRepository;
+import com.backend.Repositories.ThumbnailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -37,8 +37,8 @@ public class RecipeCommandServiceImpl implements RecipeCommandService {
     @Autowired
     private IngredientEntityRepository ingredientRepository;
 
-    /*@PersistenceContext
-    private EntityManager entityManager;*/
+    @Autowired
+    private ThumbnailRepository thumbnailRepository;
 
     public RecipeCommandServiceImpl(RecipeEntityRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
@@ -235,5 +235,17 @@ public class RecipeCommandServiceImpl implements RecipeCommandService {
     @Override
     public Page<RecipeEntity> findByNameLike(String name, Pageable pageable) {
         return recipeRepository.findAllByNameLikeIgnoreCase(name,pageable);
+    }
+
+    @Override
+    public Page<RecipeThumbnail> getRecipeThumbnails(Pageable pageable, Sort sort) { ;
+        return thumbnailRepository.findAll(
+                PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort));
+    }
+
+    @Override
+    public Page<RecipeThumbnail> getRecipeThumbnailsNameLike(String name, Pageable pageable, Sort sort) {
+        return thumbnailRepository.findAllByNameLikeIgnoreCase(name,
+                PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort));
     }
 }
