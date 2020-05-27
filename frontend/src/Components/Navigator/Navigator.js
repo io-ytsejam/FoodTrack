@@ -12,6 +12,7 @@ import { ThemeProvider } from '@material-ui/core';
 import { theme } from '../UI/MaterialTheme';
 import History from '../History/History';
 import Dashboard from '../Dashboard/Dashboard';
+import CreateRecipe from '../Recipe/CreateRecipe/CreateRecipe';
 
 import './Navigator.sass';
 import MainLoader from '../UI/Loaders/MainLoader/MainLoader';
@@ -154,7 +155,7 @@ class Navigator extends Component {
                   <SignUp />
                 </Route>
                 <Route path="/recipe/new">
-                  <h1>XDDD</h1>
+                  <CreateRecipe />
                 </Route>
                 <Route path="/recipe/:id">
                   <Recipe />

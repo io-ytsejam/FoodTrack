@@ -28,7 +28,7 @@
     "eject": "react-scripts eject",
     "lint": "eslint src/**/*.js --fix"
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "http://fdtrck.westeurope.cloudapp.azure.com:5000",
   "eslintConfig": {
     "parser": "babel-eslint",
     "rules": {
