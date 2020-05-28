@@ -13,16 +13,17 @@ class Dashboard extends Component {
     this.state = {
       recommendedRecipes: [],
       recentRecipes: [],
-      randomRecsRecipes: []
+      randomRecsRecipes: [],
+      usersRecipes: []
     };
   }
   componentDidMount() {
-    const { increaseLoading, decreaseLoading } = this.props;
+    const { increaseLoading, decreaseLoading, authToken } = this.props;
     increaseLoading();
     // const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
     const apiKey = '3b2eff55d72c4e59b6ca95f82dceaacd';
     console.log(process?.env.REACT_APP_SPOONACULAR_API_KEY);
-    const url = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10&`;
+    let url = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10&`;
     fetch(url, { method: 'GET' })
         .then((res) => res.json())
         .then((randomRecipes) => {
@@ -33,16 +34,33 @@ class Dashboard extends Component {
         .finally(() => decreaseLoading());
 
     // Read recent from local storage and set to state
-    // After that, ask API if it lacking some recipe,
-    // if yes, update and rerender :)
+    // After that, ask API if it's lacking some recipes,
+    // if yes, update and re-render :)
     this.setState({ recentRecipes: [] });
 
     // Show something completely new, be spontaneous
     this.setState({ randomRecsRecipes: [] });
+
+    // Get current user's recipes
+    url = '/api/recipes';
+    const headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + authToken
+    };
+    fetch(url, {
+      headers
+    }).then((res) => res.json())
+        .then((usersRecipes) => {
+          console.log(usersRecipes.content);
+          this.setState({ usersRecipes: usersRecipes.content });
+        }).catch((err) => {
+          console.error('Error while getting user recipes: ', err.message);
+        });
   }
 
   render() {
-    const { recommendedRecipes, recentRecipes, randomRecsRecipes } = this.state;
+    const { recommendedRecipes, recentRecipes, randomRecsRecipes, usersRecipes } = this.state;
+    const { username } = this.props;
     return (
       <>
         <HorizontalList
@@ -63,18 +81,22 @@ class Dashboard extends Component {
           }
         </HorizontalList>
         <HorizontalList
-          title="Recently viewed"
+          title={username &&
+          username[0].toUpperCase() +
+          username.substr(1) +
+          '\'s recipes'}
         >
           {
-            recentRecipes.map((recipe, index) => (
+            usersRecipes?.map((recipe, index) => (
               <DimmedExpandableCard
+                external={false}
                 recipe={recipe}
                 key={index}
                 index={index}
-                title={recipe.title}
-                image={recipe.image}
-                supportingText={recipe.summary}
-                ingredients={recipe.extendedIngredients}
+                title={recipe.name}
+                image={recipe.photos[0]}
+                supportingText={recipe.description}
+                ingredients={recipe.ingredients}
               />
             ))
           }
@@ -104,7 +126,13 @@ class Dashboard extends Component {
 
 Dashboard.propTypes = {
   increaseLoading: PropTypes.func,
-  decreaseLoading: PropTypes.func
+  decreaseLoading: PropTypes.func,
+  username: PropTypes.string
 };
 
-export default connect(null, { increaseLoading, decreaseLoading })(Dashboard);
+const mapStateToProps = (state) => ({
+  authToken: state.userSession.authToken,
+  username: state.userSession.username
+});
+
+export default connect(mapStateToProps, { increaseLoading, decreaseLoading })(Dashboard);

@@ -17,15 +17,12 @@ class Step extends React.Component {
 
   updateTime = (props) => (time) => {
     const { raiseTime, lowerTime } = props;
-    console.log('UPDATING...', time);
     /* const change = time - (props.passedTime.minutes * 60 + props.passedTime.seconds);
     lowerTime((props.passedTime.minutes * 60 + props.passedTime.seconds) - time);*/
     const change = time;
     if (change > 0) {
-      console.log('RAISING...', change);
       raiseTime(change);
     } else if (change < 0) {
-      console.log('LOWERING...', change);
       lowerTime(change * -1);
     }
   };
@@ -64,7 +61,7 @@ class Step extends React.Component {
         key={index}
         className={currentStep === index ? 'recipe recipe--active' : 'recipe'}
         style={{ padding: '20px', marginTop: '-5px', marginBottom: '-5px' }}>
-        <p>{step.step}</p>
+        <p>{step.stepdescription}</p>
         {
           currentStep === index ?
             <ProgressBar

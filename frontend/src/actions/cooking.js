@@ -1,5 +1,6 @@
-import { SET_TIME, PAUSE_RESUME_TIME, STOP_TIME, NEXT_STEP, PREV_STEP,
-  LOWER_TIME, RAISE_TIME
+import {
+  SET_TIME, PAUSE_RESUME_TIME, STOP_TIME, NEXT_STEP, PREV_STEP,
+  LOWER_TIME, RAISE_TIME, SET_RECIPE
 } from './index';
 
 export const setTime = (payload) => (dispatch) => {
@@ -46,5 +47,12 @@ export const lowerTime = (payload) => (dispatch) => {
   dispatch({
     type: LOWER_TIME,
     payload
+  });
+};
+
+export const setRecipe = (recipe) => (dispatch) => {
+  dispatch({
+    type: SET_RECIPE,
+    payload: recipe
   });
 };

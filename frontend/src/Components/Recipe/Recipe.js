@@ -12,13 +12,19 @@ import Step from './Step/Step';
 import Summary from './Summary/Summary';
 import Header from './Header/Header';
 import Ingredients from './Ingredients/Ingredients';
+import UnifiedRecipe from '../../helpers/UnifiedRecipe';
 
 class Recipe extends Component {
   constructor(props) {
     super(props);
     this.state = {
       recipe: {
-        analyzedInstructions: []
+        name: '',
+        description: '',
+        ingredients: [],
+        readyInMinutes: 0,
+        steps: [],
+        photos: []
       },
       error: undefined,
       wheelThrottling: false
@@ -32,15 +38,22 @@ class Recipe extends Component {
     increaseLoading();
     const apiKey = '3b2eff55d72c4e59b6ca95f82dceaacd';
     console.log(process?.env.REACT_APP_SPOONACULAR_API_KEY);
+
+    const currentUrl = new URL(window.location.href);
+    const isExternal = currentUrl.searchParams.get('external');
+
     const recipeID = this.props.match.params.id;
     const thirdPartyApi =
       `https://api.spoonacular.com/recipes/${recipeID}/information?apiKey=${apiKey}`;
-    // TODO: Make local API XD
-    const localApi = `/api/recipe/${recipeID}`;
+
+    const localApi = `/api/recipes/${recipeID}`;
 
     let response;
 
     try {
+      if (isExternal === 'true') {
+        throw new Error('It not really an error, we are just fetching spnclr :)');
+      }
       response = await fetch(localApi, { method: 'GET' });
       if (!response.ok) {
         throw new Error('Server responded with: ' + response.status.toString());
@@ -60,7 +73,14 @@ class Recipe extends Component {
 
     response.json()
         .then((recipe) => {
-          this.setState({ recipe });
+          if (!('ifexternal' in recipe)) {
+            const r = new UnifiedRecipe(recipe);
+            return this.setState({ recipe: r });
+          }
+          this.setState({ recipe: {
+            ...recipe,
+            readyInMinutes: recipe.steps.reduce((i, j) => i.time + j.time)
+          } });
         }).catch((error) => this.setState({ error }))
         .finally(() => decreaseLoading());
   };
@@ -85,8 +105,8 @@ class Recipe extends Component {
   }
 
   getStepTime = (recipe, index) =>
-    (recipe.readyInMinutes*60/recipe.analyzedInstructions[0].steps.length) +
-    (recipe.readyInMinutes*60/recipe.analyzedInstructions[0].steps.length) * index
+    (recipe.readyInMinutes*60/recipe.steps.length) +
+    (recipe.readyInMinutes*60/recipe.steps.length) * index
 
   scrollSteps = (e) => {
     // return;
@@ -137,12 +157,12 @@ class Recipe extends Component {
       <Grid container spacing={2}>
         <Grid item xs={12} md={5}>
           <div className='main-section'>
-            <h3>{recipe?.title}</h3>
+            <h3>{recipe?.name}</h3>
             <Header recipe={recipe} />
             <Ingredients recipe={recipe} />
             <img
-              src={recipe?.image}
-              alt={recipe?.title}
+              src={recipe?.photos[0] || '/fallback.jpeg'}
+              alt={recipe?.name}
               style={{
                 margin: '20px 0',
                 width: '100%',
@@ -182,7 +202,7 @@ class Recipe extends Component {
             onWheel={this.scrollSteps}
           >
             {
-              recipe.analyzedInstructions[0]?.steps?.map((step, key) => (
+              recipe?.steps?.map((step, key) => (
                 <Step
                   step={step}
                   index={key}

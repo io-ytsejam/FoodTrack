@@ -24,7 +24,7 @@ class Header extends Component {
             <Grid container spacing={3} style={{ justifyContent: 'space-between' }}>
               <Grid item xs={12} sm={12} lg={7} >
                 <div className='chips'>
-                  <Chip avatar={<Fastfood />} label={'Plates: ' + recipe.servings} />
+                  <Chip avatar={<Fastfood />} label={'Plates: ' + recipe?.servings} />
                   <Divider orientation='vertical' color={'black'} flexItem={true} />
                   <Chip avatar={<AccessTime />}
                     label={'Timing: '+ recipe.readyInMinutes} />

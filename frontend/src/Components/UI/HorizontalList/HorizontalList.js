@@ -38,7 +38,7 @@ export default HorizontalList;
 export const DimmedExpandableCard = (props) => {
   const headerRef = React.createRef();
   const mainCardRef = React.createRef();
-  const { recipe } = props;
+  const { recipe, external } = props;
   return (
     <div
       className='dimmed-expandable-card'
@@ -90,7 +90,10 @@ export const DimmedExpandableCard = (props) => {
           title={props.title}
           inputMode={'url'}
           component="img"
-          image={props.image}
+          image={props.image || '/fallback.jpeg'}
+          onError={(e) => {
+            e.target.src = '/fallback.jpeg';
+          }}
           style={{
             boxShadow: '0 0 4px black'
           }}
@@ -99,7 +102,7 @@ export const DimmedExpandableCard = (props) => {
         <CardActions
           className='recipe-actions'
         >
-          <Link to={`/recipe/${recipe.id}`}>
+          <Link to={`/recipe/${recipe.id || recipe.recipeid}?external=${external ?? true}`}>
             <Button
               variant="contained"
               color="secondary"
@@ -132,7 +135,7 @@ export const DimmedExpandableCard = (props) => {
           <p>
             {
               props.supportingText
-                  .replace(/<(.*?)>/g, '')
+                  ?.replace(/<(.*?)>/g, '')
             }
           </p>
         </CardContent>

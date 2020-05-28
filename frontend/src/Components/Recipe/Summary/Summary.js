@@ -8,15 +8,15 @@ class Summary extends Component {
     this.summaryRef = React.createRef();
   }
   componentDidUpdate = () => {
-    const { summary } = this.props.recipe;
+    const { description } = this.props.recipe;
     let end = 1000;
-    if (summary) {
-      if (summary.match('All things considered')) {
-        end = summary.match('All things considered').index;
-      } else if (summary.match('With a spoonacular')) {
-        end = summary.match('With a spoonacular').index;
+    if (description) {
+      if (description.match('All things considered')) {
+        end = description.match('All things considered').index;
+      } else if (description.match('With a spoonacular')) {
+        end = description.match('With a spoonacular').index;
       }
-      this.summaryRef.current.innerHTML = summary.substring(0, end);
+      this.summaryRef.current.innerHTML = description.substring(0, end);
     }
   }
   render() {

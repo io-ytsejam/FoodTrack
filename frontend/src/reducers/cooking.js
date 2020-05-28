@@ -10,7 +10,8 @@ const initialState = {
     seconds: 0
   },
   inProgress: false,
-  currentStep: 0
+  currentStep: 0,
+  recipe: {}
 };
 
 export default (state = initialState, action) => {

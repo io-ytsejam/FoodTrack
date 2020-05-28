@@ -16,3 +16,5 @@ export const LOWER_TIME = 'LOWER_TIME';
 
 export const SET_REDIRECT_URL = 'SET_REDIRECT_URL';
 export const SET_REDIRECTED = 'SET_REDIRECTED';
+
+export const SET_RECIPE = 'SET_RECIPE';

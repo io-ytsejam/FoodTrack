@@ -13,9 +13,10 @@ class Ingredients extends Component {
 
   renderIngredients = (recipe) =>
     recipe
-      ?.extendedIngredients
+      ?.ingredients
       ?.map((ing) => {
-        const src = `https://spoonacular.com/cdn/ingredients_100x100/${ing.image}`;
+        const src = ing.image ?
+          `https://spoonacular.com/cdn/ingredients_100x100/${ing.image}` : undefined;
         return <Chip
           style={{
             margin: '5px',
@@ -26,9 +27,9 @@ class Ingredients extends Component {
           color="#ffc310"
           label={ing.name}
           avatar={
-            <Tooltip title={ing.name}>
+            src ? <Tooltip title={ing.name}>
               <Avatar label={'XD'} src={src} />
-            </Tooltip>
+            </Tooltip> : undefined
           }
         />;
       })
