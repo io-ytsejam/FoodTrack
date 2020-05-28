@@ -293,9 +293,12 @@ public class RecipeEntityController{
 
     @GetMapping("/api/recipes/thumbnails")
     public Page<RecipeThumbnail> getRecipeThumbnailsLike(
-            @Nullable @RequestParam("like") String name, Pageable pageable, Sort sort)
+            @Nullable @RequestParam("like") String name,@Nullable @RequestParam("nick") String nickname
+            , Pageable pageable, Sort sort)
     {
         return recipeCommandService.getRecipeThumbnailsNameLike(
-                name==null?"%":name,pageable,sort);
+                name==null?"%":name,nickname==null?"%":nickname,pageable,sort);
     }
+
+
 }
