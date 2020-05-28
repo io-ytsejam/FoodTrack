@@ -55,7 +55,6 @@ Body: String content
 Rate recipe with given id: @PostMapping(/api/recipes/{id}/rate?{value}) @RequestParam Long value
 
 */
-//SWITCH TO DTOS TO NOT ADD COMMENTS/RATINGS WHEN CREATING RECIPE
 @RestController
 public class RecipeEntityController{
 
@@ -256,6 +255,28 @@ public class RecipeEntityController{
                     ,responseHeaders,HttpStatus.CREATED);
         }
         throw new BadCredentialsException("Anonymous users can't rate recipes");
+    }
+
+    @PostMapping("/api/recipes/{id}/addPhoto")
+    public ResponseEntity<RecipeEntity> addPhoto(@RequestBody String photo,@PathVariable Long id) throws
+            BadCredentialsException,ResourceNotFoundException
+    {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        HttpHeaders responseheaders=new HttpHeaders();
+        if (!(authentication instanceof AnonymousAuthenticationToken)){
+            try{
+                RecipeEntity recipe = recipeCommandService.addPhoto(photo,id,authentication.getName());
+                responseheaders.add("Location","/api/recipes/"+recipe.getRecipeid());
+                return new ResponseEntity(recipe,responseheaders,HttpStatus.OK);
+            } catch (BadCredentialsException | ResourceNotFoundException e) {
+                logger.error(e.getMessage());
+                throw e;
+            }
+        }else
+        {
+            logger.error("Anonymous user can't modify recipe");
+            throw new BadCredentialsException("Anonymous user can't modify recipe");
+        }
     }
 
     /*@GetMapping("/api/recipes/thumbnails")

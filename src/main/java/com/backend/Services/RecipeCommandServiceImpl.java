@@ -248,4 +248,18 @@ public class RecipeCommandServiceImpl implements RecipeCommandService {
         return thumbnailRepository.findAllByNameLikeIgnoreCase(name,
                 PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort));
     }
+
+    @Override
+    public RecipeEntity addPhoto(String photo, Long id,String username)
+            throws BadCredentialsException,ResourceNotFoundException {
+        RecipeEntity recipe= recipeRepository.findById(id).orElse(null);
+        if(recipe == null)
+            throw new ResourceNotFoundException("No recipe with given id");
+        if(!recipe.getRecipePersonNickname().equals(username))
+            throw new BadCredentialsException("Can't modify someone else's recipe");
+        PhotoEntity newPhoto=new PhotoEntity();
+        newPhoto.setPhotoLink(photo);
+        recipe.addPhoto(newPhoto);
+        return recipeRepository.save(recipe);
+    }
 }
