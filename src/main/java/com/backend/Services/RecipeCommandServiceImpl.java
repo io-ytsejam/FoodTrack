@@ -244,8 +244,8 @@ public class RecipeCommandServiceImpl implements RecipeCommandService {
     }
 
     @Override
-    public Page<RecipeThumbnail> getRecipeThumbnailsNameLike(String name, Pageable pageable, Sort sort) {
-        return thumbnailRepository.findAllByNameLikeIgnoreCase(name,
+    public Page<RecipeThumbnail> getRecipeThumbnailsNameLike(String name,String nickname, Pageable pageable, Sort sort) {
+        return thumbnailRepository.findAllByNameLikeIgnoreCaseAndNicknameLike(name,nickname,
                 PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort));
     }
 
