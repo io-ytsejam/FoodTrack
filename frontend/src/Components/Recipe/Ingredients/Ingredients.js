@@ -20,7 +20,7 @@ class Ingredients extends Component {
         return <Chip
           style={{
             margin: '5px',
-            backgrounColor: 'transparent',
+            backgroundColor: 'transparent',
             boxShadow: '0 0 11px -5px black'
           }}
           variant='outlined'
@@ -28,7 +28,7 @@ class Ingredients extends Component {
           label={ing.name}
           avatar={
             src ? <Tooltip title={ing.name}>
-              <Avatar label={'XD'} src={src} />
+              <Avatar label={ing.name} src={src} />
             </Tooltip> : undefined
           }
         />;

@@ -4,7 +4,7 @@ export default class UnifiedRecipe {
       readyInMinutes, analyzedInstructions, image } = recipe;
     this.name = title;
     this.description = summary;
-    this.ingedients = extendedIngredients;
+    this.ingredients = extendedIngredients;
     this.readyInMinutes = readyInMinutes;
     this.steps =
       analyzedInstructions[0].steps
