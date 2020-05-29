@@ -7,6 +7,7 @@ import com.backend.Models.PersonEntity;
 import com.backend.Security.JwtTokenUtil;
 import com.backend.Services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,7 +45,7 @@ public class PersonRegistrationController {
 
     @ResponseBody
     @PostMapping
-    public String registerUserAccount(@RequestBody @Valid UserRegistrationDto userDto, BindingResult result) {
+    public ResponseEntity registerUserAccount(@RequestBody @Valid UserRegistrationDto userDto, BindingResult result) {
 
         PersonEntity existing = userService.findByNickname(userDto.getNickname());
         if (existing != null) {
@@ -52,7 +53,7 @@ public class PersonRegistrationController {
         }
         if (result.hasErrors()) {
             //return "redirect:/api/registration";
-            return result.getAllErrors().toString();
+            return new ResponseEntity<String>(result.getAllErrors().toString(), HttpStatus.BAD_REQUEST);
         }
         userService.save(userDto);
         //return "redirect:/api/registration?success";
@@ -65,7 +66,9 @@ public class PersonRegistrationController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         final PersonEntity user = userService.findByNickname(userDto.getNickname());
         final String token = jwtTokenUtil.generateToken(user);
-        return new AuthToken(token,userDto.getNickname()).getToken();
+        return ResponseEntity.ok(new AuthToken(token,user.getNickname()));
+        //return ResponseEntity.ok(new AuthToken(token,user.getNickname()),user.getNickname());
+        //return new AuthToken(token,userDto.getNickname()).getToken();
     }
 }
 
