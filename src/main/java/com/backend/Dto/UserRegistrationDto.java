@@ -16,6 +16,7 @@ public class UserRegistrationDto {
     private String confirmPassword;
 
     @NotEmpty
+    @JsonProperty("username")
     private String nickname;
 
     public String getFirstName() {
