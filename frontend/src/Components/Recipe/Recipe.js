@@ -13,6 +13,7 @@ import Summary from './Summary/Summary';
 import Header from './Header/Header';
 import Ingredients from './Ingredients/Ingredients';
 import UnifiedRecipe from '../../helpers/UnifiedRecipe';
+import apiKeys from '../../helpers/spoonaculars';
 
 class Recipe extends Component {
   constructor(props) {
@@ -36,53 +37,59 @@ class Recipe extends Component {
   componentDidMount = async () => {
     const { increaseLoading, decreaseLoading } = this.props;
     increaseLoading();
-    const apiKey = '3b2eff55d72c4e59b6ca95f82dceaacd';
-    console.log(process?.env.REACT_APP_SPOONACULAR_API_KEY);
 
     const currentUrl = new URL(window.location.href);
     const isExternal = currentUrl.searchParams.get('external');
 
     const recipeID = this.props.match.params.id;
-    const thirdPartyApi =
-      `https://api.spoonacular.com/recipes/${recipeID}/information?apiKey=${apiKey}`;
 
-    const localApi = `/api/recipes/${recipeID}`;
-
-    let response;
-
-    try {
-      if (isExternal === 'true') {
-        throw new Error('It not really an error, we are just fetching spnclr :)');
-      }
-      response = await fetch(localApi, { method: 'GET' });
-      if (!response.ok) {
-        throw new Error('Server responded with: ' + response.status.toString());
-      }
-    } catch (error) {
-      console.warn(error.message + '.', 'Try third-party API...');
-      try {
-        response = await fetch(thirdPartyApi, { method: 'GET' });
-        if (!response.ok) {
-          throw new Error('Server responded with: ' + response.status.toString());
-        }
-      } catch (error) {
-        console.error(error.message);
-        this.setState({ error: error.message });
-      }
+    if (!localStorage.getItem('validApiKeyIndex')) {
+      localStorage.setItem('validApiKeyIndex', '0');
     }
+    const apiKey = apiKeys[localStorage.getItem('validApiKeyIndex')];
+    const url = isExternal ?
+      `https://api.spoonacular.com/recipes/${recipeID}/information?apiKey=${apiKey}`:
+      `/api/recipes/${recipeID}`;
+    const fetchExternalRecipes = (url, attempt) => {
+      fetch(url, { method: 'GET' })
+          .then((res) => {
+            if (res.status === 402) {
+              const index =
+              (parseInt(localStorage.getItem('validApiKeyIndex')) + 1) % apiKeys.length;
+              localStorage.setItem('validApiKeyIndex', index.toString());
+              const url = isExternal ?
+              ('https://api.spoonacular.com/recipes/' +
+                recipeID + '/information?apiKey=' + apiKeys[index]):
+              ('/api/recipes/' + recipeID);
+              console.error('Api key expired. Try again (',
+                  (Math.abs(attempt-apiKeys.length)).toString(), '/'
+                  , apiKeys.length.toString() + ')');
+              if (!attempt) {
+                throw new Error('All api keys expired.');
+              }
+              return fetchExternalRecipes(url, attempt - 1);
+            }
+            return res.json();
+          })
+          .then((recipe) => {
+            if (!('ifexternal' in recipe)) {
+              const r = new UnifiedRecipe(recipe);
+              return this.setState({ recipe: r });
+            }
+            this.setState({ recipe: {
+              ...recipe,
+              readyInMinutes: recipe.steps.reduce((i, j) => i.time + j.time)
+            } });
+          })
+          .catch((err) => {
+            console.error('Spoonacular API error: ', err.message);
+            console.error(err.message);
+            this.setState({ error: err.message });
+          })
+          .finally(() => decreaseLoading());
+    };
 
-    response.json()
-        .then((recipe) => {
-          if (!('ifexternal' in recipe)) {
-            const r = new UnifiedRecipe(recipe);
-            return this.setState({ recipe: r });
-          }
-          this.setState({ recipe: {
-            ...recipe,
-            readyInMinutes: recipe.steps.reduce((i, j) => i.time + j.time)
-          } });
-        }).catch((error) => this.setState({ error }))
-        .finally(() => decreaseLoading());
+    fetchExternalRecipes(url, apiKeys.length);
   };
 
   componentDidUpdate(prevProps, prevState, snapshot) {

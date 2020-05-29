@@ -6,6 +6,7 @@ import { PropTypes } from 'prop-types';
 import { increaseLoading, decreaseLoading } from '../../actions/loading';
 import { connect } from 'react-redux';
 import UserCreation from './UserCreation/UserCreation';
+import apiKeys from '../../helpers/spoonaculars';
 
 class Dashboard extends Component {
   constructor(props) {
@@ -21,17 +22,42 @@ class Dashboard extends Component {
     const { increaseLoading, decreaseLoading, authToken } = this.props;
     increaseLoading();
     // const apiKey = process.env.REACT_APP_SPOONACULAR_API_KEY;
-    const apiKey = '3b2eff55d72c4e59b6ca95f82dceaacd';
-    console.log(process?.env.REACT_APP_SPOONACULAR_API_KEY);
+    if (!localStorage.getItem('validApiKeyIndex')) {
+      localStorage.setItem('validApiKeyIndex', '0');
+    }
+    const apiKey = apiKeys[localStorage.getItem('validApiKeyIndex')];
     let url = `https://api.spoonacular.com/recipes/random?apiKey=${apiKey}&number=10&`;
-    fetch(url, { method: 'GET' })
-        .then((res) => res.json())
-        .then((randomRecipes) => {
-          this.setState({ recommendedRecipes: randomRecipes.recipes });
-          console.log(randomRecipes.recipes);
-        })
-        .catch((err) => err.message)
-        .finally(() => decreaseLoading());
+    const fetchExternalRecipes = (url, attempt) => {
+      fetch(url, { method: 'GET' })
+          .then((res) => {
+            if (res.status === 402) {
+              const index =
+                (parseInt(localStorage.getItem('validApiKeyIndex')) + 1) % apiKeys.length;
+              localStorage.setItem('validApiKeyIndex', index.toString());
+              const url =
+                'https://api.spoonacular.com/recipes/random?apiKey=' +
+                apiKeys[index] + '&number=10&';
+              console.error('Api key expired. Try again (',
+                  (Math.abs(attempt-apiKeys.length)).toString(), '/'
+                  , apiKeys.length.toString() + ')');
+              if (!attempt) {
+                throw new Error('All api keys expired.');
+              }
+              return fetchExternalRecipes(url, attempt - 1);
+            }
+            return res.json();
+          })
+          .then((randomRecipes) => {
+            this.setState({ recommendedRecipes: randomRecipes.recipes });
+            console.log(randomRecipes.recipes);
+          })
+          .catch((err) => {
+            console.error('Spoonacular API error: ', err.message);
+          })
+          .finally(() => decreaseLoading());
+    };
+
+    fetchExternalRecipes(url, apiKeys.length);
 
     // Read recent from local storage and set to state
     // After that, ask API if it's lacking some recipes,

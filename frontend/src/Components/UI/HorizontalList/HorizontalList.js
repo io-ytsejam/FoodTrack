@@ -95,7 +95,8 @@ export const DimmedExpandableCard = (props) => {
             e.target.src = '/fallback.jpeg';
           }}
           style={{
-            boxShadow: '0 0 4px black'
+            boxShadow: '0 0 4px black',
+            maxHeight: '500px'
           }}
         />
         <Divider />

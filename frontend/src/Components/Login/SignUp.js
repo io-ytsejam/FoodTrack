@@ -5,18 +5,22 @@ import './SignUp.sass';
 import Button from '@material-ui/core/Button';
 import { AccountCircle, Face } from '@material-ui/icons';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import { userSignIn } from '../../actions/userSession';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 
 /* eslint-disable no-invalid-this */
 class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: '',
+      firstName: '',
       lastName: '',
-      userName: '',
+      nickname: '',
       password: '',
 
-      registrationError: undefined
+      registrationError: undefined,
+      registrationStatus: 'create account'
     };
   }
 
@@ -28,38 +32,44 @@ class SignUp extends Component {
   };
 
   render() {
+    const { registrationStatus, registrationError } = this.state;
+    if (registrationError) {
+      throw registrationError;
+    }
     return (
       <div className="sign-up">
         <h1>Sign up</h1>
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            const formData = new FormData();
-            formData.append('firstName', this.state.name);
-            formData.append('lastName', this.state.lastName);
-            formData.append('nickname', this.state.userName);
-            formData.append('password', this.state.password);
-            formData.append('confirmPassword', this.state.password);
+            const { firstName, lastName, nickname, password } = this.state;
+            const { history } = this.props;
 
-            fetch('/registration', {
+            this.setState({ registrationStatus: 'signing up...' });
+            fetch('/api/registration', {
               method: 'POST',
-              body: formData,
+              body: JSON.stringify({ firstName, lastName, nickname, password }),
               mode: 'no-cors'
-            }).then((res) => {
-              console.log(res);
             })
-                .catch((err) => {
-                  console.error(err);
+                .then((res) => res.json())
+                .then((data) => {
+                  userSignIn({ username: nickname, authToken: data.token });
+                  localStorage.setItem('username', nickname);
+                  localStorage.setItem('authToken', data.token);
+                  document.cookie =
+                    'auth-token=' + data.token + ';max-age=' + (60*60*24*10).toString();
+                  history.push('/');
+                }).catch((err) => {
+                  console.error(registrationError);
+                  this.setState({ registrationError });
                 });
-
-            alert('Sign up with: ' + JSON.stringify(this.state));
           }}
         >
           <div
             className='input-wrapper'
           >
             <TextField
-              name='name'
+              name='firstName'
               onChange={(event) => {
                 this.handleChange(event);
               }}
@@ -82,7 +92,7 @@ class SignUp extends Component {
               variant="outlined"
             />
             <TextField
-              name='userName'
+              name='nickname'
               onChange={(event) => {
                 this.handleChange(event);
               }}
@@ -93,7 +103,7 @@ class SignUp extends Component {
                     <Face />
                   </InputAdornment>
                 )
-              }} label="Username" color={'secondary'} variant="outlined"/>
+              }} label="nickname" color={'secondary'} variant="outlined"/>
             <TextField
               name='password'
               onChange={(event) => {
@@ -105,7 +115,7 @@ class SignUp extends Component {
               color="secondary"
               variant="outlined"
             />
-            <Button type='submit'>Create account</Button>
+            <Button type='submit'>{registrationStatus}</Button>
           </div>
         </form>
       </div>
@@ -115,4 +125,10 @@ class SignUp extends Component {
 
 SignUp.propTypes = {};
 
-export default SignUp;
+const mapDispatchToProps = (dispatch) => ({
+  userSignIn: (sessionInfo) => {
+    dispatch(userSignIn(sessionInfo));
+  }
+});
+
+export default connect(null, mapDispatchToProps)(withRouter(SignUp));
