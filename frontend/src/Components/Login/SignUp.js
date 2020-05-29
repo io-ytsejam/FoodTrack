@@ -43,15 +43,31 @@ class SignUp extends Component {
           onSubmit={(event) => {
             event.preventDefault();
             const { firstName, lastName, nickname, password } = this.state;
-            const { history } = this.props;
+            const { history, userSignIn } = this.props;
 
             this.setState({ registrationStatus: 'signing up...' });
             fetch('/api/registration', {
               method: 'POST',
-              body: JSON.stringify({ firstName, lastName, nickname, password }),
-              mode: 'no-cors'
+              body: JSON.stringify(
+                  { firstName, lastName, nickname,
+                    password, confirmPassword: password
+                  }),
+              headers: {
+                'Content-Type': 'application/json'
+              }
             })
-                .then((res) => res.json())
+                .then((res) => {
+                  if (res.ok) return res.json();
+                  else if (res.status === 400) {
+                    const registrationStatus = 'user ' + nickname + ' already exists!';
+                    this.setState({ registrationStatus }, () => {
+                      setTimeout(() => {
+                        this.setState({ registrationStatus: 'register' });
+                      }, 4000);
+                    });
+                    throw new Error('user exists');
+                  }
+                })
                 .then((data) => {
                   userSignIn({ username: nickname, authToken: data.token });
                   localStorage.setItem('username', nickname);
@@ -59,9 +75,11 @@ class SignUp extends Component {
                   document.cookie =
                     'auth-token=' + data.token + ';max-age=' + (60*60*24*10).toString();
                   history.push('/');
-                }).catch((err) => {
+                }).catch((registrationError) => {
                   console.error(registrationError);
-                  this.setState({ registrationError });
+                  if (registrationError.message !== 'user exists') {
+                    this.setState({ registrationError });
+                  }
                 });
           }}
         >
@@ -115,7 +133,13 @@ class SignUp extends Component {
               color="secondary"
               variant="outlined"
             />
-            <Button type='submit'>{registrationStatus}</Button>
+            <Button
+              type='submit'
+              style={{
+                backgroundColor:
+                  registrationStatus.match('already exists') ? 'crimson' : ''
+              }}
+            >{registrationStatus}</Button>
           </div>
         </form>
       </div>

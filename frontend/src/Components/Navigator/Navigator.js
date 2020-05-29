@@ -57,17 +57,17 @@ class Navigator extends Component {
 
     fetch('/api/isLogged', {
       headers: {
-        token: authToken
+        Authorization: 'Bearer ' + authToken
       }
     })
         .then((res) => {
           if (res.ok) {
             res.json().then((isLogged) => {
-              if (isLogged) {
+              if (!isLogged) {
                 document.cookie = 'auth-token=;max-age=0';
-              } else {
-                history.push('/welcome');
                 userSignIn(null);
+                localStorage.setItem('authToken', '');
+                history.push('/welcome');
               }
             });
           } else throw new Error('User session validation error');
@@ -99,7 +99,7 @@ class Navigator extends Component {
     const { location, history, userSignIn } = this.props;
     if (prevProps.location.pathname !== location.pathname) {
       const { pathname } = location;
-      if (!pathname.match(/(\/user-profile|\/sign-in|\/sign-up|\/welcome)/)) {
+      if (!pathname.match(/(\/user-profile|\/sign-in|\/sign-up|\/welcome|\/recipe)/)) {
         this.verifySession(history, userSignIn);
       }
     }
