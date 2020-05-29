@@ -1,7 +1,8 @@
 export default class UnifiedRecipe {
   constructor(recipe) {
     const { title, summary, extendedIngredients,
-      readyInMinutes, analyzedInstructions, image } = recipe;
+      readyInMinutes, analyzedInstructions, image, id } = recipe;
+    this.recipeid = id;
     this.name = title;
     this.description = summary;
     this.ingredients = extendedIngredients;

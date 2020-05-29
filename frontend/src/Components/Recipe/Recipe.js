@@ -47,7 +47,7 @@ class Recipe extends Component {
       localStorage.setItem('validApiKeyIndex', '0');
     }
     const apiKey = apiKeys[localStorage.getItem('validApiKeyIndex')];
-    const url = isExternal ?
+    const url = isExternal === 'true' ?
       `https://api.spoonacular.com/recipes/${recipeID}/information?apiKey=${apiKey}`:
       `/api/recipes/${recipeID}`;
     const fetchExternalRecipes = (url, attempt) => {
