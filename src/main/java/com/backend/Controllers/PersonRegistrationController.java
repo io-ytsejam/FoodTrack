@@ -67,8 +67,6 @@ public class PersonRegistrationController {
         final PersonEntity user = userService.findByNickname(userDto.getNickname());
         final String token = jwtTokenUtil.generateToken(user);
         return ResponseEntity.ok(new AuthToken(token,user.getNickname()));
-        //return ResponseEntity.ok(new AuthToken(token,user.getNickname()),user.getNickname());
-        //return new AuthToken(token,userDto.getNickname()).getToken();
     }
 }
 
