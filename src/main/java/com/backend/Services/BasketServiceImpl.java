@@ -1,6 +1,7 @@
 package com.backend.Services;
 
 import com.backend.Dto.BasketAddDto;
+import com.backend.Dto.BasketIngredientDto;
 import com.backend.Models.Basket;
 import com.backend.Models.BasketIngredient;
 import com.backend.Models.IngredientEntity;
@@ -54,12 +55,13 @@ public class BasketServiceImpl implements BasketService {
         if(basketDto.getIngredients()==null)
             return basket;
         basket.clearIngredients();
-        for (String s : basketDto.getIngredients()) {
-            IngredientEntity ingredient = ingredientRepository.findFirstByNameIgnoreCase(s).
-                    orElseGet(() -> ingredientRepository.save(new IngredientEntity(s)));
+        for (BasketIngredientDto s : basketDto.getIngredients()) {
+            IngredientEntity ingredient = ingredientRepository.findFirstByNameIgnoreCase(s.getName()).
+                    orElseGet(() -> ingredientRepository.save(new IngredientEntity(s.getName())));
             BasketIngredient basketIngredient = new BasketIngredient();
             basketIngredient.setBasket(basket);
             basketIngredient.setIngredient(ingredient);
+            basketIngredient.setCompleted(s.isCompleted());
             basketIngredient.updateId();
             basket.addIngredient(basketIngredient);
         }

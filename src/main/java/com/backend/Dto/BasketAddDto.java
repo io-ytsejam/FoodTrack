@@ -12,7 +12,7 @@ public class BasketAddDto {
     private Long recipeid;
     @NotNull
     @NotEmpty
-    private Set<String> ingredients;
+    private Set<BasketIngredientDto> ingredients;
 
     public Long getBasketid() {
         return basketid;
@@ -38,11 +38,11 @@ public class BasketAddDto {
         this.recipeid = recipeid;
     }
 
-    public Set<String> getIngredients() {
+    public Set<BasketIngredientDto> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<String> ingredients) {
+    public void setIngredients(Set<BasketIngredientDto> ingredients) {
         this.ingredients = ingredients;
     }
 }

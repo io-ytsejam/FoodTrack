@@ -1,13 +1,17 @@
 package com.backend.Models;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Entity
 @Table(name = "BASKET_INGREDIENT", schema = "FDTRCK", catalog = "")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","basket","ingredient","id"})
 public class BasketIngredient {
 
     @EmbeddedId
@@ -18,13 +22,16 @@ public class BasketIngredient {
     @JoinColumn(name = "basketid",nullable = false,  updatable = false)
     private Basket basket;
 
-    @JsonValue
     @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("ingredientid")
     @JoinColumn(name = "ingredientid",nullable = false,  updatable = false)
     private IngredientEntity ingredient;
 
     //future attributes
+
+    @NotNull
+    @Column
+    private boolean completed;
 
     public BasketIngredientKey getId() {
         return id;
@@ -38,6 +45,8 @@ public class BasketIngredient {
         return ingredient;
     }
 
+    @JsonGetter
+    @JsonProperty("name")
     public String getIngredientName(){
         return ingredient.getName();
     }
@@ -48,6 +57,16 @@ public class BasketIngredient {
 
     public void setIngredient(IngredientEntity ingredient) {
         this.ingredient = ingredient;
+    }
+
+    @JsonGetter
+    @JsonProperty("completed")
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     public void updateId(){

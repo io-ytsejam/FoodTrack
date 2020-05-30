@@ -31,7 +31,7 @@ public class Basket {
     private RecipeEntity recipe;
 
     @OneToMany(mappedBy = "basket",cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<BasketIngredient> ingredients = new HashSet<BasketIngredient>();
+    private Set<BasketIngredient> ingredients = new HashSet<>();
 
     public Basket() {
     }
@@ -96,10 +96,19 @@ public class Basket {
         return recipe==null? null : recipe.getName();
     }
 
-    @JsonGetter
+    /*@JsonGetter
     @JsonProperty("ingredients")
     public List<String> getIngredientNames(){
         return ingredients.stream().map(BasketIngredient::getIngredientName).collect(Collectors.toList());
+    }*/
+
+    @JsonGetter
+    @JsonProperty("completed")
+    public boolean getTotalCompleted(){
+        for(BasketIngredient bi:ingredients)
+            if (!bi.isCompleted())
+                return false;
+        return true;
     }
 
     @Override
