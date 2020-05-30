@@ -34,4 +34,6 @@ public interface RecipeCommandService { //not used
     Page<RecipeThumbnail> getRecipeThumbnailsNameLike(String name,String nickname,Pageable pageable,Sort sort);
     RecipeEntity addPhoto(String photo,Long id,String username) throws
             BadCredentialsException,ResourceNotFoundException;
+    Page<RecipeEntity> findByPersonNicknameAndRecipeName(String nickname
+            , String name,Pageable pageable,Sort sort);
 }
