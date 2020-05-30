@@ -2,7 +2,6 @@ package com.backend.Dto;
 
 import com.backend.Models.IngredientEntity;
 import com.backend.Models.PhotoEntity;
-import com.backend.Models.RatingEntity;
 import com.backend.Models.StepEntity;
 
 import java.util.List;
