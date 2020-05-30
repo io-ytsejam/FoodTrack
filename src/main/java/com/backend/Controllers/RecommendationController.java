@@ -1,7 +1,9 @@
 package com.backend.Controllers;
 
+import com.backend.Models.HistoryEntity;
 import com.backend.Models.PersonEntity;
 import com.backend.Models.RecommendationEntity;
+import com.backend.Repositories.HistoryEntityRepository;
 import com.backend.Repositories.PersonEntityRepository;
 import com.backend.Repositories.RecommendationEntityRepository;
 import com.backend.Security.JwtTokenUtil;
@@ -30,6 +32,9 @@ public class RecommendationController {
     PersonEntityRepository userRepository;
 
     @Autowired
+    HistoryEntityRepository historyEntityRepository;
+
+    @Autowired
     JwtTokenUtil jwtTokenUtil;
 
     @Autowired
@@ -47,7 +52,7 @@ public class RecommendationController {
         Set<String> jsons_bournes=new HashSet<>();
         for (RecommendationEntity r: array)
         {
-            jsons_bournes.add(jsonGetRequest("https://api.spoonacular.com/recipes/"+r.getRecommendation_id()+"/similar?apiKey=APIKEY&number=3"));
+            jsons_bournes.add(jsonGetRequest("https://api.spoonacular.com/recipes/"+r.getRecommendation_id()+"/similar?apiKey=c1393fe58e8741d9b59f20cb092a2a74&number=3"));
         }
 
         return ResponseEntity.ok().body(jsons_bournes);
@@ -67,10 +72,19 @@ public class RecommendationController {
         {
             personEntity.getRecommendationEntities().add(recommendationEntity);
         }
-
         userRepository.save(personEntity);
 
-        String json=jsonGetRequest("https://api.spoonacular.com/recipes/"+id+"/information?apiKey=APIKEY&number=10");
+        HistoryEntity historyEntity=new HistoryEntity(id);
+        if(!historyEntityRepository.findById(id).equals(historyEntity))
+        {
+            historyEntityRepository.save(historyEntity);
+        }
+        if(!personEntity.getHistoryEntities().contains(historyEntity))
+        {
+            personEntity.getHistoryEntities().add(historyEntity);
+        }
+        userRepository.save(personEntity);
+        String json=jsonGetRequest("https://api.spoonacular.com/recipes/"+id+"/information?apiKey=c1393fe58e8741d9b59f20cb092a2a74");
         return ResponseEntity.ok(json);
     }
 

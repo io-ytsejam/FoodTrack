@@ -35,10 +35,6 @@ public class PersonEntity {
     @Column(name = "LASTNAME")
     private String lastname;
 
-    /*@Basic
-    @Column(name = "PRIVACY_FLAGS")
-    private Long privacyflags;*/
-
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RecipeEntity> recipes = new ArrayList<RecipeEntity>();
 
@@ -68,6 +64,12 @@ public class PersonEntity {
             joinColumns = {@JoinColumn(name = "personid")},
             inverseJoinColumns = {@JoinColumn(name = "recommendation_id")})
     private Set<RecommendationEntity> recommendationEntities = new HashSet<RecommendationEntity>();
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "person_history",
+            joinColumns = {@JoinColumn(name = "personid")},
+            inverseJoinColumns = {@JoinColumn(name = "history_id")})
+    private Set<HistoryEntity> historyEntities = new HashSet<HistoryEntity>();
 
     public PersonEntity(String firstName, String lastName, String email, String password, Collection<RoleEntity> roles) {
         this.firstname = firstName;
@@ -128,6 +130,13 @@ public class PersonEntity {
         this.personPreferenceEntities = personPreferenceEntities;
     }
 
+    public Set<HistoryEntity> getHistoryEntities() {
+        return historyEntities;
+    }
+
+    public void setHistoryEntities(Set<HistoryEntity> historyEntities) {
+        this.historyEntities = historyEntities;
+    }
 
     public void addPersonPreference(PersonPreferenceEntity personPreferenceEntity) {
         this.personPreferenceEntities.add(personPreferenceEntity);

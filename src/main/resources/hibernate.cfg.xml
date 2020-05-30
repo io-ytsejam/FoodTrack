@@ -7,9 +7,7 @@
 
     <session-factory>
         <property name="connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
-        <property name="connection.url">jdbc:oracle:thin:@fdtrck.westeurope.cloudapp.azure.com:1521:cdb1</property>
-        <property name="connection.username">fdtrck</property>
-        <property name="connection.password">${password}</property>
+        <property name="connection.url">jdbc:oracle:thin:@localhost:1521:XE</property>
         <property name="dialect">org.hibernate.dialect.Oracle12cDialect</property>
         <property name="hibernate.hbm2ddl.auto">update</property>
 
@@ -29,6 +27,7 @@
         <mapping class="com.backend.Models.HealthRestrictionPersonEntity"/>
         <mapping class="com.backend.Models.PersonSettingEntity"/>
         <mapping class="com.backend.Models.RecipeEntity"/>
+        <mapping class="com.backend.Models.HistoryEntity"/>
         <mapping class="com.backend.Models.RoleEntity"/>
 
     </session-factory>
