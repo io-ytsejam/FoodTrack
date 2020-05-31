@@ -1,36 +1,23 @@
 package com.backend.Controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
-import com.backend.Dto.UserRegistrationDto;
+import java.util.List;
 import com.backend.Models.CommentEntity;
 import com.backend.Models.PersonEntity;
 import com.backend.Repositories.PersonEntityRepository;
 import com.backend.Services.UserService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-
-import javax.validation.Valid;
-import javax.xml.stream.events.Comment;
 
 /*
 Get Person info for given person id: @GetMapping(/api/people/{id}) @PathVariable Long id
@@ -44,8 +31,6 @@ public class PersonEntityController {
 
     @Autowired
     private UserService userService;
-
-    //private final RecipeEntityRepository recipeRepository;
 
     PersonEntityController(PersonEntityRepository repository)
     {
@@ -65,14 +50,6 @@ public class PersonEntityController {
             return person;
         });
     }
-
-
-    /*@GetMapping(value = "/test")
-    HttpEntity<PagedModel<PersonEntity>> persons(Pageable pageable, PagedResourcesAssembler<PersonEntity> assembler)
-    {
-        Page<PersonEntity> persons = repository.findAll(pageable);
-        return new ResponseEntity<PagedModel<PersonEntity>>(assembler.toModel(persons), HttpStatus.OK);
-    }*/
 
     @GetMapping(value = "/api/people/{id}")
     PersonEntity one(@PathVariable Long id) throws ResourceNotFoundException {

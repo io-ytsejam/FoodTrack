@@ -6,11 +6,8 @@ import com.backend.Repositories.PersonEntityRepository;
 import com.backend.Repositories.RecommendationEntityRepository;
 import com.backend.Security.JwtTokenUtil;
 import com.backend.Services.UserServiceImpl;
-import net.minidev.json.JSONObject;
-import oracle.ucp.proxy.annotation.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

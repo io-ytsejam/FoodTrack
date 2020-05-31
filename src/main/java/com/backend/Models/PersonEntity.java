@@ -35,9 +35,8 @@ public class PersonEntity {
     @Column(name = "LASTNAME")
     private String lastname;
 
-    /*@Basic
-    @Column(name = "PRIVACY_FLAGS")
-    private Long privacyflags;*/
+    @OneToMany(mappedBy = "person",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<Basket> baskets=new ArrayList<Basket>();
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RecipeEntity> recipes = new ArrayList<RecipeEntity>();
@@ -270,4 +269,12 @@ public class PersonEntity {
         this.roles = roles;
     }
 
+    public List<Basket> getBaskets() {
+        return baskets;
+    }
+
+    public void addBasket(Basket basket){
+        this.baskets.add(basket);
+        basket.setPerson(this);
+    }
 }

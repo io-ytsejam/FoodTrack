@@ -2,8 +2,6 @@ package com.backend.Controllers;
 
 import com.backend.Models.IngredientEntity;
 import com.backend.Repositories.IngredientEntityRepository;
-import com.backend.Repositories.RecipeEntityRepository;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

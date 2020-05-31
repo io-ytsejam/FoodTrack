@@ -281,12 +281,6 @@ public class RecipeEntityController{
         }
     }
 
-    /*@GetMapping("/api/recipes/thumbnails")
-    public Page<RecipeThumbnail> getRecipeThumbnails(Pageable pageable, Sort sort)
-    {
-        return recipeCommandService.getRecipeThumbnails(pageable,sort);
-    }*/
-
     @GetMapping("/api/recipes/search")
     public Page<RecipeEntity> getRecipesLike(@RequestParam("like") String name,Pageable pageable)
     {

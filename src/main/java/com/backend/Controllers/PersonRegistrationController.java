@@ -2,7 +2,6 @@ package com.backend.Controllers;
 
 import com.backend.Dto.UserRegistrationDto;
 import com.backend.Models.AuthToken;
-import com.backend.Models.LoginUser;
 import com.backend.Models.PersonEntity;
 import com.backend.Security.JwtTokenUtil;
 import com.backend.Services.UserService;
