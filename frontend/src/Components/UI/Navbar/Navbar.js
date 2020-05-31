@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -8,7 +9,7 @@ import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
@@ -20,6 +21,7 @@ import History from '@material-ui/icons/History';
 import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userSignIn } from '../../../actions/userSession';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -195,9 +197,13 @@ const Navbar = (props) => {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton>
-              <AddCircleOutlineIcon />
-            </IconButton>
+            <Link to='/shopping-lists'>
+              <Tooltip title='Your shopping lists'>
+                <IconButton>
+                  <ShoppingCartIcon />
+                </IconButton>
+              </Tooltip>
+            </Link>
             <Link to={'history'}>
               <IconButton aria-label="show 4 new mails" color="inherit">
                 <Badge badgeContent={21} color="secondary">
@@ -265,7 +271,14 @@ const Navbar = (props) => {
 };
 
 const mapStateToProps = (state) => ({
-  username: state.userSession.username
+  username: state.userSession.username,
 });
+
+Navbar.propTypes = {
+  history: PropTypes.object,
+  absoluteCardActive: PropTypes.string,
+  username: PropTypes.string,
+  userSignIn: PropTypes.func
+};
 
 export default connect(mapStateToProps, { userSignIn })(withRouter(Navbar));

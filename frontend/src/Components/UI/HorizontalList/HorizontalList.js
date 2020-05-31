@@ -38,43 +38,44 @@ export default HorizontalList;
 * Maybe ingredients chips
 * So yeah */
 export const DimmedExpandableCard = withRouter((props) => {
+  const handleClick = (e) => {
+    const mc = e.target.closest('.dimmed-expandable-card').children[1];
+    if (mainCardRef.current.classList.contains('dimmed-expandable-card--expanded')) {
+      mainCardRef.current.classList.remove('dimmed-expandable-card--expanded');
+      document.querySelector('header').style.position = 'fixed';
+      mc.classList.remove('material-card-override--with-transition');
+      let sibling = mainCardRef.current.nextSibling;
+      for (let i = 1; i < 6; i++) {
+        if (!sibling) return;
+        sibling.style.position = '';
+        sibling.style.left = '';
+        sibling = sibling.nextSibling;
+      }
+    } else {
+      mainCardRef.current.classList.add('dimmed-expandable-card--expanded');
+      let sibling = mainCardRef.current.nextSibling;
+      for (let i = 1; i < 6; i++) {
+        if (!sibling) return;
+        sibling.style.position = 'relative';
+        sibling.style.left = (310).toString() + 'px';
+        sibling = sibling.nextSibling;
+      }
+      mc.style.transform = 'translateY(1250px) scale3d(.4, .4, 1)';
+      setTimeout(() => {
+        mc.classList.add('material-card-override--with-transition');
+        mc.style.transform = 'translateY(0)';
+      });
+      document.querySelector('header').style.position = 'absolute';
+    }
+  };
   const headerRef = React.createRef();
   const mainCardRef = React.createRef();
-  const { recipe, external, history } = props;
+  const { recipe, external, history, onClick } = props;
   return (
     <div
       className='dimmed-expandable-card'
       ref={mainCardRef}
-      onClick={(e) => {
-        const mc = e.target.closest('.dimmed-expandable-card').children[1];
-        if (mainCardRef.current.classList.contains('dimmed-expandable-card--expanded')) {
-          mainCardRef.current.classList.remove('dimmed-expandable-card--expanded');
-          document.querySelector('header').style.position = 'fixed';
-          mc.classList.remove('material-card-override--with-transition');
-          let sibling = mainCardRef.current.nextSibling;
-          for (let i = 1; i < 6; i++) {
-            if (!sibling) return;
-            sibling.style.position = '';
-            sibling.style.left = '';
-            sibling = sibling.nextSibling;
-          }
-        } else {
-          mainCardRef.current.classList.add('dimmed-expandable-card--expanded');
-          let sibling = mainCardRef.current.nextSibling;
-          for (let i = 1; i < 6; i++) {
-            if (!sibling) return;
-            sibling.style.position = 'relative';
-            sibling.style.left = (310).toString() + 'px';
-            sibling = sibling.nextSibling;
-          }
-          mc.style.transform = 'translateY(1250px) scale3d(.4, .4, 1)';
-          setTimeout(() => {
-            mc.classList.add('material-card-override--with-transition');
-            mc.style.transform = 'translateY(0)';
-          });
-          document.querySelector('header').style.position = 'absolute';
-        }
-      }}
+      onClick={onClick || handleClick}
     >
       <div className="card-header">
         <p>{props.title}</p>
@@ -102,65 +103,69 @@ export const DimmedExpandableCard = withRouter((props) => {
           }}
         />
         <Divider />
-        <CardActions
-          className='recipe-actions'
-        >
-          <Link
-            to={`/recipe/${recipe.id || recipe.recipeid}?external=${external ?? true}`}
-          >
-            <Button
-              variant="contained"
-              color="secondary"
+        {
+          recipe ? <>
+            <CardActions
+              className='recipe-actions'
             >
-              Recipe
-            </Button>
-          </Link>
-          <Button
-            color='secondary'
-            onClick={() => {
-              let { name, ifexternal, ingredients, recipeid, photos } =
-                recipe.id ? new UnifiedRecipe(recipe) : recipe;
-              // Reduce string size
-              photos = [photos[0]];
-              const URIEncodedShoppingInfo =
-                encodeURIComponent(JSON.stringify({
-                  name,
-                  ifexternal,
-                  ingredients,
-                  recipeid,
-                  photos
-                }));
-              history.push(`/shopping-list/new/${URIEncodedShoppingInfo}`);
-            }}
-          >
-            Shopping list
-          </Button>
-          <IconButton style={{ marginLeft: 'auto' }}>
-            <ArrowDownward />
-          </IconButton>
-        </CardActions>
-        <Divider />
-        <CardActions
-          className="ingredients-list"
-        >
-          {
-            props.ingredients.map((ingredient, index) => (
-              <Chip
-                className="ingredient"
-                key={index}
-                variant="outlined" label={ingredient.name}
-              />
-            ))
-          }
-        </CardActions>
-        <CardContent>
-          <p>
-            {
-              props.supportingText
-                ?.replace(/<(.*?)>/g, '')
-            }
-          </p>
-        </CardContent>
+              <Link
+                to={`/recipe/${recipe.id || recipe.recipeid}?external=${external ?? true}`}
+              >
+                <Button
+                  variant="contained"
+                  color="secondary"
+                >
+                  Recipe
+                </Button>
+              </Link>
+              <Button
+                color='secondary'
+                onClick={() => {
+                  let { name, ifexternal, ingredients, recipeid, photos } =
+                    recipe.id ? new UnifiedRecipe(recipe) : recipe;
+                  // Reduce string size
+                  photos = [photos[0]];
+                  const URIEncodedShoppingInfo =
+                    encodeURIComponent(JSON.stringify({
+                      name,
+                      ifexternal,
+                      ingredients,
+                      recipeid,
+                      photos
+                    }));
+                  history.push(`/shopping-list/new/${URIEncodedShoppingInfo}`);
+                }}
+              >
+                Shopping list
+              </Button>
+              <IconButton style={{ marginLeft: 'auto' }}>
+                <ArrowDownward />
+              </IconButton>
+            </CardActions>
+            <Divider />
+            <CardActions
+              className="ingredients-list"
+            >
+              {
+                props.ingredients.map((ingredient, index) => (
+                  <Chip
+                    className="ingredient"
+                    key={index}
+                    variant="outlined" label={ingredient.name}
+                  />
+                ))
+              }
+            </CardActions>
+            <CardContent>
+              <p>
+                {
+                  props.supportingText
+                    ?.replace(/<(.*?)>/g, '')
+                }
+              </p>
+            </CardContent>
+          </> : null
+        }
       </Card>
     </div>
   );

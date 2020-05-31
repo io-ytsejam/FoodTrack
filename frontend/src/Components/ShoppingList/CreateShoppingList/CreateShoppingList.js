@@ -2,15 +2,18 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import './CreateShoppingList.sass';
-import ShoppingListElement from './ShoppingListElement';
+import ShoppingListElement from '../ShoppingListElement/ShoppingListElement';
 import { withRouter } from 'react-router-dom';
 import Button from '@material-ui/core/Button';
 
+/* eslint-disable no-invalid-this */
+/* This component is for creating new, or dealing with
+existing shopping list*/
 class CreateShoppingList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      elements: ['prd0', 'prd1', 'prd2', 'prd3'],
+      isNew: false,
       shoppingInfo: {
         recipeid: 0,
         name: '',
@@ -28,18 +31,19 @@ class CreateShoppingList extends Component {
     if (key) {
       console.log(index, ingredients.filter((_x, i) => i !== index));
       this.setState({
-        ingredients: {
-          ...ingredients,
-          ingredients: ingredients.filter((_x, i) => i !== index)
+        shoppingInfo: {
+          ...shoppingInfo,
+          ingredients: ingredients.filter((_, i) => i !== index)
+
         }
       });
     } else {
       this.setState({
-        ingredients: {
-          ...ingredients,
+        shoppingInfo: {
+          ...shoppingInfo,
           ingredients: [
             ...ingredients,
-            { name: '' }
+            { name: '', checked: false }
           ]
         }
       });
@@ -61,14 +65,49 @@ class CreateShoppingList extends Component {
       } });
   }
 
+  checkElement = (index, state) => {
+    let { ingredients } = this.state.shoppingInfo;
+    ingredients = ingredients.map((ing, i) => {
+      if (i === index) {
+        return { name: ing.name, checked: state };
+      } else return ing;
+    });
+    if (state) {
+      ingredients = [
+        ...ingredients,
+        ingredients[index]
+      ];
+      ingredients = ingredients.filter((_, i) => i !== index);
+    } else {
+      ingredients = [
+        ingredients[index],
+        ...ingredients
+      ];
+      ingredients = ingredients.filter((_, i) => i !== index + 1);
+    }
+    this.setState({ shoppingInfo: {
+      ...this.state.shoppingInfo,
+      ingredients
+    } });
+  }
+
   componentDidMount() {
-    const { shoppingInfo } = this.props.match.params;
-    this.setState({ shoppingInfo: JSON.parse(decodeURIComponent(shoppingInfo)) });
+    const { id } = this.props.match.params;
+    if (id) {
+      const shoppingList = JSON.parse(localStorage.getItem('shoppingLists'))[id];
+      this.setState({ shoppingInfo: shoppingList,
+        shoppingListStatus: 'mark shopping list as completed' });
+    } else {
+      this.setState({ isNew: true });
+      const { shoppingInfo } = this.props.match.params;
+      this.setState({ shoppingInfo: JSON.parse(decodeURIComponent(shoppingInfo)) });
+    }
   }
 
   render() {
-    const { ingredients, name, recipeid, ifexternal, photos } = this.state?.shoppingInfo;
-    const { shoppingInfo, shoppingListStatus } = this.state;
+    const { ingredients, name, recipeid,
+      ifexternal, photos } = this.state?.shoppingInfo;
+    const { shoppingInfo, shoppingListStatus, isNew } = this.state;
     return (
       <div className='create-shopping-list'>
         <Paper
@@ -101,10 +140,13 @@ class CreateShoppingList extends Component {
             {
               ingredients?.map((ingredient, index) =>
                 <ShoppingListElement
+                  isNew={isNew}
                   handlePosition={this.handlePosition(shoppingInfo)}
                   addOrRemoveIngredient={this.addOrRemoveIngredient(index)}
                   key={index}
                   element={ingredient.name}
+                  checkElement={this.checkElement}
+                  checked={ingredient.checked}
                   index={index}
                   listSize={ingredients.length}
                 />
@@ -138,6 +180,8 @@ class CreateShoppingList extends Component {
   }
 }
 
-CreateShoppingList.propTypes = {};
+CreateShoppingList.propTypes = {
+  match: PropTypes.object
+};
 
 export default withRouter(CreateShoppingList);

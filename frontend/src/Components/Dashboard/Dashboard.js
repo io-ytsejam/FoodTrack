@@ -85,7 +85,7 @@ class Dashboard extends Component {
   }
 
   render() {
-    const { recommendedRecipes, recentRecipes, randomRecsRecipes, usersRecipes } = this.state;
+    const { recommendedRecipes, randomRecsRecipes, usersRecipes } = this.state;
     const { username } = this.props;
     return (
       <>

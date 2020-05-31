@@ -28,7 +28,8 @@ import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import SplashScreen from '../../SplashScreen/SplashScreen';
 import { setRedirectURL, setRedirected } from '../../actions/redirect';
 import WelcomeScreen from '../WelcomeScreen/WelcomeScreen';
-import CreateShoppingList from '../ShoppingList/CreateShoppingList';
+import CreateShoppingList from '../ShoppingList/CreateShoppingList/CreateShoppingList';
+import ShoppingLists from '../ShoppingList/ShoppingLists/ShoppingLists';
 
 /* eslint-disable no-invalid-this */
 class Navigator extends Component {
@@ -79,21 +80,12 @@ class Navigator extends Component {
 
   componentDidMount() {
     const { userSignIn, history } = this.props;
-
-    const getCookie = (name) =>
-      document.cookie.replace(new RegExp('(?:(?:^|.*;s*)'+ name +
-        's*=s*([^;]*).*$)|^.*$'), '$1');
-
     this.verifySession(history, userSignIn);
-    console.log('TOKEN: ', getCookie('auth-token'));
-    console.log(this.props.user);
     Notification
         .requestPermission()
         .then((status) => {
           console.log(status);
         });
-
-    // this.props.signIn({ name: 'ytsejam', id: 2137 })
   }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
@@ -125,7 +117,6 @@ class Navigator extends Component {
           <div className="content">
             <ErrorBoundary key={window.location.pathname}>
               <Switch>
-                {/* {!redirect.redirected && redirect.url ? <Redirect to={redirect.url}/> : null}*/}
                 {/* Main page */}
                 <Route exact path="/">
                   <Dashboard
@@ -141,11 +132,7 @@ class Navigator extends Component {
                 </Route>
                 {/* User profile */}
                 <Route path="/user-profile">
-                  {
-                          isSignedIn?
-                            <Profile />:
-                            <Login />
-                  }
+                  {isSignedIn ? <Profile /> : <Login />}
                 </Route>
                 {/* Sign in */}
                 <Route path="/sign-in">
@@ -160,6 +147,12 @@ class Navigator extends Component {
                 </Route>
                 <Route path="/shopping-list/new/:shoppingInfo">
                   <CreateShoppingList />
+                </Route>
+                <Route path="/shopping-list/:id">
+                  <CreateShoppingList />
+                </Route>
+                <Route path='/shopping-lists'>
+                  <ShoppingLists />
                 </Route>
                 <Route path="/recipe/:id">
                   <Recipe />
@@ -176,7 +169,11 @@ class Navigator extends Component {
 
 Navigator.propTypes = {
   user: PropTypes.object,
-  isSignedIn: PropTypes.bool
+  location: PropTypes.object,
+  history: PropTypes.object,
+  isSignedIn: PropTypes.bool,
+  isLoading: PropTypes.number,
+  userSignIn: PropTypes.func
 };
 
 const mapStateToProps = (state) => ({
