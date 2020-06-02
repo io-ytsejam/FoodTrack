@@ -45,6 +45,9 @@ public class PersonEntity {
     private List<HealthRestrictionPersonEntity> healthRestrictionPersonEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "personEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<PersonHistoryEntity> personHistoryEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "personEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PersonSettingEntity> personSettingEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -64,12 +67,6 @@ public class PersonEntity {
             joinColumns = {@JoinColumn(name = "personid")},
             inverseJoinColumns = {@JoinColumn(name = "recommendation_id")})
     private Set<RecommendationEntity> recommendationEntities = new HashSet<RecommendationEntity>();
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "person_history",
-            joinColumns = {@JoinColumn(name = "personid")},
-            inverseJoinColumns = {@JoinColumn(name = "history_id")})
-    private Set<HistoryEntity> historyEntities = new HashSet<HistoryEntity>();
 
     public PersonEntity(String firstName, String lastName, String email, String password, Collection<RoleEntity> roles) {
         this.firstname = firstName;
@@ -118,6 +115,14 @@ public class PersonEntity {
         return comments;
     }
 
+    public List<PersonHistoryEntity> getPersonHistoryEntities() {
+        return personHistoryEntities;
+    }
+
+    public void setPersonHistoryEntities(List<PersonHistoryEntity> personHistoryEntities) {
+        this.personHistoryEntities = personHistoryEntities;
+    }
+
     public void setComments(List<CommentEntity> comments) {
         this.comments = comments;
     }
@@ -130,14 +135,6 @@ public class PersonEntity {
         this.personPreferenceEntities = personPreferenceEntities;
     }
 
-    public Set<HistoryEntity> getHistoryEntities() {
-        return historyEntities;
-    }
-
-    public void setHistoryEntities(Set<HistoryEntity> historyEntities) {
-        this.historyEntities = historyEntities;
-    }
-
     public void addPersonPreference(PersonPreferenceEntity personPreferenceEntity) {
         this.personPreferenceEntities.add(personPreferenceEntity);
         personPreferenceEntity.setPersonEntity(this);
@@ -146,6 +143,11 @@ public class PersonEntity {
     public void addPersonSetting(PersonSettingEntity personSettingEntity) {
         this.personSettingEntities.add(personSettingEntity);
         personSettingEntity.setPersonEntity(this);
+    }
+
+    public void addPersonHistory(PersonHistoryEntity personHistoryEntity) {
+        this.personHistoryEntities.add(personHistoryEntity);
+        personHistoryEntity.setPersonEntity(this);
     }
 
     public void addPersonHealth(HealthRestrictionPersonEntity healthRestrictionPersonEntity)
