@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "PREFERENCE", schema = "FDTRCK", catalog = "")
+@Table(name = "PREFERENCE", schema = "TEST", catalog = "")
 public class PreferenceEntity {
 
     @Id

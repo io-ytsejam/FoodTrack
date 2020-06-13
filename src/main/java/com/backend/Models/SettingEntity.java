@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name = "SETTING", schema = "FDTRCK", catalog = "")
+@Table(name = "SETTING", schema = "TEST", catalog = "")
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler","personSettingEntities"})
 public class SettingEntity {
 

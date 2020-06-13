@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "INGREDIENT", schema = "FDTRCK", catalog = "")
+@Table(name = "INGREDIENT", schema = "TEST", catalog = "")
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler","recipes"})
 public class IngredientEntity {
     @Id

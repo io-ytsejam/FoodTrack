@@ -24,6 +24,7 @@
         <mapping class="com.backend.Models.SettingEntity"/>
         <mapping class="com.backend.Models.StepEntity"/>
         <mapping class="com.backend.Models.PersonPreferenceEntity"/>
+        <mapping class="com.backend.Models.Basket"/>
         <mapping class="com.backend.Models.HealthRestrictionPersonEntity"/>
         <mapping class="com.backend.Models.PersonSettingEntity"/>
         <mapping class="com.backend.Models.RecipeEntity"/>

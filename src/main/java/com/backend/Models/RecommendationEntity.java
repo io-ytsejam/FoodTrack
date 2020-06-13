@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "RECOMMENDATIONS", schema = "FDTRCK", catalog = "")
+@Table(name = "RECOMMENDATIONS", schema = "TEST", catalog = "")
 public class RecommendationEntity {
     @Id
     @Column(name = "RECOMMENDATION_ID")

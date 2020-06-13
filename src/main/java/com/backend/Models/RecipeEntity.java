@@ -10,7 +10,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "RECIPE", schema = "FDTRCK", catalog = "")
+@Table(name = "RECIPE", schema = "TEST", catalog = "")
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler","person","baskets"})
 public class RecipeEntity {
     @Id

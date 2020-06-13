@@ -10,9 +10,11 @@ import com.backend.Repositories.RecipeEntityRepository;
 import com.backend.Repositories.RecommendationEntityRepository;
 import com.backend.Security.JwtTokenUtil;
 import com.backend.Services.UserServiceImpl;
+import oracle.ucp.proxy.annotation.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 @RestController
 public class SearchController {
@@ -44,37 +45,19 @@ public class SearchController {
     @Autowired
     UserServiceImpl userService;
 
-    @PostMapping("/api/search")
-    public ResponseEntity recipeSearch(@RequestHeader Long id, @RequestHeader String token, @RequestHeader Boolean isExternal) throws ResourceNotFoundException
+    @GetMapping("/api/search")
+    public ResponseEntity recipeSearch(@RequestHeader String name) throws ResourceNotFoundException
     {
-        String username=jwtTokenUtil.getUsernameFromToken(token);
-        PersonEntity personEntity=userRepository.findByNickname(username);
-        if(recommnedationRepository.findById(id).isEmpty()) {
-            RecommendationEntity recommendationEntity=new RecommendationEntity(id);
-            personEntity.getRecommendationEntities().add(recommendationEntity);
+        List<RecipeEntity> internalRecipes = new ArrayList<>(recipeEntityRepository.findAllByNameIsLike("%" + name + "%"));
+        List <Object> externalRecipes = new ArrayList<>();
+        Set<Object> allRecipes=new HashSet<>();
+        for(int i=1;i<=20;i++) {
+            String json = jsonGetRequest("https://api.spoonacular.com/recipes/search?query"+name+"&number=1&offset="+i+"&apiKey=c1393fe58e8741d9b59f20cb092a2a74");
+            externalRecipes.add(json);
         }
-        userRepository.save(personEntity);
-        Optional<RecipeEntity> recipeEntity=recipeEntityRepository.findById(id);
-        PersonHistoryEntity historyEntity=new PersonHistoryEntity();
-        historyEntity.setRecipe_id(id);
-        personEntity.addPersonHistory(historyEntity);
-        if(isExternal)
-        {
-            historyEntity.setIsExternal('T');
-        }
-        else {
-            historyEntity.setIsExternal('F');
-        }
-        userRepository.save(personEntity);
-        if(!isExternal)
-        {
-            return ResponseEntity.ok(recipeEntity);
-        }
-        else
-        {
-            String json=jsonGetRequest("https://api.spoonacular.com/recipes/"+id+"/information?apiKey=c1393fe58e8741d9b59f20cb092a2a74");
-            return ResponseEntity.ok(json);
-        }
+        allRecipes.add(externalRecipes);
+        allRecipes.add(internalRecipes);
+        return ResponseEntity.ok(allRecipes);
     }
 
     private static String streamToString(InputStream inputStream) {

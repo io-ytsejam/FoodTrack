@@ -46,9 +46,9 @@ public class HistoryController {
     {
         String username=jwtTokenUtil.getUsernameFromToken(token);
         PersonEntity personEntity=userRepository.findByNickname(username);
-        List<PersonHistoryEntity> historyEntityList = new ArrayList<>(personEntity.getPersonHistoryEntities());
+        //List<PersonHistoryEntity> historyEntityList = new ArrayList<>(personEntity.getPersonHistoryEntities());
         Set<Object> jsons_bournes=new HashSet<>();
-        for (PersonHistoryEntity h: historyEntityList)
+        /*for (PersonHistoryEntity h: historyEntityList)
         {
             if(h.getIsExternal()=='T')
             {
@@ -60,7 +60,7 @@ public class HistoryController {
                 RecipeEntity json=recipeRepository.getOne(h.getRecipe_id());
                 jsons_bournes.add(json);
             }
-        }
+        }*/
         return ResponseEntity.ok().body(jsons_bournes);
     }
 }
