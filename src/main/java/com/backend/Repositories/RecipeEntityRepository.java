@@ -9,10 +9,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface RecipeEntityRepository extends JpaRepository<RecipeEntity,Long>{
     Page<RecipeEntity> findByPersonNickname(String nickname,Pageable pageable);
     Page<RecipeEntity> findAllByNameLikeIgnoreCase(String name,Pageable pageable);
     Page<RecipeEntity> findByPersonNicknameLikeAndNameLikeIgnoreCase(String nickname
             ,String name,Pageable pageable);
+    List<RecipeEntity> findAllByNameIsLike (String name);
 }
