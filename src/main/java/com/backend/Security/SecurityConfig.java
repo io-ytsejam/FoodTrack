@@ -60,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/api/recipes/**","/api/people/**",
                         "/api/recs/**","/api/login","/api/registration","/api/isLogged").permitAll()
                 .antMatchers(HttpMethod.POST,"/api/login","/api/registration").permitAll()
-                .antMatchers("/api/recipes/**").authenticated()
+                .antMatchers("/api/recipes/**","/api/baskets/**").authenticated()
                 .anyRequest().hasRole("ADMIN")
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()

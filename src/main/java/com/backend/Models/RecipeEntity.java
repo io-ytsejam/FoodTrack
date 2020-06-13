@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "RECIPE", schema = "FDTRCK", catalog = "")
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","person"})
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","person","baskets"})
 public class RecipeEntity {
     @Id
     @Column(name = "RECIPEID")
@@ -28,6 +28,9 @@ public class RecipeEntity {
     @Basic
     @Column(name = "IFEXTERNAL")
     private char ifexternal;
+
+    @OneToMany(mappedBy = "person",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<Basket> baskets=new ArrayList<Basket>();
 
     //Do przetestowania (w bazie typ to RAW)
     /*@Basic
@@ -289,5 +292,10 @@ public class RecipeEntity {
     @JsonProperty("photos")
     public List<String> getPhotos(){
         return photoEntities.stream().map(PhotoEntity::getPhotoLink).collect(Collectors.toList());
+    }
+
+    public void addBasket(Basket basket){
+        this.baskets.add(basket);
+        basket.setRecipe(this);
     }
 }

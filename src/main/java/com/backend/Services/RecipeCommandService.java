@@ -11,7 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 
-public interface RecipeCommandService { //not used
+public interface RecipeCommandService {
     RecipeEntity createRecipe(RecipeAddDto recipeDto,String username);
     RecipeEntity replaceRecipe(RecipeAddDto recipeDto,Long id,String username) throws
             BadCredentialsException,ResourceNotFoundException;
