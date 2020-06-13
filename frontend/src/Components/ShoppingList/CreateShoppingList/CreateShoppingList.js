@@ -15,13 +15,15 @@ class CreateShoppingList extends Component {
     this.state = {
       isNew: false,
       shoppingInfo: {
+        isCompleted: false,
         recipeid: 0,
         name: '',
         ingredients: [{ name: '' }],
         ifexternal: false,
         photos: ['']
       },
-      shoppingListStatus: 'save this shopping list'
+      shoppingListStatus: 'save this shopping list',
+      modified: false
     };
   }
 
@@ -42,8 +44,8 @@ class CreateShoppingList extends Component {
         shoppingInfo: {
           ...shoppingInfo,
           ingredients: [
-            ...ingredients,
-            { name: '', checked: false }
+            { name: '', checked: false },
+            ...ingredients
           ]
         }
       });
@@ -63,6 +65,16 @@ class CreateShoppingList extends Component {
         ...shoppingInfo,
         ingredients: [...ingredients]
       } });
+  }
+
+  handleChange = (value, index) => {
+    const { shoppingInfo } = this.state;
+    const { ingredients } = shoppingInfo;
+    ingredients[index].name = value;
+    this.setState({ shoppingInfo: {
+      ...shoppingInfo,
+      ingredients
+    } });
   }
 
   checkElement = (index, state) => {
@@ -104,10 +116,24 @@ class CreateShoppingList extends Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevState.shoppingInfo && prevState.shoppingInfo !== this.state.shoppingInfo) {
+      const shoppingData = { ...this.state.shoppingInfo };
+      let shoppingLists = JSON.parse(localStorage.getItem('shoppingLists'));
+      shoppingLists = shoppingLists.map((list) => {
+        console.log(list);
+        if (list.recipeid === shoppingData.recipeid) {
+          return shoppingData;
+        } else return list;
+      });
+      localStorage.setItem('shoppingLists', JSON.stringify(shoppingLists));
+    }
+  }
+
   render() {
     const { ingredients, name, recipeid,
-      ifexternal, photos } = this.state?.shoppingInfo;
-    const { shoppingInfo, shoppingListStatus, isNew } = this.state;
+      ifexternal, photos, completed } = this.state?.shoppingInfo;
+    const { shoppingInfo, shoppingListStatus, isNew, modified } = this.state;
     return (
       <div className='create-shopping-list'>
         <Paper
@@ -136,10 +162,12 @@ class CreateShoppingList extends Component {
               /></a>
           </header>
           <hr/>
+          {completed ? <h5>This shopping list is completed</h5> : null}
           <div className="elements-wrapper">
             {
               ingredients?.map((ingredient, index) =>
                 <ShoppingListElement
+                  handleChange={this.handleChange}
                   isNew={isNew}
                   handlePosition={this.handlePosition(shoppingInfo)}
                   addOrRemoveIngredient={this.addOrRemoveIngredient(index)}
@@ -157,16 +185,31 @@ class CreateShoppingList extends Component {
           <Button
             onClick={() => {
               if (shoppingListStatus === 'Saved!') return;
+              const isCompleted =
+                shoppingListStatus === 'mark shopping list as completed';
               const shoppingData = {
-                completed: false,
                 ...shoppingInfo,
+                completed: isCompleted,
                 ingredients:
                   shoppingInfo.ingredients.map((ing) =>
-                    ({ name: ing.name, checked: false })),
+                    ({
+                      name: ing.name,
+                      checked: isCompleted
+                    })),
               };
+              this.setState({ shoppingInfo: shoppingData });
               let shoppingLists = JSON.parse(localStorage.getItem('shoppingLists'));
               if (shoppingLists) {
-                shoppingLists.push(shoppingData);
+                if (isCompleted) {
+                  shoppingLists = shoppingLists.map((list) => {
+                    console.log(list);
+                    if (list.recipeid === shoppingData.recipeid) {
+                      return shoppingData;
+                    } else return list;
+                  });
+                } else {
+                  shoppingLists.push(shoppingData);
+                }
               } else {
                 shoppingLists = [shoppingData];
               }

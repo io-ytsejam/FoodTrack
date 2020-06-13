@@ -9,25 +9,26 @@ import './ShoppingListElement.sass';
 import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
 
+/* eslint-disable no-invalid-this */
 class ShoppingListElement extends Component {
   constructor(props) {
     super(props);
     this.elementRef = React.createRef();
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) {
-    if (this.props.checked) {
-      this.elementRef.current.classList.add('element-wrapper--checked');
-    } else {
-      this.elementRef.current.classList.remove('element-wrapper--checked');
-    }
-  }
-
   render() {
     const { element, index, handlePosition,
-      listSize, addOrRemoveIngredient, isNew, checked, checkElement } = this.props;
+      listSize, addOrRemoveIngredient, isNew,
+      checked, checkElement, handleChange } = this.props;
     return (
-      <div ref={this.elementRef} className='element-wrapper'>
+      <div
+        ref={this.elementRef}
+        className={
+          'element-wrapper ' + (
+            checked ? 'element-wrapper--checked' : ''
+          )
+        }
+      >
         <Tooltip title={!index ? 'Add custom element' : 'Remove element'}>
           <IconButton onClick={() => {
             addOrRemoveIngredient(index);
@@ -61,7 +62,7 @@ class ShoppingListElement extends Component {
           fullWidth
           value={element}
           onChange={(e) => {
-
+            handleChange(e.target.value, index);
           }}
           size="small"
           color="secondary"
@@ -108,7 +109,9 @@ ShoppingListElement.propTypes = {
   handlePosition: PropTypes.func,
   listSize: PropTypes.number,
   addOrRemoveIngredient: PropTypes.func,
-  isNew: PropTypes.bool
+  isNew: PropTypes.bool,
+  checked: PropTypes.bool,
+  checkElement: PropTypes.func
 };
 
 export default ShoppingListElement;
