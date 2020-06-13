@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "PERSON_SETTING", schema = "TEST", catalog = "")
+@Table(name = "PERSON_SETTING", schema = "FDTRCK", catalog = "")
 public class PersonSettingEntity {
     @Id
     @Column(name = "PERSON_SETTING_ID")

@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "BASKET", schema = "TEST", catalog = "")
+@Table(name = "BASKET", schema = "FDTRCK", catalog = "")
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler","person","recipe"})
 public class Basket {
 

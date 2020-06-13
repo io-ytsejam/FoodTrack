@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.util.*;
 
 @Entity
-@Table(name = "PERSON", schema = "TEST", catalog = "")
+@Table(name = "PERSON", schema = "FDTRCK", catalog = "")
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler","comments","personSettingEntities"})
 public class PersonEntity {
     @Id

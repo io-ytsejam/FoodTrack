@@ -6,7 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "PERSON_HISTORY", schema = "TEST", catalog = "")
+@Table(name = "PERSON_HISTORY", schema = "FDTRCK", catalog = "")
 public class PersonHistoryEntity {
     @Id
     @Column(name = "PERSON_HISTORY_ID")
