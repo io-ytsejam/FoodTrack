@@ -262,4 +262,11 @@ public class RecipeCommandServiceImpl implements RecipeCommandService {
         recipe.addPhoto(newPhoto);
         return recipeRepository.save(recipe);
     }
+
+    @Override
+    public Page<RecipeEntity> findByPersonNicknameAndRecipeName(String nickname
+            , String name, Pageable pageable, Sort sort) {
+        return recipeRepository.findByPersonNicknameLikeAndNameLikeIgnoreCase(nickname,name,
+                PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort));
+    }
 }

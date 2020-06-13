@@ -237,9 +237,7 @@ class CreateRecipe extends Component {
                       this.setState({ recipe: {
                         ...recipe,
                         photos
-                      } }, () => {
-                        console.log(this.state.recipe.photos);
-                      });
+                      } });
                     }}
                   />
                 )

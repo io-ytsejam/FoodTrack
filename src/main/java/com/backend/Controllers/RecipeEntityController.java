@@ -144,9 +144,11 @@ public class RecipeEntityController{
     }
 
     @GetMapping("/api/recipes")
-    public Page<RecipeEntity> getRecipes(Pageable pageable) throws BadCredentialsException
+    public Page<RecipeEntity> getRecipes(@Nullable @RequestParam("like") String name,@Nullable @RequestParam("nick") String nickname
+            , Pageable pageable, Sort sort)
     {
-        return recipeCommandService.getAllRecipes(pageable);
+        return recipeCommandService.findByPersonNicknameAndRecipeName(
+                nickname==null?"%":nickname,name==null?"%":name,pageable,sort);
     }
 
     @GetMapping("/api/recipes/{id}")
@@ -278,12 +280,6 @@ public class RecipeEntityController{
             throw new BadCredentialsException("Anonymous user can't modify recipe");
         }
     }
-
-    /*@GetMapping("/api/recipes/thumbnails")
-    public Page<RecipeThumbnail> getRecipeThumbnails(Pageable pageable, Sort sort)
-    {
-        return recipeCommandService.getRecipeThumbnails(pageable,sort);
-    }*/
 
     @GetMapping("/api/recipes/search")
     public Page<RecipeEntity> getRecipesLike(@RequestParam("like") String name,Pageable pageable)

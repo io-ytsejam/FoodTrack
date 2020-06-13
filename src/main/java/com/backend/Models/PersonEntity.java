@@ -35,6 +35,9 @@ public class PersonEntity {
     @Column(name = "LASTNAME")
     private String lastname;
 
+    @OneToMany(mappedBy = "person",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    private List<Basket> baskets=new ArrayList<Basket>();
+
     @OneToMany(mappedBy = "person", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<RecipeEntity> recipes = new ArrayList<RecipeEntity>();
 
@@ -43,9 +46,6 @@ public class PersonEntity {
 
     @OneToMany(mappedBy = "personEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<HealthRestrictionPersonEntity> healthRestrictionPersonEntities = new ArrayList<>();
-
-    @OneToMany(mappedBy = "personEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<PersonHistoryEntity> personHistoryEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "personEntity", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PersonSettingEntity> personSettingEntities = new ArrayList<>();
@@ -115,14 +115,6 @@ public class PersonEntity {
         return comments;
     }
 
-    public List<PersonHistoryEntity> getPersonHistoryEntities() {
-        return personHistoryEntities;
-    }
-
-    public void setPersonHistoryEntities(List<PersonHistoryEntity> personHistoryEntities) {
-        this.personHistoryEntities = personHistoryEntities;
-    }
-
     public void setComments(List<CommentEntity> comments) {
         this.comments = comments;
     }
@@ -135,6 +127,7 @@ public class PersonEntity {
         this.personPreferenceEntities = personPreferenceEntities;
     }
 
+
     public void addPersonPreference(PersonPreferenceEntity personPreferenceEntity) {
         this.personPreferenceEntities.add(personPreferenceEntity);
         personPreferenceEntity.setPersonEntity(this);
@@ -143,11 +136,6 @@ public class PersonEntity {
     public void addPersonSetting(PersonSettingEntity personSettingEntity) {
         this.personSettingEntities.add(personSettingEntity);
         personSettingEntity.setPersonEntity(this);
-    }
-
-    public void addPersonHistory(PersonHistoryEntity personHistoryEntity) {
-        this.personHistoryEntities.add(personHistoryEntity);
-        personHistoryEntity.setPersonEntity(this);
     }
 
     public void addPersonHealth(HealthRestrictionPersonEntity healthRestrictionPersonEntity)
@@ -281,4 +269,12 @@ public class PersonEntity {
         this.roles = roles;
     }
 
+    public List<Basket> getBaskets() {
+        return baskets;
+    }
+
+    public void addBasket(Basket basket){
+        this.baskets.add(basket);
+        basket.setPerson(this);
+    }
 }

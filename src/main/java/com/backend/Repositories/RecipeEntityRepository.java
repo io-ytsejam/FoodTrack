@@ -13,10 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface RecipeEntityRepository extends JpaRepository<RecipeEntity,Long>{
     Page<RecipeEntity> findByPersonNickname(String nickname,Pageable pageable);
     Page<RecipeEntity> findAllByNameLikeIgnoreCase(String name,Pageable pageable);
-    /*@Modifying
-    @Query(
-            value = "insert into PHOTO (PHOTOID,RECIPEID,PHOTO) values" +
-                    " (HIBERNATE_SEQUENCE.nextval, :recipeid, :content)",
-            nativeQuery = true)
-    void insertPhoto(@Param("recipeid") String recipeid, @Param("content") String photo);*/
+    Page<RecipeEntity> findByPersonNicknameLikeAndNameLikeIgnoreCase(String nickname
+            ,String name,Pageable pageable);
 }

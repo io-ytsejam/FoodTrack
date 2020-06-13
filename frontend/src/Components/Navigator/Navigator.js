@@ -28,6 +28,7 @@ import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
 import SplashScreen from '../../SplashScreen/SplashScreen';
 import { setRedirectURL, setRedirected } from '../../actions/redirect';
 import WelcomeScreen from '../WelcomeScreen/WelcomeScreen';
+import CreateShoppingList from '../ShoppingList/CreateShoppingList';
 
 /* eslint-disable no-invalid-this */
 class Navigator extends Component {
@@ -156,6 +157,9 @@ class Navigator extends Component {
                 </Route>
                 <Route path="/recipe/new">
                   <CreateRecipe />
+                </Route>
+                <Route path="/shopping-list/new/:shoppingInfo">
+                  <CreateShoppingList />
                 </Route>
                 <Route path="/recipe/:id">
                   <Recipe />

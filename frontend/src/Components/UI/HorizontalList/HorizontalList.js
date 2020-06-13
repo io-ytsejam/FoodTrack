@@ -12,6 +12,8 @@ import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import { ArrowDownward } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
+import UnifiedRecipe from '../../../helpers/UnifiedRecipe';
+import { withRouter } from 'react-router-dom';
 
 const HorizontalList = (props) => {
   return (
@@ -35,10 +37,10 @@ export default HorizontalList;
 * taste based on history, last time seen, last time cooked, source: (API|DB)
 * Maybe ingredients chips
 * So yeah */
-export const DimmedExpandableCard = (props) => {
+export const DimmedExpandableCard = withRouter((props) => {
   const headerRef = React.createRef();
   const mainCardRef = React.createRef();
-  const { recipe, external } = props;
+  const { recipe, external, history } = props;
   return (
     <div
       className='dimmed-expandable-card'
@@ -103,7 +105,9 @@ export const DimmedExpandableCard = (props) => {
         <CardActions
           className='recipe-actions'
         >
-          <Link to={`/recipe/${recipe.id || recipe.recipeid}?external=${external ?? true}`}>
+          <Link
+            to={`/recipe/${recipe.id || recipe.recipeid}?external=${external ?? true}`}
+          >
             <Button
               variant="contained"
               color="secondary"
@@ -111,7 +115,24 @@ export const DimmedExpandableCard = (props) => {
               Recipe
             </Button>
           </Link>
-          <Button color='secondary'>
+          <Button
+            color='secondary'
+            onClick={() => {
+              let { name, ifexternal, ingredients, recipeid, photos } =
+                recipe.id ? new UnifiedRecipe(recipe) : recipe;
+              // Reduce string size
+              photos = [photos[0]];
+              const URIEncodedShoppingInfo =
+                encodeURIComponent(JSON.stringify({
+                  name,
+                  ifexternal,
+                  ingredients,
+                  recipeid,
+                  photos
+                }));
+              history.push(`/shopping-list/new/${URIEncodedShoppingInfo}`);
+            }}
+          >
             Shopping list
           </Button>
           <IconButton style={{ marginLeft: 'auto' }}>
@@ -136,14 +157,14 @@ export const DimmedExpandableCard = (props) => {
           <p>
             {
               props.supportingText
-                  ?.replace(/<(.*?)>/g, '')
+                ?.replace(/<(.*?)>/g, '')
             }
           </p>
         </CardContent>
       </Card>
     </div>
   );
-};
+});
 
 DimmedExpandableCard.propTypes = {
   title: PropTypes.string,
@@ -153,3 +174,4 @@ DimmedExpandableCard.propTypes = {
   recipe: PropTypes.object,
   index: PropTypes.number
 };
+
