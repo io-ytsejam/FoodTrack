@@ -48,7 +48,7 @@ public class SearchController {
     @GetMapping("/api/search")
     public ResponseEntity recipeSearch(@RequestHeader String name) throws ResourceNotFoundException
     {
-        List<RecipeEntity> internalRecipes = new ArrayList<>(recipeEntityRepository.findAllByNameIsLike("%" + name + "%"));
+        List<RecipeEntity> internalRecipes = new ArrayList<>(recipeEntityRepository.findAllByNameIsLikeIgnoreCase("%" + name + "%"));
         List <Object> externalRecipes = new ArrayList<>();
         Set<Object> allRecipes=new HashSet<>();
         for(int i=1;i<=20;i++) {

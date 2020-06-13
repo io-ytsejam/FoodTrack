@@ -17,5 +17,5 @@ public interface RecipeEntityRepository extends JpaRepository<RecipeEntity,Long>
     Page<RecipeEntity> findAllByNameLikeIgnoreCase(String name,Pageable pageable);
     Page<RecipeEntity> findByPersonNicknameLikeAndNameLikeIgnoreCase(String nickname
             ,String name,Pageable pageable);
-    List<RecipeEntity> findAllByNameIsLike (String name);
+    List<RecipeEntity> findAllByNameIsLikeIgnoreCase (String name);
 }
