@@ -120,6 +120,7 @@ class CreateShoppingList extends Component {
     if (prevState.shoppingInfo && prevState.shoppingInfo !== this.state.shoppingInfo) {
       const shoppingData = { ...this.state.shoppingInfo };
       let shoppingLists = JSON.parse(localStorage.getItem('shoppingLists'));
+      if (!shoppingLists) return;
       shoppingLists = shoppingLists.map((list) => {
         console.log(list);
         if (list.recipeid === shoppingData.recipeid) {
