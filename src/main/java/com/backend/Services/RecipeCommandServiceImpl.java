@@ -46,8 +46,7 @@ public class RecipeCommandServiceImpl implements RecipeCommandService {
 
     @Override
     public RecipeEntity saveRecipe(RecipeEntity recipeEntity) {
-        RecipeEntity recipeResponse = recipeRepository.save(recipeEntity);
-        return recipeResponse;
+        return recipeRepository.save(recipeEntity);
     }
 
     @Override
@@ -198,19 +197,19 @@ public class RecipeCommandServiceImpl implements RecipeCommandService {
             value=0;
         if(recipeRepository.existsById(recipeId)){
             RecipeEntity recipe=recipeRepository.findById(recipeId).get();
-            List<RatingEntity> ratings = recipe.getRatings();
-            for(RatingEntity r: ratings)
+            RatingEntity rating = recipe.getRatings().stream().filter(
+            ratingEntity -> ratingEntity.getPersonNickname().equals(username)).findAny().orElse(null);
+            if(rating != null)
             {
-                if(r.getPerson().getNickname().equals(username))
-                {r.setValue(value);recipe.setRatings(ratings);return recipeRepository.save(recipe);}
+                rating.setValue(value);
+                return recipeRepository.saveAndFlush(recipe);
             }
-                RatingEntity newRating=new RatingEntity();
-                newRating.setValue(value);
-                newRating.setPerson(userService.findByNickname(username));
-                newRating.setRecipe(recipe);
-                recipe.addRating(newRating);
-
-                return recipeRepository.save(recipe);
+            rating =new RatingEntity();
+            rating.setValue(value);
+            rating.setRecipe(recipe);
+            rating.setPerson(userService.findByNickname(username));
+            recipe.addRating(rating);
+            return recipeRepository.save(recipe);
         }else
             throw new ResourceNotFoundException("No recipe with given id");
     }
@@ -238,7 +237,7 @@ public class RecipeCommandServiceImpl implements RecipeCommandService {
     }
 
     @Override
-    public Page<RecipeThumbnail> getRecipeThumbnails(Pageable pageable, Sort sort) { ;
+    public Page<RecipeThumbnail> getRecipeThumbnails(Pageable pageable, Sort sort) {
         return thumbnailRepository.findAll(
                 PageRequest.of(pageable.getPageNumber(),pageable.getPageSize(),sort));
     }
