@@ -187,6 +187,14 @@ const Navbar = (props) => {
               <SearchIcon />
             </div>
             <InputBase
+              onSubmit={() => alert('Submit')}
+              onKeyPress={(e) => {
+                const { value } = e.target;
+                if (e.key === 'Enter' && value) {
+                  history.push('/search?name=' + value);
+                }
+              }}
+              onChange={(e) => console.log(e.target.value)}
               placeholder="Search for recipe…"
               classes={{
                 root: classes.inputRoot,
@@ -204,18 +212,6 @@ const Navbar = (props) => {
                 </IconButton>
               </Tooltip>
             </Link>
-            <Link to={'history'}>
-              <IconButton aria-label="show 4 new mails" color="inherit">
-                <Badge badgeContent={21} color="secondary">
-                  <History />
-                </Badge>
-              </IconButton>
-            </Link>
-            <IconButton aria-label="show 37 new notifications" color="inherit">
-              <Badge badgeContent={37} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
             <IconButton
               edge="end"
               aria-label="account of current user"

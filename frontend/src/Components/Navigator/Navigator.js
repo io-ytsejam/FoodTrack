@@ -30,6 +30,7 @@ import { setRedirectURL, setRedirected } from '../../actions/redirect';
 import WelcomeScreen from '../WelcomeScreen/WelcomeScreen';
 import CreateShoppingList from '../ShoppingList/CreateShoppingList/CreateShoppingList';
 import ShoppingLists from '../ShoppingList/ShoppingLists/ShoppingLists';
+import Search from '../Search/Search';
 
 /* eslint-disable no-invalid-this */
 class Navigator extends Component {
@@ -156,6 +157,9 @@ class Navigator extends Component {
                 </Route>
                 <Route path="/recipe/:id">
                   <Recipe />
+                </Route>
+                <Route path="/search">
+                  <Search />
                 </Route>
               </Switch>
             </ErrorBoundary>

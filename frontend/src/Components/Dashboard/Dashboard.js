@@ -107,10 +107,7 @@ class Dashboard extends Component {
           }
         </HorizontalList>
         <HorizontalList
-          title={username &&
-          username[0].toUpperCase() +
-          username.substr(1) +
-          '\'s recipes'}
+          title={'Our recipes'}
         >
           {
             usersRecipes?.map((recipe, index) => (
@@ -127,23 +124,6 @@ class Dashboard extends Component {
             ))
           }
         </HorizontalList>
-        <HorizontalList
-          title="Try something new"
-        >
-          {
-            randomRecsRecipes.map((recipe, index) => (
-              <DimmedExpandableCard
-                recipe={recipe}
-                key={index}
-                index={index}
-                title={recipe.title}
-                image={recipe.image}
-                supportingText={recipe.summary}
-                ingredients={recipe.extendedIngredients}
-              />
-            ))
-          }
-        </HorizontalList>
         <UserCreation />
       </>
     );
@@ -153,7 +133,8 @@ class Dashboard extends Component {
 Dashboard.propTypes = {
   increaseLoading: PropTypes.func,
   decreaseLoading: PropTypes.func,
-  username: PropTypes.string
+  username: PropTypes.string,
+  authToken: PropTypes.string
 };
 
 const mapStateToProps = (state) => ({

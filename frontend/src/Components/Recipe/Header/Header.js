@@ -29,7 +29,7 @@ class Header extends Component {
                   <Chip avatar={<AccessTime />}
                     label={'Timing: '+ recipe.readyInMinutes} />
                   <Divider orientation='vertical' flexItem={true}/>
-                  <Chip avatar={<LocalDining />} label={'Level: ' + null} />
+                  <Chip avatar={<LocalDining />} label={'Level: medium'} />
                 </div>
               </Grid>
               <Grid item xs={12} sm={12} lg={4}>
