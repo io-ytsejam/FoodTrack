@@ -50,7 +50,7 @@ public class SearchController {
     {
         List<RecipeEntity> internalRecipes = new ArrayList<>(recipeEntityRepository.findAllByNameIsLikeIgnoreCase("%" + name + "%"));
         List <Object> externalRecipes = new ArrayList<>();
-        Set<Object> allRecipes=new HashSet<>();
+        List<Object> allRecipes=new ArrayList<>();
         name=name.replaceAll(" ","%20");
         for(int i=1;i<=20;i++) {
             String json = jsonGetRequest("https://api.spoonacular.com/recipes/search?query="+name+"&number=1&offset="+i+"&apiKey=c1393fe58e8741d9b59f20cb092a2a74");
