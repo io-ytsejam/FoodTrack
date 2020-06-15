@@ -18,6 +18,7 @@ public class UserRegistrationDto {
 
     @NotEmpty
     @JsonProperty("username")
+    @JsonAlias({ "nickname", "username" })
     private String nickname;
 
     public String getFirstName() {
