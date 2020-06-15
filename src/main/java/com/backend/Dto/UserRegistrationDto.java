@@ -1,6 +1,8 @@
 package com.backend.Dto;
 
 import javax.validation.constraints.NotEmpty;
+
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UserRegistrationDto {
