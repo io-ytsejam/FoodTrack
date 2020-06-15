@@ -27,7 +27,10 @@ class Header extends Component {
                   <Chip avatar={<Fastfood />} label={'Plates: ' + recipe?.servings} />
                   <Divider orientation='vertical' color={'black'} flexItem={true} />
                   <Chip avatar={<AccessTime />}
-                    label={'Timing: '+ recipe.readyInMinutes} />
+                    label={'Timing: '+
+                    recipe.readyInMinutes ||
+                    recipe.steps.reduce((acc, v) => acc.time + v.time)
+                    } />
                   <Divider orientation='vertical' flexItem={true}/>
                   <Chip avatar={<LocalDining />} label={'Level: medium'} />
                 </div>

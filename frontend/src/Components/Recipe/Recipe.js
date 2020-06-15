@@ -111,9 +111,16 @@ class Recipe extends Component {
     }
   }
 
-  getStepTime = (recipe, index) =>
-    (recipe.readyInMinutes*60/recipe.steps.length) +
-    (recipe.readyInMinutes*60/recipe.steps.length) * index
+  getStepTime = (recipe, index) => {
+    if (recipe.readyInMinutes) {
+      return (recipe.readyInMinutes * 60 / recipe.steps.length) +
+        (recipe.readyInMinutes * 60 / recipe.steps.length) * index;
+    } else if (recipe.steps[0].time) {
+      return recipe.steps
+          .slice(0, index + 1)
+          .reduce((acc, v) => v.time + acc.time);
+    }
+  }
 
   scrollSteps = (e) => {
     // return;

@@ -131,6 +131,7 @@ render() {
             {
                recipes?.map((recipe, index) =>
                  <DimmedExpandableCard
+                   external={!recipe.ifexternal}
                    recipe={recipe}
                    key={index}
                    index={index}
