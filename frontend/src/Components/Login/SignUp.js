@@ -16,7 +16,7 @@ class SignUp extends Component {
     this.state = {
       firstName: '',
       lastName: '',
-      nickname: '',
+      username: '',
       password: '',
 
       registrationError: undefined,
@@ -42,14 +42,14 @@ class SignUp extends Component {
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            const { firstName, lastName, nickname, password } = this.state;
+            const { firstName, lastName, username, password } = this.state;
             const { history, userSignIn } = this.props;
 
             this.setState({ registrationStatus: 'signing up...' });
             fetch('/api/registration', {
               method: 'POST',
               body: JSON.stringify(
-                  { firstName, lastName, nickname,
+                  { firstName, lastName, username,
                     password, confirmPassword: password
                   }),
               headers: {
@@ -59,7 +59,7 @@ class SignUp extends Component {
                 .then((res) => {
                   if (res.ok) return res.json();
                   else if (res.status === 400) {
-                    const registrationStatus = 'user ' + nickname + ' already exists!';
+                    const registrationStatus = 'user ' + username + ' already exists!';
                     this.setState({ registrationStatus }, () => {
                       setTimeout(() => {
                         this.setState({ registrationStatus: 'register' });
@@ -69,8 +69,8 @@ class SignUp extends Component {
                   }
                 })
                 .then((data) => {
-                  userSignIn({ username: nickname, authToken: data.token });
-                  localStorage.setItem('username', nickname);
+                  userSignIn({ username: username, authToken: data.token });
+                  localStorage.setItem('username', username);
                   localStorage.setItem('authToken', data.token);
                   document.cookie =
                     'auth-token=' + data.token + ';max-age=' + (60*60*24*10).toString();
@@ -110,7 +110,7 @@ class SignUp extends Component {
               variant="outlined"
             />
             <TextField
-              name='nickname'
+              name='username'
               onChange={(event) => {
                 this.handleChange(event);
               }}
@@ -121,7 +121,7 @@ class SignUp extends Component {
                     <Face />
                   </InputAdornment>
                 )
-              }} label="nickname" color={'secondary'} variant="outlined"/>
+              }} label="username" color={'secondary'} variant="outlined"/>
             <TextField
               name='password'
               onChange={(event) => {
